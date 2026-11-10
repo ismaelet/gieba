@@ -7,6 +7,7 @@ use App\Models\Order;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class InvoiceController extends Controller
 {
@@ -83,6 +84,7 @@ class InvoiceController extends Controller
         // populate
 
         $html = file_get_contents(resource_path('html/invoice.html'));
+        $html = str_replace('{{ logo }}', base64_encode(File::get(resource_path('images/logo/invoice-logo.png'))), $html);
         $html = str_replace('{{ title }}', $title, $html);
         $html = str_replace('{{ date }}', $date->format('d/m/Y'), $html);
         $html = str_replace('{{ quote-number }}', $order->idCode(), $html);
