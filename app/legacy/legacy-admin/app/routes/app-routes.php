@@ -1,9 +1,12 @@
 <?php
 
+use Legacy\System\Classes\Route;
+use Legacy\System\Classes\View;
+
 // home
-\Legacy\System\Classes\Route::add('/', function () {
-	\Legacy\System\Classes\View::setPage('home')
-		->setTemplate('admin')
-		->addMiddlewares(['admin'])
-		->show();
+Route::add('/', function () {
+    View::setPage('home')
+        ->setTemplate('admin')
+        ->addMiddlewares(['admin'])
+        ->show();
 });

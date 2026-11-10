@@ -1,29 +1,29 @@
 /* Background */
 #bgr {
-	background: linear-gradient(to bottom, #eead47, #f4ab70);
+  background: linear-gradient(to bottom, #eead47, #f4ab70);
 }
 
 /* Containers */
 main {
-	height: 100vh;
-	min-height: 400px;
+  height: 100vh;
+  min-height: 400px;
 }
 
 .grid {
-	height: 100%;
+  height: 100%;
 }
 
 /* Body */
 #logo {
-	width: 6rem;
-	height: 6rem;
+  width: 6rem;
+  height: 6rem;
 }
 
 #title {
-	letter-spacing: 0.1rem;
-	margin-right: -0.1rem;
+  letter-spacing: 0.1rem;
+  margin-right: -0.1rem;
 }
 
 .sbtn:hover {
-	border-color: var(--color-neutral-heading) !important;
+  border-color: var(--color-neutral-heading) !important;
 }

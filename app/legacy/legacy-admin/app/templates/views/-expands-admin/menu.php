@@ -40,7 +40,7 @@
 
 							<!-- Item header -->
 							<div class="menu-item__header js-open-menu-category">
-								<?= icon_embed(APP_ICONS_DIR . 'navigation/' . $category['slug']) ?>
+								<?= icon_embed(APP_ICONS_DIR.'navigation/'.$category['slug']) ?>
 								<p class="menu-item__title"><?= $category['name'] ?></p>
 							</div>
 

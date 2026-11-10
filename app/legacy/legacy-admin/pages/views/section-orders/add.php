@@ -38,7 +38,7 @@ use function Ecommerce\ecommerce_config;
 			<div class="panel">
 				<div class="form_body">
 
-					<?php if (!$newCart) { ?>
+					<?php if (! $newCart) { ?>
 						<div class="form-field">
 							<p class="form-lbl">ID</p>
 							<input type="number" class="inp" readonly value="<?= $cart->id ?>">
@@ -52,7 +52,7 @@ use function Ecommerce\ecommerce_config;
 
 							<?php foreach (ecommerce_config('cart-statuses') as $oldCartStatusId => $oldCartStatus) { ?>
 
-								<option value="<?= $oldCartStatusId ?>" <?= ($newCart && $oldCartStatusId == 1) || (!$newCart && $oldCart->status == $oldCartStatusId) ? 'selected' : '' ?>><?= $oldCartStatus[1] ?></option>
+								<option value="<?= $oldCartStatusId ?>" <?= ($newCart && $oldCartStatusId == 1) || (! $newCart && $oldCart->status == $oldCartStatusId) ? 'selected' : '' ?>><?= $oldCartStatus[1] ?></option>
 
 							<?php } ?>
 
@@ -68,7 +68,7 @@ use function Ecommerce\ecommerce_config;
 					<div class="grid lg:grid-cols-2 gap-2 grid-cols-1">
 						<div class="form-field">
 							<label class="checkbox">
-								<input type="checkbox" name="billed" <?= !$newCart && $oldCart->billed ? 'checked' : '' ?>>
+								<input type="checkbox" name="billed" <?= ! $newCart && $oldCart->billed ? 'checked' : '' ?>>
 								<span></span>
 								<p>Fatturato</p>
 							</label>
@@ -84,7 +84,7 @@ use function Ecommerce\ecommerce_config;
 
 						<div class="form-field">
 							<label class="checkbox">
-								<input type="checkbox" name="print_notes" <?= !$newCart && $oldCart->print_notes ? 'checked' : '' ?>>
+								<input type="checkbox" name="print_notes" <?= ! $newCart && $oldCart->print_notes ? 'checked' : '' ?>>
 								<span></span>
 								<p>Stampa le note</p>
 							</label>
@@ -92,7 +92,7 @@ use function Ecommerce\ecommerce_config;
 
 						<div class="form-field">
 							<label class="checkbox">
-								<input type="checkbox" name="printStatus" <?= !$newCart && $oldCart->printStatus ? 'checked' : '' ?>>
+								<input type="checkbox" name="printStatus" <?= ! $newCart && $oldCart->printStatus ? 'checked' : '' ?>>
 								<span></span>
 								<p>Stampa lo stato</p>
 							</label>
@@ -100,7 +100,7 @@ use function Ecommerce\ecommerce_config;
 
 						<div class="form-field">
 							<label class="checkbox">
-								<input type="checkbox" name="always_print_prices" <?= !$newCart && $cart->always_print_prices ? 'checked' : '' ?>>
+								<input type="checkbox" name="always_print_prices" <?= ! $newCart && $cart->always_print_prices ? 'checked' : '' ?>>
 								<span></span>
 								<p>Stampa i prezzi nella bolla</p>
 							</label>
@@ -129,11 +129,11 @@ use function Ecommerce\ecommerce_config;
 						<p class="form-lbl">Acconto</p>
 						<div class="discount-field">
 							<div class="price-input">
-								<input type="number" class="js-down-payment" name="downPayment" value="<?= !$newCart ? $oldCart->formattedDownPayment : '0.00' ?>" step=".01">
+								<input type="number" class="js-down-payment" name="downPayment" value="<?= ! $newCart ? $oldCart->formattedDownPayment : '0.00' ?>" step=".01">
 							</div>
 
 							<label class="checkbox">
-								<input type="checkbox" class="js-down-payment-with-vat" name="downPaymentWithVat" <?= !$newCart && $oldCart->downPaymentWithVat ? 'checked' : '' ?>>
+								<input type="checkbox" class="js-down-payment-with-vat" name="downPaymentWithVat" <?= ! $newCart && $oldCart->downPaymentWithVat ? 'checked' : '' ?>>
 								<span></span>
 								<p>IVA</p>
 							</label>
@@ -145,11 +145,11 @@ use function Ecommerce\ecommerce_config;
 						<p class="form-lbl">Sconto fisso</p>
 						<div class="discount-field">
 							<div class="price-input">
-								<input type="number" class="js-fixed-discount" name="fixedDiscount" value="<?= !$newCart ? $oldCart->formattedFixedDiscount : '0.00' ?>" min="0" step=".01">
+								<input type="number" class="js-fixed-discount" name="fixedDiscount" value="<?= ! $newCart ? $oldCart->formattedFixedDiscount : '0.00' ?>" min="0" step=".01">
 							</div>
 
 							<label class="checkbox">
-								<input type="checkbox" class="js-discount-with-vat" name="discountWithVat" <?= !$newCart && $oldCart->discountWithVat ? 'checked' : '' ?>>
+								<input type="checkbox" class="js-discount-with-vat" name="discountWithVat" <?= ! $newCart && $oldCart->discountWithVat ? 'checked' : '' ?>>
 								<span></span>
 								<p>IVA</p>
 							</label>
@@ -159,7 +159,7 @@ use function Ecommerce\ecommerce_config;
 					<!-- Percentage discount -->
 					<div class="form-field">
 						<p class="form-lbl">Sconto percentuale</p>
-						<input type="number" class="js-percentage-discount" name="percentageDiscount" value="<?= !$newCart ? $oldCart->percentageDiscount : 0 ?>" min="0" max="100">
+						<input type="number" class="js-percentage-discount" name="percentageDiscount" value="<?= ! $newCart ? $oldCart->percentageDiscount : 0 ?>" min="0" max="100">
 					</div>
 				</div>
 			</div>
@@ -186,17 +186,17 @@ use function Ecommerce\ecommerce_config;
 
 					<?php
 
-					for ($i = 1; $i <= 50; $i++) {
-						$order = $oldCart->orders[$i - 1] ?? false;
-						$searchProduct['index-value'] = $order ? $order->product->id : false;
-						$searchProduct['visible-value'] = $order ? ($order->product->name ?: '[Articolo Rimosso]') : false;
+                    for ($i = 1; $i <= 50; $i++) {
+                        $order = $oldCart->orders[$i - 1] ?? false;
+                        $searchProduct['index-value'] = $order ? $order->product->id : false;
+                        $searchProduct['visible-value'] = $order ? ($order->product->name ?: '[Articolo Rimosso]') : false;
 
-						$orderStatusStr = $order ? $order->statusString : '';
-						$orderQuantity = $order ? $order->quantity : 1;
-						$orderNetPrice = $order ? $order->formattedNetProductPrice : '';
-						$orderGrossPrice = $order ? $order->formattedProductPrice : '';
-						$orderTotalPrice = $order ? $order->formattedPrice : '';
-					?>
+                        $orderStatusStr = $order ? $order->statusString : '';
+                        $orderQuantity = $order ? $order->quantity : 1;
+                        $orderNetPrice = $order ? $order->formattedNetProductPrice : '';
+                        $orderGrossPrice = $order ? $order->formattedProductPrice : '';
+                        $orderTotalPrice = $order ? $order->formattedPrice : '';
+                        ?>
 
 						<div class="order-row <?= ($newCart && $i == 1) || $order ? 'active' : '' ?> js-order">
 							<input type="hidden" class="inp" name="orderId[]" value="<?= $order ? $order->id : 0 ?>">
@@ -233,7 +233,7 @@ use function Ecommerce\ecommerce_config;
 								<input type="number" class="inp js-order-gross-price" value="<?= $orderGrossPrice ?>" title="<?= $orderGrossPrice ?>" placeholder="Prezzo unità" step="0.01">
 							</div>
 							<label class="checkbox order-row_item--center">
-								<input type="checkbox" class="js-order-vat" name="orderVat<?= $i ?>" <?= $order && !$order->vat ? '' : 'checked' ?>>
+								<input type="checkbox" class="js-order-vat" name="orderVat<?= $i ?>" <?= $order && ! $order->vat ? '' : 'checked' ?>>
 								<span></span>
 							</label>
 							<div class="inp-price">
@@ -283,7 +283,7 @@ use function Ecommerce\ecommerce_config;
 	<section class="page_footer">
 		<button class="button button--auto-width" name="submit" autofocus><?= $newCart ? 'Aggiungi l\'ordine' : 'Modifica l\'ordine' ?></button>
 
-		<?php if (!$newCart) { ?>
+		<?php if (! $newCart) { ?>
 			<div class="flex-group" data-spacing="400">
 				<button class="button button--secondary" name="duplicate">Duplica l'ordine</button>
 				<button class="button button--secondary button--bad button--auto-width" name="delete" onclick="return confirm('Sei sicuro di voler rimuovere l\'ordine? Non sarà possibile ripristinarlo.')">Rimuovi l'ordine</button>

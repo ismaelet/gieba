@@ -1,31 +1,34 @@
 <?php
 
-//home
-\Legacy\System\Classes\Route::add('/', function () {
+use Legacy\System\Classes\Route;
+use Legacy\System\Classes\View;
 
-	//create view
-	$view = new \Legacy\System\Classes\View('home');
+// home
+Route::add('/', function () {
 
-	//render view
-	$view->show();
+    // create view
+    $view = new View('home');
+
+    // render view
+    $view->show();
 });
 
-//gallery
-\Legacy\System\Classes\Route::add('/gallery', function () {
+// gallery
+Route::add('/gallery', function () {
 
-	//create view
-	$view = new \Legacy\System\Classes\View('gallery');
+    // create view
+    $view = new View('gallery');
 
-	//render view
-	$view->show();
+    // render view
+    $view->show();
 });
 
-//collection
-\Legacy\System\Classes\Route::add('/collection', function () {
+// collection
+Route::add('/collection', function () {
 
-	//create view
-	$view = new \Legacy\System\Classes\View('collection');
+    // create view
+    $view = new View('collection');
 
-	//render view
-	$view->show();
+    // render view
+    $view->show();
 });

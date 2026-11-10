@@ -2,209 +2,249 @@
 
 namespace Ecommerce;
 
+use Legacy\System\Classes\DB;
 use Structure\DatabaseObject;
 
 /**
  * Cart class
- * 
+ *
  * @property float downPayment
  * @property float formattedDownPayment
- * 
  * @property float discount
  * @property float formattedDiscount
  * @property float fixedDiscount
  * @property float formattedFixedDiscount
  * @property int percentageDiscount
  */
-class Cart {
+class Cart
+{
+    use DatabaseObject;
 
-	use DatabaseObject;
+    public const TABLE = 'ecommerce_carts';
 
-	public const TABLE = 'ecommerce_carts';
-	public const INDEX = 'id';
-	public const STATUS_INDEX = 'status';
+    public const INDEX = 'id';
 
-	public $id;
-	public $customerId;
-	public $status;
-	public $billed;
-	public $date;
-	public $time;
+    public const STATUS_INDEX = 'status';
 
-	/*
-	* Get methods
-	*/
-	private function getIdCode() {
-		return '#' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
-	}
+    public $id;
 
-	private function getDateString() {
-		return date('Y-m-d', strtotime($this->time));
-	}
+    public $customerId;
 
-	private function getStatusId() {
-		return $this->{self::STATUS_INDEX};
-	}
+    public $status;
 
-	private function getStatusCode() {
-		return ecommerce_config('cart-statuses')[$this->statusId][0];
-	}
+    public $billed;
 
-	private function getStatusString() {
-		return ecommerce_config('cart-statuses')[$this->statusId][1] ?? 'Non definito';
-	}
+    public $date;
 
-	private function getStatusColor() {
-		return ecommerce_config('cart-statuses')[$this->statusId][2];
-	}
+    public $time;
 
-	private function getStatusIcon() {
-		return ecommerce_config('cart-statuses')[$this->statusId][3];
-	}
+    /*
+    * Get methods
+    */
+    private function getIdCode()
+    {
+        return '#'.str_pad($this->id, 6, '0', STR_PAD_LEFT);
+    }
 
-	private function getFullPrice() {
-		$price = 0;
+    private function getDateString()
+    {
+        return date('Y-m-d', strtotime($this->time));
+    }
 
-		foreach ($this->orders as $order) {
-			$price += $order->price;
-		}
+    private function getStatusId()
+    {
+        return $this->{self::STATUS_INDEX};
+    }
 
-		return $price;
-	}
+    private function getStatusCode()
+    {
+        return ecommerce_config('cart-statuses')[$this->statusId][0];
+    }
 
-	private function getPrice() {
-		return $this->fullPrice - $this->fullDownPayment - $this->fullDiscount;
-	}
+    private function getStatusString()
+    {
+        return ecommerce_config('cart-statuses')[$this->statusId][1] ?? 'Non definito';
+    }
 
-	private function getFullDownPayment() {
-		return $this->downPaymentWithVat ? $this->downPayment : $this->downPayment * 1.22;
-	}
+    private function getStatusColor()
+    {
+        return ecommerce_config('cart-statuses')[$this->statusId][2];
+    }
 
-	private function getFormattedFullDownPayment() {
-		return format($this->fullDownPayment);
-	}
+    private function getStatusIcon()
+    {
+        return ecommerce_config('cart-statuses')[$this->statusId][3];
+    }
 
-	private function getFullDiscount() {
-		return $this->discountWithVat ? $this->discount : $this->discount * 1.22;
-	}
+    private function getFullPrice()
+    {
+        $price = 0;
 
-	private function getFormattedFullDiscount() {
-		return format($this->fullDiscount);
-	}
+        foreach ($this->orders as $order) {
+            $price += $order->price;
+        }
 
-	private function getFormattedPrice() {
-		return format($this->price);
-	}
+        return $price;
+    }
 
-	private function getPriceString() {
-		return format_price($this->price);
-	}
+    private function getPrice()
+    {
+        return $this->fullPrice - $this->fullDownPayment - $this->fullDiscount;
+    }
 
-	private function getNetPrice() {
-		$price = 0;
+    private function getFullDownPayment()
+    {
+        return $this->downPaymentWithVat ? $this->downPayment : $this->downPayment * 1.22;
+    }
 
-		foreach ($this->orders as $order) {
-			$price += $order->netPrice;
-		}
+    private function getFormattedFullDownPayment()
+    {
+        return format($this->fullDownPayment);
+    }
 
-		return $price;
-	}
+    private function getFullDiscount()
+    {
+        return $this->discountWithVat ? $this->discount : $this->discount * 1.22;
+    }
 
-	private function getFormattedNetPrice() {
-		return format($this->netPrice);
-	}
+    private function getFormattedFullDiscount()
+    {
+        return format($this->fullDiscount);
+    }
 
-	private function getnetPriceString() {
-		return format_price($this->netPrice);
-	}
+    private function getFormattedPrice()
+    {
+        return format($this->price);
+    }
 
-	private function getVat() {
-		$vat = 0;
+    private function getPriceString()
+    {
+        return format_price($this->price);
+    }
 
-		foreach ($this->orders as $order) {
-			$vat += $order->vat;
-		}
+    private function getNetPrice()
+    {
+        $price = 0;
 
-		return $vat;
-	}
+        foreach ($this->orders as $order) {
+            $price += $order->netPrice;
+        }
 
-	private function getFormattedVat() {
-		return format($this->vat);
-	}
+        return $price;
+    }
 
-	private function getVatString() {
-		return format_price($this->vat);
-	}
+    private function getFormattedNetPrice()
+    {
+        return format($this->netPrice);
+    }
 
-	private function getFormattedDownPayment() {
-		return format($this->downPayment);
-	}
+    private function getnetPriceString()
+    {
+        return format_price($this->netPrice);
+    }
 
-	private function getDownPaymentString() {
-		return format_price($this->downPayment);
-	}
+    private function getVat()
+    {
+        $vat = 0;
 
-	private function getDiscount() {
-		return round($this->fixedDiscount + $this->fullPrice * ($this->percentageDiscount / 100), 2);
-	}
+        foreach ($this->orders as $order) {
+            $vat += $order->vat;
+        }
 
-	private function getFormattedDiscount() {
-		return format($this->discount);
-	}
+        return $vat;
+    }
 
-	private function getDiscountString() {
-		return format_price($this->discount);
-	}
+    private function getFormattedVat()
+    {
+        return format($this->vat);
+    }
 
-	private function getFormattedFixedDiscount() {
-		return format($this->fixedDiscount);
-	}
+    private function getVatString()
+    {
+        return format_price($this->vat);
+    }
 
-	private function getOrders() {
-		return rows_to_objects(\Legacy\System\Classes\DB::select('ecommerce_orders.id AS id FROM ecommerce_orders LEFT JOIN ecommerce_products ON ecommerce_orders.productId = ecommerce_products.id WHERE cartId = ? ORDER BY status DESC, name ASC, ecommerce_orders.id ASC', [$this->id]), Order::class);
-	}
+    private function getFormattedDownPayment()
+    {
+        return format($this->downPayment);
+    }
 
-	private function getOrdersSortedById() {
-		return rows_to_objects(\Legacy\System\Classes\DB::select('ecommerce_orders.id AS id FROM ecommerce_orders JOIN ecommerce_products ON ecommerce_orders.productId = ecommerce_products.id WHERE cartId = ? ORDER BY ecommerce_products.id ASC, status DESC, ecommerce_orders.id ASC, name ASC', [$this->id]), Order::class);
-	}
+    private function getDownPaymentString()
+    {
+        return format_price($this->downPayment);
+    }
 
-	private function getQuantity() {
-		return (int) \Legacy\System\Classes\DB::sum('quantity FROM ecommerce_orders WHERE cartId = ?', [$this->id]);
-	}
+    private function getDiscount()
+    {
+        return round($this->fixedDiscount + $this->fullPrice * ($this->percentageDiscount / 100), 2);
+    }
 
-	private function getCustomer() {
-		return new Customer($this->customerId);
-	}
+    private function getFormattedDiscount()
+    {
+        return format($this->discount);
+    }
 
-	/*
-	* Update methods
-	*/
-	public function updateBilled($billed = false) {
-		$billed = $billed ? 1 : 0;
+    private function getDiscountString()
+    {
+        return format_price($this->discount);
+    }
 
-		\Legacy\System\Classes\DB::update(self::TABLE . ' SET billed = ? WHERE ' . self::INDEX . ' = ?', [$billed, $this->id]);
+    private function getFormattedFixedDiscount()
+    {
+        return format($this->fixedDiscount);
+    }
 
-		$this->billed = $billed;
+    private function getOrders()
+    {
+        return rows_to_objects(DB::select('ecommerce_orders.id AS id FROM ecommerce_orders LEFT JOIN ecommerce_products ON ecommerce_orders.productId = ecommerce_products.id WHERE cartId = ? ORDER BY status DESC, name ASC, ecommerce_orders.id ASC', [$this->id]), Order::class);
+    }
 
-		return $this;
-	}
+    private function getOrdersSortedById()
+    {
+        return rows_to_objects(DB::select('ecommerce_orders.id AS id FROM ecommerce_orders JOIN ecommerce_products ON ecommerce_orders.productId = ecommerce_products.id WHERE cartId = ? ORDER BY ecommerce_products.id ASC, status DESC, ecommerce_orders.id ASC, name ASC', [$this->id]), Order::class);
+    }
 
-	/*
-	* Istance methods
-	*/
-	public function duplicate() {
-		\Legacy\System\Classes\DB::execute("CREATE TEMPORARY TABLE temp_table SELECT * FROM ecommerce_carts WHERE id = ?", [$this->id]);
-		\Legacy\System\Classes\DB::update("temp_table SET id = NULL, date = NOW(), billed = 0");
-		$newCartId = \Legacy\System\Classes\DB::add("ecommerce_carts SELECT * FROM temp_table");
-		\Legacy\System\Classes\DB::execute("DROP TEMPORARY TABLE IF EXISTS temp_table");
+    private function getQuantity()
+    {
+        return (int) DB::sum('quantity FROM ecommerce_orders WHERE cartId = ?', [$this->id]);
+    }
 
-		foreach ($this->orders as $order) {
-			\Legacy\System\Classes\DB::execute("CREATE TEMPORARY TABLE temp_table SELECT * FROM ecommerce_orders WHERE id = ?", [$order->id]);
-			\Legacy\System\Classes\DB::update("temp_table SET id = NULL, cartId = ?", [$newCartId]);
-			\Legacy\System\Classes\DB::add("ecommerce_orders SELECT * FROM temp_table");
-			\Legacy\System\Classes\DB::execute("DROP TEMPORARY TABLE IF EXISTS temp_table");
-		}
+    private function getCustomer()
+    {
+        return new Customer($this->customerId);
+    }
 
-		return new self($newCartId);
-	}
+    /*
+    * Update methods
+    */
+    public function updateBilled($billed = false)
+    {
+        $billed = $billed ? 1 : 0;
+
+        DB::update(self::TABLE.' SET billed = ? WHERE '.self::INDEX.' = ?', [$billed, $this->id]);
+
+        $this->billed = $billed;
+
+        return $this;
+    }
+
+    /*
+    * Istance methods
+    */
+    public function duplicate()
+    {
+        DB::execute('CREATE TEMPORARY TABLE temp_table SELECT * FROM ecommerce_carts WHERE id = ?', [$this->id]);
+        DB::update('temp_table SET id = NULL, date = NOW(), billed = 0');
+        $newCartId = DB::add('ecommerce_carts SELECT * FROM temp_table');
+        DB::execute('DROP TEMPORARY TABLE IF EXISTS temp_table');
+
+        foreach ($this->orders as $order) {
+            DB::execute('CREATE TEMPORARY TABLE temp_table SELECT * FROM ecommerce_orders WHERE id = ?', [$order->id]);
+            DB::update('temp_table SET id = NULL, cartId = ?', [$newCartId]);
+            DB::add('ecommerce_orders SELECT * FROM temp_table');
+            DB::execute('DROP TEMPORARY TABLE IF EXISTS temp_table');
+        }
+
+        return new self($newCartId);
+    }
 }

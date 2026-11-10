@@ -13,11 +13,11 @@
 -->
 
 <template>
-	<div class="search-input js-search-input" data-endpoint="<?= $search ?>" <?= isset($where) ? 'data-where="' . implode(',', $where) . '"' : '' ?> <?= isset($exclude) ? 'data-exclude="' . implode(',', $exclude) . '"' : '' ?>>
+	<div class="search-input js-search-input" data-endpoint="<?= $search ?>" <?= isset($where) ? 'data-where="'.implode(',', $where).'"' : '' ?> <?= isset($exclude) ? 'data-exclude="'.implode(',', $exclude).'"' : '' ?>>
 
 		<input type="hidden" class="js-search-store" name="<?= $storedName ?>" value="<?= $storedValue ?? '' ?>" <?= isset($required) ? 'required' : '' ?>>
 
-		<input type="text" class="js-search-show" <?= isset($shownName) ? 'name="' . $shownName . '"' : '' ?> value="<?= $shownValue ?? '' ?>" placeholder="<?= $placeholder ?? '' ?>" <?= isset($required) ? 'required' : '' ?> autocomplete="off">
+		<input type="text" class="js-search-show" <?= isset($shownName) ? 'name="'.$shownName.'"' : '' ?> value="<?= $shownValue ?? '' ?>" placeholder="<?= $placeholder ?? '' ?>" <?= isset($required) ? 'required' : '' ?> autocomplete="off">
 
 		<div class="search-input__dropdown js-search-dropdown">
 			<!-- Populated after fetch -->

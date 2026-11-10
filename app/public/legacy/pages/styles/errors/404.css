@@ -1,18 +1,22 @@
 /* Structure */
-main {background-color: #333;}
+main {
+  background-color: #333;
+}
 
 /* Background */
-#bgr {opacity: .3;}
+#bgr {
+  opacity: 0.3;
+}
 
 /* Content */
 #title {
-	font-size: clamp(4rem, 7vw, 7rem);
+  font-size: clamp(4rem, 7vw, 7rem);
 }
 
 .button {
-	border: 4px solid #FFF;
-	letter-spacing: .07em;
-	line-height: 3.8;
-	transition: border .4s;
-	cursor: pointer;
+  border: 4px solid #fff;
+  letter-spacing: 0.07em;
+  line-height: 3.8;
+  transition: border 0.4s;
+  cursor: pointer;
 }

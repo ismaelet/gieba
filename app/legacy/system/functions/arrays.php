@@ -1,8 +1,9 @@
 <?php
 
-function bump(&$array) {
+function bump(&$array)
+{
 
-	array_unshift($array, '');
-	
-	unset($array[0]);
+    array_unshift($array, '');
+
+    unset($array[0]);
 }

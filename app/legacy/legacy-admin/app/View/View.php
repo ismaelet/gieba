@@ -4,61 +4,69 @@ namespace App\View;
 
 use App\View\Components\Component;
 
-class View {
+class View
+{
+    private static $name;
 
-	private static $name;
-	private static $styles = [];
-	private static $scripts = [];
+    private static $styles = [];
 
-	/**
-	 * Get the view name
-	 */
-	public static function name() {
-		return self::$name;
-	}
+    private static $scripts = [];
 
-	/**
-	 * Add an inline style
-	 */
-	public static function addStyle(string $style): void {
-		$htmlStyle = '<style>' . $style . '</style>';
+    /**
+     * Get the view name
+     */
+    public static function name()
+    {
+        return self::$name;
+    }
 
-		if (!in_array($htmlStyle, self::$styles)) {
-			self::$styles[] = $htmlStyle;
-		}
-	}
+    /**
+     * Add an inline style
+     */
+    public static function addStyle(string $style): void
+    {
+        $htmlStyle = '<style>'.$style.'</style>';
 
-	/**
-	 * Get a string of all the stacked inline styles
-	 */
-	public static function stackedStyles(): string {
-		return implode(PHP_EOL, self::$styles);
-	}
+        if (! in_array($htmlStyle, self::$styles)) {
+            self::$styles[] = $htmlStyle;
+        }
+    }
 
-	/**
-	 * Add an inline script
-	 */
-	public static function addScript(string $script): void {
-		$htmlScript = '<script defer>' . $script . '</script>';
+    /**
+     * Get a string of all the stacked inline styles
+     */
+    public static function stackedStyles(): string
+    {
+        return implode(PHP_EOL, self::$styles);
+    }
 
-		if (!in_array($htmlScript, self::$scripts)) {
-			self::$scripts[] = $htmlScript;
-		}
-	}
+    /**
+     * Add an inline script
+     */
+    public static function addScript(string $script): void
+    {
+        $htmlScript = '<script defer>'.$script.'</script>';
 
-	/**
-	 * Get a string of all the stacked inline scripts
-	 */
-	public static function stackedScripts(): string {
-		return implode(PHP_EOL, self::$scripts);
-	}
+        if (! in_array($htmlScript, self::$scripts)) {
+            self::$scripts[] = $htmlScript;
+        }
+    }
 
-	/**
-	 * Render the view
-	 */
-	public static function render(string $viewName, array $arguments = []): void {
-		self::$name = $viewName;
+    /**
+     * Get a string of all the stacked inline scripts
+     */
+    public static function stackedScripts(): string
+    {
+        return implode(PHP_EOL, self::$scripts);
+    }
 
-		echo Component::anonymousRender($viewName, $arguments);
-	}
+    /**
+     * Render the view
+     */
+    public static function render(string $viewName, array $arguments = []): void
+    {
+        self::$name = $viewName;
+
+        echo Component::anonymousRender($viewName, $arguments);
+    }
 }

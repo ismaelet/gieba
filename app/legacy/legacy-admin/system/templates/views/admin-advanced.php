@@ -7,14 +7,18 @@
 	<!-- Title -->
 	<div class="page-title flex gap05">
 		<a href="list" class="title-arrow icon-box center-items">
-			<?= icon_embed('navigation/arrow1-left') ?>
+			<?php
+
+use Legacy\System\Classes\View;
+
+?><?= icon_embed('navigation/arrow1-left') ?>
 		</a>
-		<h1 class="add_title"><?= \Legacy\System\Classes\View::$title ?></h1>
+		<h1 class="add_title"><?= View::$title ?></h1>
 	</div>
 
 	<?php if ($updated) { ?>
 		<p class="confirmation">Modifiche salvate</p>
-	<?php } else if ($added) { ?>
+	<?php } elseif ($added) { ?>
 		<p class="confirmation">Elemento aggiunto</p>
 	<?php } ?>
 
@@ -25,12 +29,12 @@
 
 	</div>
 
-	<?php if (!empty($layout['delete']) || !empty($layout['save']) || !empty($layout['preview'])) { ?>
+	<?php if (! empty($layout['delete']) || ! empty($layout['save']) || ! empty($layout['preview'])) { ?>
 
 		<!-- Footer -->
 		<section class="page-footer <?= $item->id ? '' : 'page-footer_add-item' ?>">
 
-			<?php if (!empty($layout['delete'])) { ?>
+			<?php if (! empty($layout['delete'])) { ?>
 				<!-- Delete -->
 				<button type="submit" class="sbtn btn-with-icons" name="delete" onclick="return confirm('Confermi di voler eliminare questo elemento? Non potrà essere ripristinato.')">
 					Elimina l'elemento
@@ -38,7 +42,7 @@
 				</button>
 			<?php } ?>
 
-			<?php if (!empty($layout['preview'])) { ?>
+			<?php if (! empty($layout['preview'])) { ?>
 				<!-- Preview -->
 				<a class="sbtn preview-btn btn-with-icons" href="<?= $item->url ?>" target="_blank">
 					Esamina
@@ -46,7 +50,7 @@
 				</a>
 			<?php } ?>
 
-			<?php if (!empty($layout['save'])) { ?>
+			<?php if (! empty($layout['save'])) { ?>
 				<!-- Save -->
 				<button type="submit" class="pbtn btn-with-icons" name="submit-form">
 					<?= $item->id ? 'Salva' : 'Aggiungi' ?>

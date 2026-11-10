@@ -20,17 +20,17 @@ $queryConfig['where-search'] = "
 
 // select fields
 $fields = [
-	['title' => 'ID', 'name' => 'id'],
-	['title' => 'Nome', 'name' => 'name', 'size' => 1],
-	['title' => 'Info', 'name' => 'info', 'size' => 1],
-	['title' => 'Telefono', 'name' => 'phone',],
+    ['title' => 'ID', 'name' => 'id'],
+    ['title' => 'Nome', 'name' => 'name', 'size' => 1],
+    ['title' => 'Info', 'name' => 'info', 'size' => 1],
+    ['title' => 'Telefono', 'name' => 'phone'],
 
-	['type' => 'btn'],
+    ['type' => 'btn'],
 ];
 
 // buttons
 $buttons = [
-	['type' => 'edit'],
-	['type' => 'delete'],
-	['url' => 'merge?id={{id}}', 'title' => 'Unifica', 'color' => 'green'],
+    ['type' => 'edit'],
+    ['type' => 'delete'],
+    ['url' => 'merge?id={{id}}', 'title' => 'Unifica', 'color' => 'green'],
 ];

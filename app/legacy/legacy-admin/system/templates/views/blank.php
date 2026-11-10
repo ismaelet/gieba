@@ -18,24 +18,24 @@ use Legacy\System\Classes\View as GlobalView;
 	<title><?= GlobalView::$tabTitle ?></title>
 
 	<!-- Styles -->
-	<?= StyleLoader::load() . PHP_EOL . PHP_EOL ?>
+	<?= StyleLoader::load().PHP_EOL.PHP_EOL ?>
 	<?= AppView::stackedStyles() ?>
 
 	<!-- Scripts -->
 	<script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	<?= AppView::stackedScripts() ?>
-	<?= ScriptLoader::load() . PHP_EOL . PHP_EOL ?>
-	<?= ScriptLoader::loadHeadInline()  . PHP_EOL . PHP_EOL ?>
+	<?= ScriptLoader::load().PHP_EOL.PHP_EOL ?>
+	<?= ScriptLoader::loadHeadInline().PHP_EOL.PHP_EOL ?>
 
 	<!-- Favicon -->
-	<?= favicon() . PHP_EOL ?>
+	<?= favicon().PHP_EOL ?>
 </head>
 
 <body>
 	{% place body %}
 
-	<?php if (sys_config('cookies-warning') && !isset($_COOKIE['cookies-warning'])) { ?>
+	<?php if (sys_config('cookies-warning') && ! isset($_COOKIE['cookies-warning'])) { ?>
 
 		<div class="cookies-warning">
 			<h3 class="cookies-warning_title">Avviso cookies</h3>

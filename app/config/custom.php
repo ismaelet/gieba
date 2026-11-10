@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'description' => "Abbigliamento e accessori personalizzati",
+    'description' => 'Abbigliamento e accessori personalizzati',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     |
     */
 
-    'short_description' => "Abbigliamento e accessori personalizzati",
+    'short_description' => 'Abbigliamento e accessori personalizzati',
 
     /*
     |--------------------------------------------------------------------------
@@ -30,18 +30,18 @@ return [
     |--------------------------------------------------------------------------
     |
     | The default color scheme for the application.
-	| Can be 'light', 'dark', or 'auto'.
-	| I can be overridden by the user in the settings.
+    | Can be 'light', 'dark', or 'auto'.
+    | I can be overridden by the user in the settings.
     |
-	*/
+    */
 
-    'default_color_scheme' => "light",
+    'default_color_scheme' => 'light',
 
     /*
     |--------------------------------------------------------------------------
     | Header navigation Links
     |--------------------------------------------------------------------------
-	|	
+    |
     |
     */
 
@@ -62,11 +62,11 @@ return [
     */
 
     'contacts' => [
-        'instagram' => ['url' => 'https://www.instagram.com/tag/', 'label' => '@tag',],
-        'facebook' => ['url' => 'https://www.facebook.com/GieBaPromotion', 'label' => '@GieBaPromotion',],
-        'email' => ['url' => 'mailto:giebapromotion@gmail.com', 'label' => 'giebapromotion@gmail.com',],
-        'whatsapp' => ['url' => 'https://wa.me/3517419263', 'label' => '351 7419263',],
-        'phone' => ['url' => 'tel:3517419263', 'label' => '351 7419263',],
+        'instagram' => ['url' => 'https://www.instagram.com/tag/', 'label' => '@tag'],
+        'facebook' => ['url' => 'https://www.facebook.com/GieBaPromotion', 'label' => '@GieBaPromotion'],
+        'email' => ['url' => 'mailto:giebapromotion@gmail.com', 'label' => 'giebapromotion@gmail.com'],
+        'whatsapp' => ['url' => 'https://wa.me/3517419263', 'label' => '351 7419263'],
+        'phone' => ['url' => 'tel:3517419263', 'label' => '351 7419263'],
     ],
 
     /*
@@ -77,7 +77,7 @@ return [
     | The email addresses to be notified on certain events.
     | E.g., when a new user registers, a new newsletter subscription is made, etc.
     |
-	*/
+    */
     'notification_emails' => config('app.env') === 'production'
         ? ['giebapromotion@gmail.com'] : ['ismaele.tuffanelli@gmail.com'],
 ];

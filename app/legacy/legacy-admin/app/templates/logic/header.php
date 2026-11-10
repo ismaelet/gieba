@@ -10,12 +10,12 @@ $header['mobile-threshold'] = 768;
 
 // structure
 $header['structure'] = [
-	'left' => ['logo',],
-	'center' => [],
-	'right' => ['desktop-navigation',],
-	'mobile-left' => ['search-icon'],
-	'mobile-center' => ['logo',],
-	'mobile-right' => ['mobile-icon',],
+    'left' => ['logo'],
+    'center' => [],
+    'right' => ['desktop-navigation'],
+    'mobile-left' => ['search-icon'],
+    'mobile-center' => ['logo'],
+    'mobile-right' => ['mobile-icon'],
 ];
 
 // components
@@ -33,22 +33,33 @@ $h_links[] = ['title' => 'Home', 'loc' => 'home', 'url' => client_url('/')];
 
 foreach ($h_links as $h_link) {
 
-	$valid = true;
+    $valid = true;
 
-	// check logged filter
-	if (isset($h_link['logged'])) {
-		if ($h_link['logged'] && !logged()) $valid = false;
-		else if (!$h_link['logged'] && logged()) $valid = false;
-	}
+    // check logged filter
+    if (isset($h_link['logged'])) {
+        if ($h_link['logged'] && ! logged()) {
+            $valid = false;
+        } elseif (! $h_link['logged'] && logged()) {
+            $valid = false;
+        }
+    }
 
-	// check admin filter
-	if (isset($h_link['admin']) && !$user->admin) $valid = false;
-	// check manager filter
-	if (isset($h_link['manager']) && !$user->manager) $valid = false;
-	// check cart filter
-	if (isset($h_link['cart']) && !$user->cart_count) $valid = false;
-	// add it to the list if valid
-	if ($valid) $header['links'][] = $h_link;
+    // check admin filter
+    if (isset($h_link['admin']) && ! $user->admin) {
+        $valid = false;
+    }
+    // check manager filter
+    if (isset($h_link['manager']) && ! $user->manager) {
+        $valid = false;
+    }
+    // check cart filter
+    if (isset($h_link['cart']) && ! $user->cart_count) {
+        $valid = false;
+    }
+    // add it to the list if valid
+    if ($valid) {
+        $header['links'][] = $h_link;
+    }
 }
 
 unset($h_link);
@@ -56,7 +67,7 @@ unset($h_links);
 
 // dropdowns
 /*$header['dropdowns']['*dropdown-name*'] = [
-	['Title', client_url('/link')],
+    ['Title', client_url('/link')],
 ];*/
 
 // languages
@@ -64,7 +75,9 @@ $header['languages'] = sys_config('lang-all');
 
 // login bar
 $header['login-link'] = ['Login', client_url('/login')];
-if (!sys_config('static')) $header['logged-link'] = [$user->username, client_url('/profile')];
+if (! sys_config('static')) {
+    $header['logged-link'] = [$user->username, client_url('/profile')];
+}
 
 // load components
-include_once('-expands-header/components.php');
+include_once '-expands-header/components.php';

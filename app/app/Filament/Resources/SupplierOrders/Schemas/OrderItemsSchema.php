@@ -11,8 +11,10 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Icons\Heroicon;
 
-trait OrderItemsSchema {
-    protected static function getOrderItemsSchema(): Repeater {
+trait OrderItemsSchema
+{
+    protected static function getOrderItemsSchema(): Repeater
+    {
         return Repeater::make('order_items')
             ->label('Articoli dell\'ordine')
             ->addActionLabel('+')
@@ -48,7 +50,7 @@ trait OrderItemsSchema {
                             ->label('Nome prodotto')
                             ->placeholder('Nome prodotto')
                             ->required()
-                            ->maxLength(255)
+                            ->maxLength(255),
                     ])
                     ->createOptionUsing(function (array $data): int {
                         if (Product::where('name', $data['name'])->exists()) {
@@ -76,16 +78,14 @@ trait OrderItemsSchema {
                             ->modalSubmitActionLabel('Crea');
                     }),
 
-
-
                 // Product info
                 TextInput::make('info')
                     ->label('Dettagli')
                     ->placeholder('Informazioni aggiuntive sul prodotto')
                     ->extraInputAttributes([
                         'x-on:mouseenter' => '$el.title = $el.value',
-                        'x-on:focus'      => '$el.title = $el.value',
-                        'x-on:input'      => '$el.title = $el.value',
+                        'x-on:focus' => '$el.title = $el.value',
+                        'x-on:input' => '$el.title = $el.value',
                     ])
                     ->columnSpan(3),
 
@@ -102,11 +102,11 @@ trait OrderItemsSchema {
                     ->live()
                     ->options(
                         collect(config('ecommerce.supplier_order_statuses'))
-                            ->mapWithKeys(fn(array $status, string $key): array => [$key => $status['label']])
+                            ->mapWithKeys(fn (array $status, string $key): array => [$key => $status['label']])
                             ->toArray()
                     )
-                    ->extraInputAttributes(fn(callable $get) => ['class' => 'text-status-' . $get('status'),])
-                    ->afterStateUpdated(fn(callable $set, callable $get) => self::updateOrderStatus($get, $set))
+                    ->extraInputAttributes(fn (callable $get) => ['class' => 'text-status-'.$get('status')])
+                    ->afterStateUpdated(fn (callable $set, callable $get) => self::updateOrderStatus($get, $set))
                     ->required()
                     ->columnSpan(2),
             ])

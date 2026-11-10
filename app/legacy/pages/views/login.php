@@ -1,6 +1,8 @@
 {% block content %}
 
-<input type="hidden" name="url" value="<?php if (isset($_GET['url'])) echo $_GET['url'];?>">
+<input type="hidden" name="url" value="<?php if (isset($_GET['url'])) {
+    echo $_GET['url'];
+}?>">
 
 <div class="load ld-lef">
 	<input type="text" name="username" id="username" class="inp" placeholder="Username" required>
@@ -30,7 +32,7 @@
 
 </div>
 
-<a href="<?= __HROOT__;?>/login/recover">
+<a href="<?= __HROOT__; ?>/login/recover">
 	<p class="txt load ld-lef mart1 marl5px">Hai dimenticato la password?</p>
 </a>
 

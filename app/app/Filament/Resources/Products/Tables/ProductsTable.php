@@ -3,17 +3,16 @@
 namespace App\Filament\Resources\Products\Tables;
 
 use App\Models\Product;
-use Dom\Text;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\Summarizers\Count;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Query\Builder;
 
-class ProductsTable {
-    public static function configure(Table $table): Table {
+class ProductsTable
+{
+    public static function configure(Table $table): Table
+    {
         return $table
             ->defaultSort('id', 'desc')
             ->query(

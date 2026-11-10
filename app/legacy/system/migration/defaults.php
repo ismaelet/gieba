@@ -1,9 +1,9 @@
 <?php
 
-//variables table
-if (!$con->query('SELECT 1 FROM variables')) {
+// variables table
+if (! $con->query('SELECT 1 FROM variables')) {
 
-	$con->query('
+    $con->query('
 		CREATE TABLE variables (
 
 			id INT(3) AUTO_INCREMENT PRIMARY KEY,
@@ -13,11 +13,11 @@ if (!$con->query('SELECT 1 FROM variables')) {
 		)
 	');
 
-	$con->query('INSERT INTO variables (name, value) VALUES (?, ?)', ['public', 0]);
+    $con->query('INSERT INTO variables (name, value) VALUES (?, ?)', ['public', 0]);
 
 }
 
-//users table
+// users table
 $con->query('
 	CREATE TABLE IF NOT EXISTS users (
 
@@ -33,7 +33,7 @@ $con->query('
 	)
 ');
 
-//authentication table
+// authentication table
 $con->query('
 	CREATE TABLE IF NOT EXISTS auth_tokens (
 

@@ -4,14 +4,15 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::table('order_items', function (Blueprint $table) {
             $table->float('unit_price_net')->default(0)->change();
             $table->float('unit_price_gross')->default(0)->change();
@@ -33,7 +34,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
+    public function down(): void
+    {
         //
     }
 };

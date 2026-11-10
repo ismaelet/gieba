@@ -8,8 +8,8 @@ use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 
-class EditSupplierOrder extends EditRecord {
-
+class EditSupplierOrder extends EditRecord
+{
     use HandleSupplierOrderPageLogic;
 
     /**
@@ -20,7 +20,8 @@ class EditSupplierOrder extends EditRecord {
     /**
      * Filament Method: Get the header actions for the edit page
      */
-    protected function getHeaderActions(): array {
+    protected function getHeaderActions(): array
+    {
         return [
             DeleteAction::make(),
         ];
@@ -29,7 +30,8 @@ class EditSupplierOrder extends EditRecord {
     /**
      * Filament Method: Mount the edit page with the given record
      */
-    public function mount($record): void {
+    public function mount($record): void
+    {
         $this->storeReturnUrlInSession();
 
         parent::mount($record);
@@ -38,14 +40,15 @@ class EditSupplierOrder extends EditRecord {
     /**
      * Filament Method: Actions to perform after saving the record
      */
-    protected function afterSave(): void {
+    protected function afterSave(): void
+    {
         $this->redirect(
             $this->getReturnUrlFromSession()
         );
 
         Action::create([
             'user_id' => Auth::id(),
-            'action' => "Ha modificato il carrello del fornitore {$this->record->supplier->name} (#{$this->record->id})"
+            'action' => "Ha modificato il carrello del fornitore {$this->record->supplier->name} (#{$this->record->id})",
         ]);
     }
 }

@@ -4,100 +4,129 @@ namespace Ecommerce;
 
 use Structure\DatabaseObject;
 
-class Order {
+class Order
+{
+    use DatabaseObject;
 
-	use DatabaseObject;
+    public const TABLE = 'ecommerce_orders';
 
-	public const TABLE = 'ecommerce_orders';
-	public const INDEX = 'id';
-	public const PRODUCT_INDEX = 'productId';
+    public const INDEX = 'id';
 
-	public $id;
-	public $productId;
-	public $cartId;
-	public $info;
-	public $quantity;
-	public $netProductPrice;
-	public $discount;
-	public $status;
-	public $hasVat;
+    public const PRODUCT_INDEX = 'productId';
 
-	/*
-	* Get methods
-	*/
-	private function getIdCode() {
-		return '#' . str_pad($this->id, 6, '0', STR_PAD_LEFT);
-	}
+    public $id;
 
-	private function getName() {
-		return $this->quantity > 1 ? $this->quantity . ' x ' . $this->product->name : $this->product->name;
-	}
+    public $productId;
 
-	private function getDescription() {
-		return $this->info;
-	}
+    public $cartId;
 
-	private function getStatusString() {
-		return ecommerce_config('cart-statuses')[$this->status][1];
-	}
+    public $info;
 
-	private function getProductPrice() {
-		return $this->hasVat ? $this->netProductPrice * 1.22 : $this->netProductPrice;
-	}
+    public $quantity;
 
-	private function getFormattedProductPrice() {
-		return format($this->productPrice);
-	}
+    public $netProductPrice;
 
-	private function getProductPriceString() {
-		return format_price($this->productPrice);
-	}
+    public $discount;
 
-	private function getFormattedNetProductPrice() {
-		return format($this->netProductPrice);
-	}
+    public $status;
 
-	private function getNetProductPriceString() {
-		return format_price($this->netProductPrice);
-	}
+    public $hasVat;
 
-	private function getPrice() {
-		return $this->productPrice * $this->quantity;
-	}
+    /*
+    * Get methods
+    */
+    private function getIdCode()
+    {
+        return '#'.str_pad($this->id, 6, '0', STR_PAD_LEFT);
+    }
 
-	private function getFormattedPrice() {
-		return format($this->price);
-	}
+    private function getName()
+    {
+        return $this->quantity > 1 ? $this->quantity.' x '.$this->product->name : $this->product->name;
+    }
 
-	private function getPriceString() {
-		return format_price($this->price);
-	}
+    private function getDescription()
+    {
+        return $this->info;
+    }
 
-	private function getNetPrice() {
-		return $this->netProductPrice * $this->quantity;
-	}
+    private function getStatusString()
+    {
+        return ecommerce_config('cart-statuses')[$this->status][1];
+    }
 
-	private function getNetPriceString() {
-		return format_price($this->netPrice);
-	}
+    private function getProductPrice()
+    {
+        return $this->hasVat ? $this->netProductPrice * 1.22 : $this->netProductPrice;
+    }
 
-	private function getProductVat() {
-		return $this->hasVat ? $this->netProductPrice * .22 : 0;
-	}
+    private function getFormattedProductPrice()
+    {
+        return format($this->productPrice);
+    }
 
-	private function getProductVatString() {
-		return format_price($this->productVat);
-	}
+    private function getProductPriceString()
+    {
+        return format_price($this->productPrice);
+    }
 
-	private function getVat() {
-		return $this->hasVat ? $this->netPrice * .22 : 0;
-	}
+    private function getFormattedNetProductPrice()
+    {
+        return format($this->netProductPrice);
+    }
 
-	private function getProduct() {
-		return new Product($this->productId);
-	}
+    private function getNetProductPriceString()
+    {
+        return format_price($this->netProductPrice);
+    }
 
-	private function getCart() {
-		return new Cart($this->cartId);
-	}
+    private function getPrice()
+    {
+        return $this->productPrice * $this->quantity;
+    }
+
+    private function getFormattedPrice()
+    {
+        return format($this->price);
+    }
+
+    private function getPriceString()
+    {
+        return format_price($this->price);
+    }
+
+    private function getNetPrice()
+    {
+        return $this->netProductPrice * $this->quantity;
+    }
+
+    private function getNetPriceString()
+    {
+        return format_price($this->netPrice);
+    }
+
+    private function getProductVat()
+    {
+        return $this->hasVat ? $this->netProductPrice * .22 : 0;
+    }
+
+    private function getProductVatString()
+    {
+        return format_price($this->productVat);
+    }
+
+    private function getVat()
+    {
+        return $this->hasVat ? $this->netPrice * .22 : 0;
+    }
+
+    private function getProduct()
+    {
+        return new Product($this->productId);
+    }
+
+    private function getCart()
+    {
+        return new Cart($this->cartId);
+    }
 }

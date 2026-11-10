@@ -1,341 +1,358 @@
 $(document).ready(function () {
-	$('.file-inp').on('change', function () {
-		$(this).parents('.file-form').find('.file-submit').click()
+  $(".file-inp").on("change", function () {
+    $(this).parents(".file-form").find(".file-submit").click();
 
-		console.log(1)
-	})
+    console.log(1);
+  });
 
-	$('.file-form').submit(function () {
-		var self = $(this)
+  $(".file-form").submit(function () {
+    var self = $(this);
 
-		self.find('.file-cancel').hide()
-		self.find('.file-submit').hide()
-		self.find('.file-load').show()
-		self.find('.file-stick').show().css('opacity', 1)
-	})
-})
-
-$(document).ready(function () {
-	//clear error messages
-	$('.clear-error').keypress(function () {
-		$('.inp.err').hide()
-	})
-	$('.clear-error').click(function () {
-		$('.inp.err').hide()
-	})
-
-	//No spance inputs
-	$('.inp-nospace').keypress(function (e) {
-		if (e.which === 32) return false
-	})
-
-	//dependent selector
-	$('.sel.affect').each(function () {
-		selector_affect($(this))
-	})
-	$('.sel.affect').on('change', function () {
-		selector_affect($(this))
-	})
-
-	function selector_affect(selector) {
-		const affected = selector.parent().find('.sel[name="' + selector.data('affect') + '"]')
-		const field_id = affected.data('id')
-		const field_show = affected.data('show')
-
-		affected.attr('disabled', false).empty()
-
-		$.ajax({
-			type: 'POST',
-
-			url: affected.data('root') + '/system/modules/ajax/search-selector.php',
-
-			data: { tbl: affected.data('tbl'), filter: affected.data('filter'), filter_val: selector.val(), field_id: field_id, field_show: field_show },
-
-			success: function (data) {
-				const options = $.parseJSON(data)
-
-				for (var i = 0; i < options.length; i++) {
-					const option = options[i]
-
-					affected.append('<option value="' + option[field_id] + '" selected>' + option[field_show] + '</option>')
-				}
-			},
-		})
-	}
-
-	//ajax search
-	$('.ajax-search-txt').keyup(function () {
-		//setup
-		const self = $(this)
-		const parent = self.parents('.ajax-search')
-		const url = parent.data('url')
-		const filter = parent.data('filter')
-		const root = parent.data('root')
-
-		$.ajax({
-			type: 'POST',
-
-			url: root + '/app/modules/ajax/search-' + url + '.php',
-
-			data: { search: self.val(), filter: filter },
-
-			success: function (data) {
-				if ($.trim(data).length) {
-					parent.find('.ajax-search-ddown').show()
-					parent.find('.ajax-search-box').html(data)
-				} else {
-					parent.find('.ajax-search-ddown').hide()
-					parent.find('.ajax-search-box').html('')
-				}
-			},
-		})
-	})
-
-	$('.ajax-search').on('click', '.ajax-search-item', function () {
-		var self = $(this)
-		var parent = self.parents('.ajax-search')
-
-		parent.find('.ajax-search-id').val(self.data('id'))
-		parent.find('.ajax-search-txt').val(self.data('txt'))
-
-		parent.find('.ajax-search-ddown').hide()
-	})
-
-	$('.inp, .mbtn').focus(function () {
-		$('.ajax-search').find('.ajax-search-ddown').hide()
-		$('.ajax-search').find('.ajax-search-box').html('')
-	})
-})
+    self.find(".file-cancel").hide();
+    self.find(".file-submit").hide();
+    self.find(".file-load").show();
+    self.find(".file-stick").show().css("opacity", 1);
+  });
+});
 
 $(document).ready(function () {
-	//open
-	$('.lbox-open').click(function () {
-		const tar = $($(this).data('tar'))
+  //clear error messages
+  $(".clear-error").keypress(function () {
+    $(".inp.err").hide();
+  });
+  $(".clear-error").click(function () {
+    $(".inp.err").hide();
+  });
 
-		if ($('.lbox:visible').length) {
-			$('.lbox').hide()
+  //No spance inputs
+  $(".inp-nospace").keypress(function (e) {
+    if (e.which === 32) return false;
+  });
 
-			tar.show()
-		} else {
-			$('body').addClass('fixed')
+  //dependent selector
+  $(".sel.affect").each(function () {
+    selector_affect($(this));
+  });
+  $(".sel.affect").on("change", function () {
+    selector_affect($(this));
+  });
 
-			tar.fadeIn()
-		}
-	})
+  function selector_affect(selector) {
+    const affected = selector.parent().find('.sel[name="' + selector.data("affect") + '"]');
+    const field_id = affected.data("id");
+    const field_show = affected.data("show");
 
-	//close
-	$('.lbox-close').click(function () {
-		close($(this))
-	})
-	$('.lbox-bgr').click(function () {
-		close($(this))
-	})
-	$('.lbox-close-icon').click(function () {
-		close($(this))
-	})
+    affected.attr("disabled", false).empty();
 
-	function close(ele) {
-		ele.parents('.lbox').fadeOut()
+    $.ajax({
+      type: "POST",
 
-		$('body').removeClass('fixed')
-	}
-})
+      url: affected.data("root") + "/system/modules/ajax/search-selector.php",
 
-$(window).on('load', function () {
-	if ($('#loading').length) {
-		setTimeout(function () {
-			$('#loading').fadeOut(400)
-			update()
-		}, 400)
-	} else {
-		update()
-	}
+      data: {
+        tbl: affected.data("tbl"),
+        filter: affected.data("filter"),
+        filter_val: selector.val(),
+        field_id: field_id,
+        field_show: field_show,
+      },
 
-	var winBot = 0
+      success: function (data) {
+        const options = $.parseJSON(data);
 
-	$(window).scroll(function () {
-		update()
-	})
-	$(window).on('resize', function () {
-		update()
-	})
+        for (var i = 0; i < options.length; i++) {
+          const option = options[i];
 
-	function update() {
-		winBot = $(window).scrollTop() + $(window).height()
+          affected.append(
+            '<option value="' + option[field_id] + '" selected>' + option[field_show] + "</option>",
+          );
+        }
+      },
+    });
+  }
 
-		$('.load').each(function () {
-			var elem = $(this)
+  //ajax search
+  $(".ajax-search-txt").keyup(function () {
+    //setup
+    const self = $(this);
+    const parent = self.parents(".ajax-search");
+    const url = parent.data("url");
+    const filter = parent.data("filter");
+    const root = parent.data("root");
 
-			if (visible(elem)) {
-				elem.removeClass('load')
-			}
-		})
-	}
+    $.ajax({
+      type: "POST",
 
-	function visible(elem) {
-		var elemPos = elem.offset().top
-		//var elemPos = elem.offset().top + elem.outerHeight(true);
-		return elemPos <= winBot
-	}
-})
+      url: root + "/app/modules/ajax/search-" + url + ".php",
 
-$(document).ready(function () {
-	update()
+      data: { search: self.val(), filter: filter },
 
-	$(window).resize(function () {
-		update()
-	})
+      success: function (data) {
+        if ($.trim(data).length) {
+          parent.find(".ajax-search-ddown").show();
+          parent.find(".ajax-search-box").html(data);
+        } else {
+          parent.find(".ajax-search-ddown").hide();
+          parent.find(".ajax-search-box").html("");
+        }
+      },
+    });
+  });
 
-	function update() {
-		$('.slide-pan').each(function () {
-			var panel = $(this)
-			var block = panel.find('.slide-block').outerWidth()
-			var box = panel.find('.slide-box').outerWidth()
+  $(".ajax-search").on("click", ".ajax-search-item", function () {
+    var self = $(this);
+    var parent = self.parents(".ajax-search");
 
-			var size = Math.round(block / box)
+    parent.find(".ajax-search-id").val(self.data("id"));
+    parent.find(".ajax-search-txt").val(self.data("txt"));
 
-			panel.data('size', size)
+    parent.find(".ajax-search-ddown").hide();
+  });
 
-			panel.find('.slide-row').addClass('no-trans')
-
-			slide(panel)
-
-			panel[0].offsetHeight
-
-			panel.find('.slide-row').removeClass('no-trans')
-		})
-	}
-
-	//move panel
-	function slide(panel) {
-		//get variables
-		var pos = parseInt(panel.data('pos'))
-		var size = parseInt(panel.data('size'))
-
-		//move the row
-		var left = (-100 * (pos - 1)) / size
-
-		panel.find('.slide-row').css({ left: left + '%' })
-	}
-})
+  $(".inp, .mbtn").focus(function () {
+    $(".ajax-search").find(".ajax-search-ddown").hide();
+    $(".ajax-search").find(".ajax-search-box").html("");
+  });
+});
 
 $(document).ready(function () {
-	//document ready
-	$('.slide-pan').each(function () {
-		var panel = $(this)
-		panel.find('.slide-row').addClass('no-trans')
+  //open
+  $(".lbox-open").click(function () {
+    const tar = $($(this).data("tar"));
 
-		slide(panel)
+    if ($(".lbox:visible").length) {
+      $(".lbox").hide();
 
-		panel[0].offsetHeight
+      tar.show();
+    } else {
+      $("body").addClass("fixed");
 
-		panel.find('.slide-row').removeClass('no-trans')
-	})
+      tar.fadeIn();
+    }
+  });
 
-	//on click
-	$('.slide-arrow').click(function () {
-		if (!$(this).hasClass('disabled')) {
-			var arrow = $(this)
-			var panel = $(arrow.data('tar'))
+  //close
+  $(".lbox-close").click(function () {
+    close($(this));
+  });
+  $(".lbox-bgr").click(function () {
+    close($(this));
+  });
+  $(".lbox-close-icon").click(function () {
+    close($(this));
+  });
 
-			update_pos(arrow, panel)
-			slide(panel)
-		}
-	})
+  function close(ele) {
+    ele.parents(".lbox").fadeOut();
 
-	//update position variable
-	function update_pos(arrow, panel) {
-		//get data
-		var qty = Math.round(parseInt(panel.find('.slide-row').css('width')) / parseInt(panel.find('.slide-box').css('width')))
-		var size = Math.round(parseInt(panel.find('.slide-block').css('width')) / parseInt(panel.find('.slide-box').css('width')))
-		var loop = panel.data('loop')
-		var leap = panel.data('leap')
+    $("body").removeClass("fixed");
+  }
+});
 
-		if (!leap) {
-			leap = size
-		}
+$(window).on("load", function () {
+  if ($("#loading").length) {
+    setTimeout(function () {
+      $("#loading").fadeOut(400);
+      update();
+    }, 400);
+  } else {
+    update();
+  }
 
-		//if is a fixed arrow
-		if (arrow.data('pos')) {
-			var pos = parseInt(arrow.data('pos'))
+  var winBot = 0;
 
-			//if is a dynamic arrow
-		} else if (arrow.data('dir')) {
-			var pos = parseInt(panel.data('pos'))
-			var dir = arrow.data('dir')
-			var posOld = pos
+  $(window).scroll(function () {
+    update();
+  });
+  $(window).on("resize", function () {
+    update();
+  });
 
-			//get pos
-			if (dir === 'right') {
-				pos = Math.floor(pos + leap)
-				arrow.prev('.left.disabled').removeClass('disabled')
-			} else if (dir === 'left') {
-				pos = Math.ceil(pos - leap)
-				arrow.next('.right.disabled').removeClass('disabled')
-			}
+  function update() {
+    winBot = $(window).scrollTop() + $(window).height();
 
-			//enable & disable arrows
-			if (pos <= 1 && dir === 'left') {
-				if (loop && posOld === 1) {
-					pos = qty - size + 1
-				} else {
-					pos = 1
-				}
+    $(".load").each(function () {
+      var elem = $(this);
 
-				if (!loop) {
-					arrow.addClass('disabled')
-				}
-			}
+      if (visible(elem)) {
+        elem.removeClass("load");
+      }
+    });
+  }
 
-			if (pos >= qty - (size - 1) && dir === 'right') {
-				if (loop && posOld === qty - size + 1) {
-					pos = 1
-				} else {
-					pos = qty - size + 1
-				}
-
-				if (!loop) arrow.addClass('disabled')
-			}
-		}
-
-		//save new pos
-		panel.data('pos', pos)
-	}
-
-	//move panel
-	function slide(panel) {
-		//get variables
-		var pos = parseInt(panel.data('pos'))
-		var size = Math.round(parseInt(panel.find('.slide-block').css('width')) / parseInt(panel.find('.slide-box').css('width')))
-
-		//move the row
-		var left = (-100 * (pos - 1)) / size
-
-		panel.find('.slide-row').css({ left: left + '%' })
-	}
-})
+  function visible(elem) {
+    var elemPos = elem.offset().top;
+    //var elemPos = elem.offset().top + elem.outerHeight(true);
+    return elemPos <= winBot;
+  }
+});
 
 $(document).ready(function () {
-	$('.svg').each(function () {
-		var img = $(this)
-		var imgURL = img.attr('src')
-		var attributes = img.prop('attributes')
+  update();
 
-		$.get(
-			imgURL,
-			function (data) {
-				// Get the SVG tag, ignore the rest
-				var svg = jQuery(data).find('svg')
+  $(window).resize(function () {
+    update();
+  });
 
-				// Loop through IMG attributes and apply on SVG
-				$.each(attributes, function () {
-					svg.attr(this.name, this.value)
-				})
+  function update() {
+    $(".slide-pan").each(function () {
+      var panel = $(this);
+      var block = panel.find(".slide-block").outerWidth();
+      var box = panel.find(".slide-box").outerWidth();
 
-				// Replace IMG with SVG
-				img.replaceWith(svg)
-			},
-			'xml',
-		)
-	})
-})
+      var size = Math.round(block / box);
+
+      panel.data("size", size);
+
+      panel.find(".slide-row").addClass("no-trans");
+
+      slide(panel);
+
+      panel[0].offsetHeight;
+
+      panel.find(".slide-row").removeClass("no-trans");
+    });
+  }
+
+  //move panel
+  function slide(panel) {
+    //get variables
+    var pos = parseInt(panel.data("pos"));
+    var size = parseInt(panel.data("size"));
+
+    //move the row
+    var left = (-100 * (pos - 1)) / size;
+
+    panel.find(".slide-row").css({ left: left + "%" });
+  }
+});
+
+$(document).ready(function () {
+  //document ready
+  $(".slide-pan").each(function () {
+    var panel = $(this);
+    panel.find(".slide-row").addClass("no-trans");
+
+    slide(panel);
+
+    panel[0].offsetHeight;
+
+    panel.find(".slide-row").removeClass("no-trans");
+  });
+
+  //on click
+  $(".slide-arrow").click(function () {
+    if (!$(this).hasClass("disabled")) {
+      var arrow = $(this);
+      var panel = $(arrow.data("tar"));
+
+      update_pos(arrow, panel);
+      slide(panel);
+    }
+  });
+
+  //update position variable
+  function update_pos(arrow, panel) {
+    //get data
+    var qty = Math.round(
+      parseInt(panel.find(".slide-row").css("width")) /
+        parseInt(panel.find(".slide-box").css("width")),
+    );
+    var size = Math.round(
+      parseInt(panel.find(".slide-block").css("width")) /
+        parseInt(panel.find(".slide-box").css("width")),
+    );
+    var loop = panel.data("loop");
+    var leap = panel.data("leap");
+
+    if (!leap) {
+      leap = size;
+    }
+
+    //if is a fixed arrow
+    if (arrow.data("pos")) {
+      var pos = parseInt(arrow.data("pos"));
+
+      //if is a dynamic arrow
+    } else if (arrow.data("dir")) {
+      var pos = parseInt(panel.data("pos"));
+      var dir = arrow.data("dir");
+      var posOld = pos;
+
+      //get pos
+      if (dir === "right") {
+        pos = Math.floor(pos + leap);
+        arrow.prev(".left.disabled").removeClass("disabled");
+      } else if (dir === "left") {
+        pos = Math.ceil(pos - leap);
+        arrow.next(".right.disabled").removeClass("disabled");
+      }
+
+      //enable & disable arrows
+      if (pos <= 1 && dir === "left") {
+        if (loop && posOld === 1) {
+          pos = qty - size + 1;
+        } else {
+          pos = 1;
+        }
+
+        if (!loop) {
+          arrow.addClass("disabled");
+        }
+      }
+
+      if (pos >= qty - (size - 1) && dir === "right") {
+        if (loop && posOld === qty - size + 1) {
+          pos = 1;
+        } else {
+          pos = qty - size + 1;
+        }
+
+        if (!loop) arrow.addClass("disabled");
+      }
+    }
+
+    //save new pos
+    panel.data("pos", pos);
+  }
+
+  //move panel
+  function slide(panel) {
+    //get variables
+    var pos = parseInt(panel.data("pos"));
+    var size = Math.round(
+      parseInt(panel.find(".slide-block").css("width")) /
+        parseInt(panel.find(".slide-box").css("width")),
+    );
+
+    //move the row
+    var left = (-100 * (pos - 1)) / size;
+
+    panel.find(".slide-row").css({ left: left + "%" });
+  }
+});
+
+$(document).ready(function () {
+  $(".svg").each(function () {
+    var img = $(this);
+    var imgURL = img.attr("src");
+    var attributes = img.prop("attributes");
+
+    $.get(
+      imgURL,
+      function (data) {
+        // Get the SVG tag, ignore the rest
+        var svg = jQuery(data).find("svg");
+
+        // Loop through IMG attributes and apply on SVG
+        $.each(attributes, function () {
+          svg.attr(this.name, this.value);
+        });
+
+        // Replace IMG with SVG
+        img.replaceWith(svg);
+      },
+      "xml",
+    );
+  });
+});

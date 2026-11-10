@@ -7,130 +7,177 @@ use Scripts;
 use Styles;
 use Viewer;
 
-class View {
+class View
+{
+    public $name;
 
-	public $name;
-	public $title;
-	public $page_title;
-	public $loc;
-	public $styles;
-	public $scripts;
-	public $elements = [];
-	public $middlewares = ['public'];
-	public $preload = [];
-	public $template = 'main';
-	public $path;
-	public $url;
-	public $variabiles = [];
-	public $stored = [];
+    public $title;
 
-	function __construct($name) {
+    public $page_title;
 
-		global $user;
+    public $loc;
 
-		$this->name = $name;
-		$this->loc = $name;
+    public $styles;
 
-		$this->set('user', $user);
-	}
+    public $scripts;
 
-	//setup page
-	public function show() {
+    public $elements = [];
 
-		//setup assets
-		$this->styles = new Styles($this);
-		$this->scripts = new Scripts($this);
-		$this->set('favicon', favicon());
+    public $middlewares = ['public'];
 
-		//set page title
-		if (isset($this->title)) $this->title($this->title);
+    public $preload = [];
 
-		else {
-			$page_title = sysData('name');
+    public $template = 'main';
 
-			if (!empty(sysData('desc_shr_' . sysData('lang')))) $page_title .= ' | ' . sysData('desc_shr_' . sysData('lang'));
+    public $path;
 
-			$this->page_title = $page_title;
-		}
+    public $url;
 
-		//save url
-		$this->url = SERVER_ROOT . '/pages/views/' . $this->name . '.php';
+    public $variabiles = [];
 
-		//add middleware
-		foreach ($this->middlewares as $name) load_middleware($name, $this->get('user'), $this);
+    public $stored = [];
 
-		//add logic
-		$this->add_logic($this->template, 'template');
-		$this->add_logic($this->name, 'page');
+    public function __construct($name)
+    {
 
-		//add elements
-		foreach ($this->elements as $name) $this->add_element($name);
+        global $user;
 
-		//setup google analytics
-		$this->start_analytics();
+        $this->name = $name;
+        $this->loc = $name;
 
-		//render page
-		$viewer = new Viewer($this);
-		$viewer->show();
-	}
+        $this->set('user', $user);
+    }
 
-	//variables
-	public function set($var, $value, $key = false) {
-		if ($key) $this->variables[$var][$key] = $value;
-		else $this->variables[$var] = $value;
-	}
+    // setup page
+    public function show()
+    {
 
-	public function get($var) {
-		return $this->variables[$var] ?? null;
-	}
+        // setup assets
+        $this->styles = new Styles($this);
+        $this->scripts = new Scripts($this);
+        $this->set('favicon', favicon());
 
-	//add logic
-	public function add_logic($file, $type) {
+        // set page title
+        if (isset($this->title)) {
+            $this->title($this->title);
+        } else {
+            $page_title = sysData('name');
 
-		$exists = false;
+            if (! empty(sysData('desc_shr_'.sysData('lang')))) {
+                $page_title .= ' | '.sysData('desc_shr_'.sysData('lang'));
+            }
 
-		if ($type == 'template') {
-			if (file_exists($file_exists = SERVER_ROOT . '/app/templates/logic/' . $file . '.php')) $exists = $file_exists;
-			else if (file_exists($file_exists = SERVER_ROOT . '/system/templates/logic/' . $file . '.php')) $exists = $file_exists;
-		} else if ($type == 'page') {
+            $this->page_title = $page_title;
+        }
 
-			if (file_exists($file_exists = SERVER_ROOT . '/pages/logic/' . $file . '.php')) $exists = $file_exists;
-		} else if ($type == 'static') {
+        // save url
+        $this->url = SERVER_ROOT.'/pages/views/'.$this->name.'.php';
 
-			if (file_exists($file)) $exists = $file;
-		}
+        // add middleware
+        foreach ($this->middlewares as $name) {
+            load_middleware($name, $this->get('user'), $this);
+        }
 
-		if ($exists) include_once($exists);
-	}
+        // add logic
+        $this->add_logic($this->template, 'template');
+        $this->add_logic($this->name, 'page');
 
-	//add an element
-	public function add_element($name) {
+        // add elements
+        foreach ($this->elements as $name) {
+            $this->add_element($name);
+        }
 
-		$element = new Element($name);
+        // setup google analytics
+        $this->start_analytics();
 
-		//add styles
-		foreach ($element->styles as $style) $this->styles->add($style);
+        // render page
+        $viewer = new Viewer($this);
+        $viewer->show();
+    }
 
-		//add scripts
-		foreach ($element->scripts as $script) $this->scripts->add($script);
+    // variables
+    public function set($var, $value, $key = false)
+    {
+        if ($key) {
+            $this->variables[$var][$key] = $value;
+        } else {
+            $this->variables[$var] = $value;
+        }
+    }
 
-		//add logic
-		if ($element->setup) $this->add_logic($element->setup, 'static');
+    public function get($var)
+    {
+        return $this->variables[$var] ?? null;
+    }
 
-		//add dependencies
-		foreach ($element->dependencies as $dependency) $this->add_element($dependency);
-	}
+    // add logic
+    public function add_logic($file, $type)
+    {
 
-	//page title
-	public function title($title) {
+        $exists = false;
 
-		$this->title = $title;
-		$this->page_title = $title . ' | ' . sysData('name');
-	}
+        if ($type == 'template') {
+            if (file_exists($file_exists = SERVER_ROOT.'/app/templates/logic/'.$file.'.php')) {
+                $exists = $file_exists;
+            } elseif (file_exists($file_exists = SERVER_ROOT.'/system/templates/logic/'.$file.'.php')) {
+                $exists = $file_exists;
+            }
+        } elseif ($type == 'page') {
 
-	//google analytics
-	private function start_analytics() {
+            if (file_exists($file_exists = SERVER_ROOT.'/pages/logic/'.$file.'.php')) {
+                $exists = $file_exists;
+            }
+        } elseif ($type == 'static') {
 
-		$this->set('google_analytics', google_analytics($this->get('user')));
-	}
+            if (file_exists($file)) {
+                $exists = $file;
+            }
+        }
+
+        if ($exists) {
+            include_once $exists;
+        }
+    }
+
+    // add an element
+    public function add_element($name)
+    {
+
+        $element = new Element($name);
+
+        // add styles
+        foreach ($element->styles as $style) {
+            $this->styles->add($style);
+        }
+
+        // add scripts
+        foreach ($element->scripts as $script) {
+            $this->scripts->add($script);
+        }
+
+        // add logic
+        if ($element->setup) {
+            $this->add_logic($element->setup, 'static');
+        }
+
+        // add dependencies
+        foreach ($element->dependencies as $dependency) {
+            $this->add_element($dependency);
+        }
+    }
+
+    // page title
+    public function title($title)
+    {
+
+        $this->title = $title;
+        $this->page_title = $title.' | '.sysData('name');
+    }
+
+    // google analytics
+    private function start_analytics()
+    {
+
+        $this->set('google_analytics', google_analytics($this->get('user')));
+    }
 }

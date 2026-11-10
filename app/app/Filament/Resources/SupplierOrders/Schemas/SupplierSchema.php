@@ -2,22 +2,19 @@
 
 namespace App\Filament\Resources\SupplierOrders\Schemas;
 
-use App\Models\Customer;
-use App\Models\Order;
 use App\Models\Supplier\Supplier;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Icons\Heroicon;
 
-trait SupplierSchema {
-    protected static function getSupplierSchema(): Fieldset {
+trait SupplierSchema
+{
+    protected static function getSupplierSchema(): Fieldset
+    {
         return Fieldset::make('Dati del fornitore')
             ->schema([
                 Select::make('supplier_id')

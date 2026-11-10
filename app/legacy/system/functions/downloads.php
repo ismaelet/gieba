@@ -1,44 +1,51 @@
 <?php
 
-function download_csv($array, $title) {
+function download_csv($array, $title)
+{
 
-	function generate_csv(array &$array) {
+    function generate_csv(array &$array)
+    {
 
-		if (!count($array)) return null;
+        if (! count($array)) {
+            return null;
+        }
 
-		ob_start();
+        ob_start();
 
-		$df = fopen("php://output", 'w');
-		fputcsv($df, array_keys(reset($array)));
-		foreach ($array as $row) fputcsv($df, $row);
+        $df = fopen('php://output', 'w');
+        fputcsv($df, array_keys(reset($array)));
+        foreach ($array as $row) {
+            fputcsv($df, $row);
+        }
 
-		fclose($df);
+        fclose($df);
 
-		return ob_get_clean();
+        return ob_get_clean();
 
-	}
+    }
 
-	function send_headers($filename) {
+    function send_headers($filename)
+    {
 
-		// disable caching
-		$now = gmdate("D, d M Y H:i:s");
-		header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-		header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-		header("Last-Modified: {$now} GMT");
+        // disable caching
+        $now = gmdate('D, d M Y H:i:s');
+        header('Expires: Tue, 03 Jul 2001 06:00:00 GMT');
+        header('Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate');
+        header("Last-Modified: {$now} GMT");
 
-		// force download  
-		header("Content-Type: application/force-download");
-		header("Content-Type: application/octet-stream");
-		header("Content-Type: application/download");
+        // force download
+        header('Content-Type: application/force-download');
+        header('Content-Type: application/octet-stream');
+        header('Content-Type: application/download');
 
-		// disposition / encoding on response body
-		header("Content-Disposition: attachment;filename={$filename}");
-		header("Content-Transfer-Encoding: binary");
+        // disposition / encoding on response body
+        header("Content-Disposition: attachment;filename={$filename}");
+        header('Content-Transfer-Encoding: binary');
 
-	}
+    }
 
-	send_headers($title.'.csv');
-	echo generate_csv($array);
-	die();
+    send_headers($title.'.csv');
+    echo generate_csv($array);
+    exit();
 
 }

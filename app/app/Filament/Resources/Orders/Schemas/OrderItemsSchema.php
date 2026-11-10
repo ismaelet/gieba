@@ -16,15 +16,17 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Icons\Heroicon;
 
-trait OrderItemsSchema {
-    protected static function getOrderItemsSchema(): Repeater {
+trait OrderItemsSchema
+{
+    protected static function getOrderItemsSchema(): Repeater
+    {
         return Repeater::make('ordered_order_items')
             ->label('Articoli dell\'ordine')
             ->addActionLabel('+')
             ->addAction(
-                fn(Action $action) => $action
+                fn (Action $action) => $action
                     ->requiresConfirmation()
-                    ->modalHidden(fn(Get $get): bool => ! $get('billed'))
+                    ->modalHidden(fn (Get $get): bool => ! $get('billed'))
                     ->modalHeading('Aggiungi articolo')
                     ->modalDescription('L\'ordine è già fatturato. Sei sicuro di voler aggiungere un nuovo articolo?')
                     ->modalSubmitActionLabel('Aggiungi')
@@ -65,12 +67,12 @@ trait OrderItemsSchema {
 
                         if ($customer && $product) {
                             $unitPriceNet = (float) OrderItem::where('product_id', $state)
-                                ->whereHas('order.customer', fn($query) => $query->whereKey($customer->getKey()))
+                                ->whereHas('order.customer', fn ($query) => $query->whereKey($customer->getKey()))
                                 ->orderByDesc('created_at')
                                 ->value('unit_price_net');
                         }
 
-                        if (!$unitPriceNet && $product) {
+                        if (! $unitPriceNet && $product) {
                             $unitPriceNet = $product->price;
                         }
 
@@ -100,7 +102,7 @@ trait OrderItemsSchema {
                             ->label('Nome prodotto')
                             ->placeholder('Nome prodotto')
                             ->required()
-                            ->maxLength(255)
+                            ->maxLength(255),
                     ])
                     ->createOptionUsing(function (array $data): int {
                         if (Product::where('name', $data['name'])->exists()) {
@@ -135,8 +137,8 @@ trait OrderItemsSchema {
                     ->autocomplete(false)
                     ->extraInputAttributes([
                         'x-on:mouseenter' => '$el.title = $el.value',
-                        'x-on:focus'      => '$el.title = $el.value',
-                        'x-on:input'      => '$el.title = $el.value',
+                        'x-on:focus' => '$el.title = $el.value',
+                        'x-on:input' => '$el.title = $el.value',
                     ])
                     ->columnSpan(8),
 
@@ -146,8 +148,7 @@ trait OrderItemsSchema {
                     ->autocomplete(false)
                     ->live(onBlur: true)
                     ->extraInputAttributes(self::extraAttributesForInt())
-                    ->afterStateUpdated(fn(TextInput $component, Get $get, Set $set) =>
-                    self::updatePrices(
+                    ->afterStateUpdated(fn (TextInput $component, Get $get, Set $set) => self::updatePrices(
                         get: $get,
                         set: $set,
                         fieldName: $component->getName()
@@ -162,11 +163,11 @@ trait OrderItemsSchema {
                     ->live()
                     ->options(
                         collect(config('ecommerce.order_statuses'))
-                            ->mapWithKeys(fn(array $status, string $key): array => [$key => $status['label']])
+                            ->mapWithKeys(fn (array $status, string $key): array => [$key => $status['label']])
                             ->toArray()
                     )
-                    ->extraInputAttributes(fn() => ['class' => 'status-selector'])
-                    ->afterStateUpdated(fn(callable $set, callable $get) => self::updateOrderStatus($get, $set))
+                    ->extraInputAttributes(fn () => ['class' => 'status-selector'])
+                    ->afterStateUpdated(fn (callable $set, callable $get) => self::updateOrderStatus($get, $set))
                     ->required()
                     ->columnSpan(4),
 
@@ -176,11 +177,10 @@ trait OrderItemsSchema {
                     ->autocomplete(false)
                     ->live(onBlur: true)
                     ->extraInputAttributes(self::extraAttributesForPrices())
-                    ->afterStateHydrated(fn($state, TextInput $component) => $component->state(self::parseNumber($state)))
-                    ->dehydrateStateUsing(fn($state) => self::parseToFloat($state))
+                    ->afterStateHydrated(fn ($state, TextInput $component) => $component->state(self::parseNumber($state)))
+                    ->dehydrateStateUsing(fn ($state) => self::parseToFloat($state))
                     ->afterStateUpdated(
-                        fn(TextInput $component, Get $get, Set $set) =>
-                        self::updatePrices(
+                        fn (TextInput $component, Get $get, Set $set) => self::updatePrices(
                             get: $get,
                             set: $set,
                             fieldName: $component->getName()
@@ -194,11 +194,10 @@ trait OrderItemsSchema {
                     ->autocomplete(false)
                     ->live(onBlur: true)
                     ->extraInputAttributes(self::extraAttributesForPrices())
-                    ->afterStateHydrated(fn($state, TextInput $component) => $component->state(self::parseNumber($state)))
-                    ->dehydrateStateUsing(fn($state) => self::parseToFloat($state))
+                    ->afterStateHydrated(fn ($state, TextInput $component) => $component->state(self::parseNumber($state)))
+                    ->dehydrateStateUsing(fn ($state) => self::parseToFloat($state))
                     ->afterStateUpdated(
-                        fn(TextInput $component, Get $get, Set $set) =>
-                        self::updatePrices(
+                        fn (TextInput $component, Get $get, Set $set) => self::updatePrices(
                             get: $get,
                             set: $set,
                             fieldName: $component->getName()
@@ -211,8 +210,7 @@ trait OrderItemsSchema {
                     ->default(true)
                     ->live()
                     ->afterStateUpdated(
-                        fn(Checkbox $component, Get $get, Set $set) =>
-                        self::updatePrices(
+                        fn (Checkbox $component, Get $get, Set $set) => self::updatePrices(
                             get: $get,
                             set: $set,
                             fieldName: $component->getName()
@@ -226,11 +224,10 @@ trait OrderItemsSchema {
                     ->autocomplete(false)
                     ->live(onBlur: true)
                     ->extraInputAttributes(self::extraAttributesForPrices())
-                    ->afterStateHydrated(fn($state, TextInput $component) => $component->state(self::parseNumber($state)))
-                    ->dehydrateStateUsing(fn($state) => self::parseToFloat($state))
+                    ->afterStateHydrated(fn ($state, TextInput $component) => $component->state(self::parseNumber($state)))
+                    ->dehydrateStateUsing(fn ($state) => self::parseToFloat($state))
                     ->afterStateUpdated(
-                        fn(TextInput $component, Get $get, Set $set) =>
-                        self::updatePrices(
+                        fn (TextInput $component, Get $get, Set $set) => self::updatePrices(
                             get: $get,
                             set: $set,
                             fieldName: $component->getName()

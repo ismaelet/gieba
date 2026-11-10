@@ -16,8 +16,10 @@ use Filament\Schemas\Components\Group;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\DB;
 
-trait AddToSupplierButton {
-    protected static function getAddToSupplierButton(): Group {
+trait AddToSupplierButton
+{
+    protected static function getAddToSupplierButton(): Group
+    {
         return Group::make()
             ->schema([
                 Action::make('add_to_supplier')
@@ -56,11 +58,11 @@ trait AddToSupplierButton {
 
                                     return [
                                         'order_item_id' => $item['id'] ?? null,
-                                        'product_id'    => $pid,
-                                        'product_name'  => $pid ? ($namesById[$pid] ?? ('#' . $pid)) : '-',
-                                        'info'          => $item['info'] ?? '',
-                                        'quantity'      => (int) ($item['quantity'] ?? 1),
-                                        'supplier_id'   => null,
+                                        'product_id' => $pid,
+                                        'product_name' => $pid ? ($namesById[$pid] ?? ('#'.$pid)) : '-',
+                                        'info' => $item['info'] ?? '',
+                                        'quantity' => (int) ($item['quantity'] ?? 1),
+                                        'supplier_id' => null,
                                     ];
                                 })->values()->all();
                             })
@@ -84,7 +86,7 @@ trait AddToSupplierButton {
 
                                 Select::make('supplier_id')
                                     ->label('Fornitore')
-                                    ->options(fn() => Supplier::query()->orderBy('name')->pluck('name', 'id')->all())
+                                    ->options(fn () => Supplier::query()->orderBy('name')->pluck('name', 'id')->all())
                                     ->searchable()
                                     ->preload()
                                     ->columnSpan(6),
@@ -99,7 +101,7 @@ trait AddToSupplierButton {
 
                         // keep only lines that have a supplier selected
                         $lines = collect($lines)
-                            ->filter(fn($l) => ! empty($l['supplier_id']))
+                            ->filter(fn ($l) => ! empty($l['supplier_id']))
                             ->values();
 
                         if ($lines->isEmpty()) {
@@ -136,7 +138,7 @@ trait AddToSupplierButton {
                             ->title('Articoli aggiunti ai fornitori')
                             ->success()
                             ->send();
-                    })
+                    }),
             ]);
     }
 }

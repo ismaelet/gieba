@@ -2,54 +2,56 @@
 
 namespace Legacy\System\Classes;
 
-use View;
+class Route
+{
+    private static $routes = [];
 
-class Route {
-	private static $routes = [];
+    public static function add($paths, $function, $arguments = false)
+    {
 
-	public static function add($paths, $function, $arguments = false) {
+        $paths = (array) $paths;
 
-		$paths = (array) $paths;
+        foreach ($paths as $path) {
 
-		foreach ($paths as $path)
+            array_push(self::$routes, [
+                'path' => __HROOT__.$path,
+                'function' => $function,
+                'arguments' => $arguments,
+            ]);
+        }
+    }
 
-			array_push(self::$routes, [
-				'path' => __HROOT__ . $path,
-				'function' => $function,
-				'arguments' => $arguments,
-			]);
-	}
+    public static function run()
+    {
 
-	public static function run() {
+        $path_found = false;
 
-		$path_found = false;
+        // parse url
+        $path = parse_url($_SERVER['REQUEST_URI'])['path'] ?? null;
 
-		//parse url
-		$path = parse_url($_SERVER['REQUEST_URI'])['path'] ?? null;
+        if ($path !== null) {
+            foreach (self::$routes as $route) {
 
-		if ($path !== null) {
-			foreach (self::$routes as $route) {
+                // Check path match
+                if (in_array($path, [$route['path'], $route['path'].'/'])) {
 
-				// Check path match	
-				if (in_array($path, [$route['path'], $route['path'] . '/'])) {
+                    $path_found = true;
 
-					$path_found = true;
+                    call_user_func_array($route['function'], [$route['arguments']]);
 
-					call_user_func_array($route['function'], [$route['arguments']]);
+                    break;
+                }
+            }
+        }
 
-					break;
-				}
-			}
-		}
+        // error 404
+        if (! $path_found) {
 
-		//error 404
-		if (!$path_found) {
+            $view = new \Legacy\System\Classes\View('errors/404');
 
-			$view = new \Legacy\System\Classes\View('errors/404');
+            $view->middlewares = [];
 
-			$view->middlewares = [];
-
-			$view->show();
-		}
-	}
+            $view->show();
+        }
+    }
 }

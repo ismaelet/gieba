@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-class HomeController extends Controller {
-
+class HomeController extends Controller
+{
     /**
      * Show the application dashboard
      */
-    public function index() {
-        //send mail
+    public function index()
+    {
+        // send mail
         // if (isset($_POST['submit']) && !$sent) {
 
         //     $name = trim($_POST['name']);

@@ -14,8 +14,10 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CustomersTable {
-    public static function configure(Table $table): Table {
+class CustomersTable
+{
+    public static function configure(Table $table): Table
+    {
         return $table
             ->defaultSort('id', 'desc')
             ->columns([
@@ -52,22 +54,22 @@ class CustomersTable {
                     ->color('info')
                     ->icon(Heroicon::ArrowsPointingIn)
                     ->modalSubmitActionLabel('Unisci clienti')
-                    ->schema(fn(Customer $record) => [
+                    ->schema(fn (Customer $record) => [
                         Select::make('target_customer_id')
                             ->label('Unisci con cliente')
                             ->aboveContent('Il cliente che verrà mantenuto è quello selezionato qui sotto.')
                             ->searchable()
                             ->getSearchResultsUsing(
-                                fn(string $search) => Customer::query()
+                                fn (string $search) => Customer::query()
                                     ->whereKeyNot($record->id)
-                                    ->where('name', 'like', '%' . $search . '%')
+                                    ->where('name', 'like', '%'.$search.'%')
                                     ->orWhere('id', $search)
                                     ->limit(50)
                                     ->pluck('name', 'id')
                                     ->all()
                             )
                             ->getOptionLabelUsing(
-                                fn($value) => Customer::find($value)?->name ?? (string) $value
+                                fn ($value) => Customer::find($value)?->name ?? (string) $value
                             )
                             ->required(),
                     ])

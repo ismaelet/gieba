@@ -1,305 +1,327 @@
 <?php
 
-class Viewer {
+class Viewer
+{
+    public $view;
 
-	public $view;
-	private $views_path = SERVER_ROOT . '/pages/views';
-	private $app_path = SERVER_ROOT . '/app/templates';
-	private $system_path = SERVER_ROOT . '/system/templates';
+    private $views_path = SERVER_ROOT.'/pages/views';
 
-	function __construct($view) {
+    private $app_path = SERVER_ROOT.'/app/templates';
 
-		$this->view = $view;
-	}
+    private $system_path = SERVER_ROOT.'/system/templates';
 
-	//render page
-	public function show() {
+    public function __construct($view)
+    {
 
-		$view_file = false;
+        $this->view = $view;
+    }
 
-		$view = $this->view;
+    // render page
+    public function show()
+    {
 
-		//add assets
-		$this->view->set('styles', $this->view->styles->make());
-		$this->view->set('scripts', $this->view->scripts->make());
+        $view_file = false;
 
-		//load template
-		if (file_exists($file = $this->views_path . '/' . $this->view->name . '.php')) $view_file = $file;
-		//else throw new Exception('Template '.$this->view->template.' not found');
+        $view = $this->view;
 
-		//access variables
-		foreach ($this->view->variables as $var => $value) ${$var} = $value;
+        // add assets
+        $this->view->set('styles', $this->view->styles->make());
+        $this->view->set('scripts', $this->view->scripts->make());
 
-		//render
-		ob_start();
+        // load template
+        if (file_exists($file = $this->views_path.'/'.$this->view->name.'.php')) {
+            $view_file = $file;
+        }
+        // else throw new Exception('Template '.$this->view->template.' not found');
 
-		if ($view_file) include_once($view_file);
+        // access variables
+        foreach ($this->view->variables as $var => $value) {
+            ${$var} = $value;
+        }
 
-		$render = ob_get_clean();
+        // render
+        ob_start();
 
-		//$render = $this->loop($render, 'for');
-		//$render = $this->loop($render, 'if');
-		$render = $this->extend($render);
-		//$render = $this->place_variables($render);
+        if ($view_file) {
+            include_once $view_file;
+        }
 
-		echo $render;
-	}
+        $render = ob_get_clean();
 
-	private function extend($render) {
+        // $render = $this->loop($render, 'for');
+        // $render = $this->loop($render, 'if');
+        $render = $this->extend($render);
+        // $render = $this->place_variables($render);
 
-		$ext_tag = '{% extends ';
+        echo $render;
+    }
 
-		//recover variabiles
-		foreach ($this->view->variables as $var => $value) ${$var} = $value;
+    private function extend($render)
+    {
 
-		$view = $this->view;
+        $ext_tag = '{% extends ';
 
-		//add template if the page is empty
-		if (strpos($render, $ext_tag) === false) $render = $ext_tag . $this->view->template . ' %}' . $render;
+        // recover variabiles
+        foreach ($this->view->variables as $var => $value) {
+            ${$var} = $value;
+        }
 
-		//process templates
-		while (strpos($render, $ext_tag) !== false) {
+        $view = $this->view;
 
-			preg_match_all('/' . $ext_tag . '(.*?) %}/', $render, $match);
+        // add template if the page is empty
+        if (strpos($render, $ext_tag) === false) {
+            $render = $ext_tag.$this->view->template.' %}'.$render;
+        }
 
-			$template = $match[1][0];
+        // process templates
+        while (strpos($render, $ext_tag) !== false) {
 
-			$blocks = $this->get_blocks($render);
+            preg_match_all('/'.$ext_tag.'(.*?) %}/', $render, $match);
 
-			if (file_exists($file = $this->app_path . '/views/' . $template . '.php')) {
-			} else if (file_exists($file = $this->system_path . '/views/' . $template . '.php')) {
-			}
+            $template = $match[1][0];
 
-			ob_start();
+            $blocks = $this->get_blocks($render);
 
-			include($file);
+            if (file_exists($file = $this->app_path.'/views/'.$template.'.php')) {
+            } elseif (file_exists($file = $this->system_path.'/views/'.$template.'.php')) {
+            }
 
-			$render = ob_get_clean();
+            ob_start();
 
-			$render = $this->place_blocks($render, $blocks);
-		}
+            include $file;
 
-		return $render;
-	}
+            $render = ob_get_clean();
 
-	private function get_blocks($render, $offset = 0) {
+            $render = $this->place_blocks($render, $blocks);
+        }
 
-		$blocks = [];
-		$names = [];
+        return $render;
+    }
 
-		$start_tag = '{% block ';
-		$end_tag = '{% end ';
-		$tag_limit = ' %}';
+    private function get_blocks($render, $offset = 0)
+    {
 
-		$heads = explode($start_tag, $render);
+        $blocks = [];
+        $names = [];
 
-		array_shift($heads);
+        $start_tag = '{% block ';
+        $end_tag = '{% end ';
+        $tag_limit = ' %}';
 
-		foreach ($heads as $head) $names[] = explode($tag_limit, $head, 2)[0];
+        $heads = explode($start_tag, $render);
 
-		foreach ($names as $name) {
+        array_shift($heads);
 
-			$content = explode($start_tag . $name . $tag_limit, $render);
+        foreach ($heads as $head) {
+            $names[] = explode($tag_limit, $head, 2)[0];
+        }
 
-			$blocks[$name] = explode($end_tag . $name . $tag_limit, $content[1])[0];
-		}
+        foreach ($names as $name) {
 
-		return $blocks;
-	}
+            $content = explode($start_tag.$name.$tag_limit, $render);
 
-	private function place_blocks($render, $blocks) {
+            $blocks[$name] = explode($end_tag.$name.$tag_limit, $content[1])[0];
+        }
 
-		$names = [];
+        return $blocks;
+    }
 
-		$start_tag = '{% place ';
-		$end_tag = '{% end ';
-		$tag_limit = ' %}';
+    private function place_blocks($render, $blocks)
+    {
 
-		$heads = explode($start_tag, $render);
+        $names = [];
 
-		array_shift($heads);
+        $start_tag = '{% place ';
+        $end_tag = '{% end ';
+        $tag_limit = ' %}';
 
-		foreach ($heads as $head) $names[] = explode($tag_limit, $head, 2)[0];
+        $heads = explode($start_tag, $render);
 
-		foreach ($names as $name) {
+        array_shift($heads);
 
-			$start = $start_tag . $name . $tag_limit;
-			$end = $end_tag . $name . $tag_limit;
+        foreach ($heads as $head) {
+            $names[] = explode($tag_limit, $head, 2)[0];
+        }
 
-			$process = explode($start, $render);
+        foreach ($names as $name) {
 
-			$before = $process[0];
+            $start = $start_tag.$name.$tag_limit;
+            $end = $end_tag.$name.$tag_limit;
 
-			$process = explode($end, $process[1]);
+            $process = explode($start, $render);
 
-			$after = $process[1];
+            $before = $process[0];
 
-			$content = $blocks[$name] ?? $process[0];
+            $process = explode($end, $process[1]);
 
-			$render = $before . $content . $after;
-		}
+            $after = $process[1];
 
-		return $render;
-	}
+            $content = $blocks[$name] ?? $process[0];
 
-	/*private function place_variables($render) {
-		
-		//access variables
-		foreach ($this->view->variables as $var => $value) ${$var} = $value;
+            $render = $before.$content.$after;
+        }
 
-		$start_tag = '{{ ';
-		$end_tag = ' }}';
-		
-		while (strpos($render, '{{ ')) {
+        return $render;
+    }
 
-			$block = explode($start_tag, $render, 2);
+    /*private function place_variables($render) {
 
-			$before = $block[0];
+        //access variables
+        foreach ($this->view->variables as $var => $value) ${$var} = $value;
 
-			$block = explode($end_tag, $block[1], 2);
+        $start_tag = '{{ ';
+        $end_tag = ' }}';
 
-			$variable = $block[0];
+        while (strpos($render, '{{ ')) {
 
-			$after = $block[1];
+            $block = explode($start_tag, $render, 2);
 
-			if ($variable[0] == '_') $value = constant($variable);
-			else $value = $this->calc_var($variable);
+            $before = $block[0];
 
-			$render = $before.$value.$after;
-		}
+            $block = explode($end_tag, $block[1], 2);
 
-		return $render;
-	}
+            $variable = $block[0];
 
-	//calculate a variable
-	private function calc_var($variable, $temp_val = null, $field = false) {
+            $after = $block[1];
 
-		//explode to get the variable data
-		$variable = explode(' ', $variable);
+            if ($variable[0] == '_') $value = constant($variable);
+            else $value = $this->calc_var($variable);
 
-		//get the possible operations
-		$operation = $variable[1] ?? false;
+            $render = $before.$value.$after;
+        }
 
-		if ($operation == '>') {
+        return $render;
+    }
 
-			$value = call_user_func($variable[0], $variable[2]);
+    //calculate a variable
+    private function calc_var($variable, $temp_val = null, $field = false) {
 
-		} else {
-			//canculate the value if not set yet
-			if ($temp_val === null) {
+        //explode to get the variable data
+        $variable = explode(' ', $variable);
 
-				$field = $field ?: $this->view->variables;
+        //get the possible operations
+        $operation = $variable[1] ?? false;
 
-				if (strpos($variable[0], '.')) {
+        if ($operation == '>') {
 
-					$value_raw = explode('.', $variable[0]);
+            $value = call_user_func($variable[0], $variable[2]);
 
-					$value1 = $field[$value_raw[0]][$value_raw[1]];
+        } else {
+            //canculate the value if not set yet
+            if ($temp_val === null) {
 
-				} else if (strpos($variable[0], '->')) {
+                $field = $field ?: $this->view->variables;
 
-					$value_raw = explode('->', $variable[0]);
+                if (strpos($variable[0], '.')) {
 
-					$value1 = $field[$value_raw[0]]->{$value_raw[1]};
+                    $value_raw = explode('.', $variable[0]);
 
-				} else $value1 = $field[$variable[0]];
+                    $value1 = $field[$value_raw[0]][$value_raw[1]];
 
-			//otherwise recover the value
-			} else $value1 = $temp_val;
+                } else if (strpos($variable[0], '->')) {
 
-			//manage the operations
-			switch ($operation) {
+                    $value_raw = explode('->', $variable[0]);
 
-				case '+': $value = $value1 + $variable[2]; break;
-				case '?': $value = $value1 ? $variable[2] : $variable[4]; break;
-				
-				default: $value = $value1; break;
-			}
-		}
+                    $value1 = $field[$value_raw[0]]->{$value_raw[1]};
 
-		return $value;
-	}*/
+                } else $value1 = $field[$variable[0]];
 
-	/*private function loop($render, $loop) {
+            //otherwise recover the value
+            } else $value1 = $temp_val;
 
-		$start_tag = '{% '.$loop.' ';
-		$end_tag = ' %}';
-		$loop_end = '{% end'.$loop.' %}';
+            //manage the operations
+            switch ($operation) {
 
-		while (strpos($render, $start_tag)) {
+                case '+': $value = $value1 + $variable[2]; break;
+                case '?': $value = $value1 ? $variable[2] : $variable[4]; break;
 
-			$result = '';
-			
-			//explode where the loop starts
-			$block = explode($start_tag, $render, 2);
+                default: $value = $value1; break;
+            }
+        }
 
-			//save the render previous to the loop
-			$before = $block[0];
+        return $value;
+    }*/
 
-			//explode where the content starts
-			$block = explode($end_tag, $block[1], 2);
+    /*private function loop($render, $loop) {
 
-			//save the loop data
-			$loop_data = explode(' ', $block[0]);
+        $start_tag = '{% '.$loop.' ';
+        $end_tag = ' %}';
+        $loop_end = '{% end'.$loop.' %}';
 
-			//explode where the loops ends
-			$block = explode($loop_end, $block[1], 2);
+        while (strpos($render, $start_tag)) {
 
-			//save the content of the loop
-			$content = $block[0];
+            $result = '';
 
-			//save the render after the loop
-			$after = $block[1];
+            //explode where the loop starts
+            $block = explode($start_tag, $render, 2);
 
-			//if it's an if
-			if ($loop == 'if') {
+            //save the render previous to the loop
+            $before = $block[0];
 
-				$condition = explode('.', $loop_data[0]);
+            //explode where the content starts
+            $block = explode($end_tag, $block[1], 2);
 
-				$val = false;
+            //save the loop data
+            $loop_data = explode(' ', $block[0]);
 
-				if (isset($condition[0])) $val = $this->calc_var($condition[0]);
+            //explode where the loops ends
+            $block = explode($loop_end, $block[1], 2);
 
-				if ($val) $result = $content;
-			}		
+            //save the content of the loop
+            $content = $block[0];
 
-			//if it's a for/freach
-			else if ($loop == 'for') {
-				
-				$pholder_arr = $loop_data[0];
-				$array = $this->view->variables[$loop_data[2]];
+            //save the render after the loop
+            $after = $block[1];
 
-				foreach ($array as $key => $element) {
+            //if it's an if
+            if ($loop == 'if') {
 
-					$cycle = $content;
+                $condition = explode('.', $loop_data[0]);
 
-					//replace the loop placeholders
-					foreach ($element as $var => $value) {
+                $val = false;
 
-						$pholder = $pholder_arr.'.'.$var;
-					
-						$cycle = str_replace('{{ '.$pholder.' }}', $this->calc_var($pholder, $value), $cycle);
+                if (isset($condition[0])) $val = $this->calc_var($condition[0]);
 
-					}
+                if ($val) $result = $content;
+            }
 
-					//replace the key placeholders
-					preg_match_all('/\{\{\s(.*?)\s\}\}/', $cycle, $matches_raw);
+            //if it's a for/freach
+            else if ($loop == 'for') {
 
-					$matches = $matches_raw[0];
-					$values = $matches_raw[1];
+                $pholder_arr = $loop_data[0];
+                $array = $this->view->variables[$loop_data[2]];
 
-					foreach ($matches as $i => $match) {
+                foreach ($array as $key => $element) {
 
-						$cycle = str_replace($match, $this->calc_var($values[$i], $key), $cycle);
-					}
+                    $cycle = $content;
 
-					$result .= $cycle.PHP_EOL;
-				}
-			}
+                    //replace the loop placeholders
+                    foreach ($element as $var => $value) {
 
-			$render = implode('', [$before, $result, $after]);
-		}
+                        $pholder = $pholder_arr.'.'.$var;
 
-		return $render;
-	}*/
+                        $cycle = str_replace('{{ '.$pholder.' }}', $this->calc_var($pholder, $value), $cycle);
+
+                    }
+
+                    //replace the key placeholders
+                    preg_match_all('/\{\{\s(.*?)\s\}\}/', $cycle, $matches_raw);
+
+                    $matches = $matches_raw[0];
+                    $values = $matches_raw[1];
+
+                    foreach ($matches as $i => $match) {
+
+                        $cycle = str_replace($match, $this->calc_var($values[$i], $key), $cycle);
+                    }
+
+                    $result .= $cycle.PHP_EOL;
+                }
+            }
+
+            $render = implode('', [$before, $result, $after]);
+        }
+
+        return $render;
+    }*/
 }

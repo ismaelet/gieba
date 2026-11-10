@@ -1,7 +1,9 @@
-#bgr {display: none;}
+#bgr {
+  display: none;
+}
 
 .form {
-	background-color: transparent;
-	border: none;
-	box-shadow: none;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }

@@ -1,14 +1,17 @@
 <?php
 
-function parse_rgba($hex, $alpha = 1) {
+function parse_rgba($hex, $alpha = 1)
+{
 
-	$rgba = [];
+    $rgba = [];
 
-	$hex = str_replace('#', '', $hex);
+    $hex = str_replace('#', '', $hex);
 
-	for ($i = 0; $i < 3; $i++) $rgba[] = hexdec(substr($hex, $i * 2, 2));
+    for ($i = 0; $i < 3; $i++) {
+        $rgba[] = hexdec(substr($hex, $i * 2, 2));
+    }
 
-	$rgba[] = $alpha;
+    $rgba[] = $alpha;
 
-	return $rgba;
+    return $rgba;
 }

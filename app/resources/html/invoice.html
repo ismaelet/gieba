@@ -1,296 +1,306 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>{{ title }} {{ quote-number }}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }} {{ quote-number }}</title>
 
-		<style>
-			* {
-				margin: 0;
-			}
+    <style>
+      * {
+        margin: 0;
+      }
 
-			img {
-				display: block;
-				max-width: 100%;
-			}
+      img {
+        display: block;
+        max-width: 100%;
+      }
 
-			h1,
-			h2,
-			h3 {
-				font-family: 'Helvetica';
-			}
+      h1,
+      h2,
+      h3 {
+        font-family: "Helvetica";
+      }
 
-			h1 {
-				margin-top: -0.5rem;
-				margin-bottom: 1rem;
-				opacity: 0.5;
-				font-size: 1.5rem;
-				font-weight: 700;
-				line-height: 1;
-			}
+      h1 {
+        margin-top: -0.5rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+      }
 
-			h2 {
-				font-weight: 600;
-				margin-bottom: 0.25rem;
-			}
+      h2 {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
 
-			p {
-				font-family: 'Helvetica';
-				font-size: 14px;
-			}
+      p {
+        font-family: "Helvetica";
+        font-size: 14px;
+      }
 
-			main {
-				background-color: #fff;
-			}
+      main {
+        background-color: #fff;
+      }
 
-			.main-wrap {
-				padding-left: 2rem;
-				padding-right: 2rem;
-			}
+      .main-wrap {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
 
-			.head {
-				background-color: #414a5e;
-				color: #fff;
-			}
+      .head {
+        background-color: #414a5e;
+        color: #fff;
+      }
 
-			.head_content {
-				display: table;
-				width: 100%;
-				padding-top: 1.5rem;
-				padding-bottom: 1.5rem;
-			}
+      .head_content {
+        display: table;
+        width: 100%;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+      }
 
-			.head_content > * {
-				display: table-cell;
-				vertical-align: middle;
-			}
+      .head_content > * {
+        display: table-cell;
+        vertical-align: middle;
+      }
 
-			.contact-block {
-				padding-left: 1rem;
-				padding-right: 2rem;
-				text-align: right;
-				line-height: 1.5;
-			}
+      .contact-block {
+        padding-left: 1rem;
+        padding-right: 2rem;
+        text-align: right;
+        line-height: 1.5;
+      }
 
-			.logo {
-				width: 7rem;
-			}
+      .logo {
+        width: 7rem;
+      }
 
-			.logo img {
-				width: inherit;
-			}
+      .logo img {
+        width: inherit;
+      }
 
-			.logo-image {
-				margin-bottom: 1rem;
-			}
+      .logo-image {
+        margin-bottom: 1rem;
+      }
 
-			.page-content {
-				padding-top: 2rem;
-				padding-bottom: 2rem;
-			}
+      .page-content {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
 
-			.customer {
-				display: table;
-				margin-bottom: 2rem;
-			}
+      .customer {
+        display: table;
+        margin-bottom: 2rem;
+      }
 
-			.customer > * {
-				display: table-cell;
-			}
+      .customer > * {
+        display: table-cell;
+      }
 
-			.customer_title {
-				padding: 0.5rem 1rem;
-				background-color: #b6c4e0;
-				font-size: 1rem;
-				letter-spacing: 0.03em;
-			}
+      .customer_title {
+        padding: 0.5rem 1rem;
+        background-color: #b6c4e0;
+        font-size: 1rem;
+        letter-spacing: 0.03em;
+      }
 
-			.customer_name {
-				background-color: #e9eef8;
-				padding: 0.5rem 1rem;
-				font-size: 1rem;
-			}
+      .customer_name {
+        background-color: #e9eef8;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+      }
 
-			.notes {
-				margin-bottom: 2rem;
-				font-size: 16px;
-			}
+      .notes {
+        margin-bottom: 2rem;
+        font-size: 16px;
+      }
 
-			.products {
-				display: table;
-				width: 100%;
-			}
+      .products {
+        display: table;
+        width: 100%;
+      }
 
-			.products_head,
-			.product {
-				display: table-row;
-			}
+      .products_head,
+      .product {
+        display: table-row;
+      }
 
-			.products_head > *,
-			.product > * {
-				display: table-cell;
-			}
+      .products_head > *,
+      .product > * {
+        display: table-cell;
+      }
 
-			.products_head > * {
-				background-color: #d3dae8;
-			}
+      .products_head > * {
+        background-color: #d3dae8;
+      }
 
-			.product--even > * {
-				background-color: #f5f6f9;
-			}
+      .product--even > * {
+        background-color: #f5f6f9;
+      }
 
-			.products_head p {
-				font-weight: bold;
-			}
+      .products_head p {
+        font-weight: bold;
+      }
 
-			.products p {
-				padding: 0.6rem 0.75rem;
-			}
+      .products p {
+        padding: 0.6rem 0.75rem;
+      }
 
-			.services {
-				padding: 1rem 2rem;
-				margin-top: 2rem;
-				background-color: #edf2fc;
-				text-align: center;
-			}
+      .services {
+        padding: 1rem 2rem;
+        margin-top: 2rem;
+        background-color: #edf2fc;
+        text-align: center;
+      }
 
-			.recap {
-				display: table;
-				border-collapse: collapse;
-				margin-left: auto;
-				margin-top: 4rem;
-				text-align: right;
-			}
+      .recap {
+        display: table;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-top: 4rem;
+        text-align: right;
+      }
 
-			.hidden {
-				display: none !important;
-			}
+      .hidden {
+        display: none !important;
+      }
 
-			.recap_item {
-				display: table-row;
-				border-bottom: 2px solid #fff;
-			}
+      .recap_item {
+        display: table-row;
+        border-bottom: 2px solid #fff;
+      }
 
-			.recap_item > * {
-				display: table-cell;
-			}
+      .recap_item > * {
+        display: table-cell;
+      }
 
-			.recap_item p {
-				padding: 0.35rem 1rem;
-			}
+      .recap_item p {
+        padding: 0.35rem 1rem;
+      }
 
-			.recap_item:last-child p {
-				font-size: 1.125rem;
-			}
+      .recap_item:last-child p {
+        font-size: 1.125rem;
+      }
 
-			.recap_item p:first-child {
-				width: 5rem;
-				background-color: #e9eef8;
-				font-weight: bold;
-			}
+      .recap_item p:first-child {
+        width: 5rem;
+        background-color: #e9eef8;
+        font-weight: bold;
+      }
 
-			.recap_item p:last-child {
-				width: 10rem;
-				background-color: #b6c4e0;
-				font-weight: bold;
-			}
+      .recap_item p:last-child {
+        width: 10rem;
+        background-color: #b6c4e0;
+        font-weight: bold;
+      }
 
-			.no-prices .visible-price {
-				display: none !important;
-			}
-		</style>
-	</head>
+      .no-prices .visible-price {
+        display: none !important;
+      }
+    </style>
+  </head>
 
-	<body>
-		<main>
-			<!-- Head -->
-			<section class="head">
-				<div class="main-wrap">
-					<div class="head_content">
-						<!-- Title block -->
-						<div class="title-block">
-							<h1>Gi&Ba by Shipping Dog</h1>
+  <body>
+    <main>
+      <!-- Head -->
+      <section class="head">
+        <div class="main-wrap">
+          <div class="head_content">
+            <!-- Title block -->
+            <div class="title-block">
+              <h1>Gi&Ba by Shipping Dog</h1>
 
-							<!-- Logo -->
-							<div class="logo">
-								<img class="logo-image" src="https://giebapromotion.com/legacy/app/resources/logo/logo-header-light.png?=1675963645" alt="Logo" />
-							</div>
+              <!-- Logo -->
+              <div class="logo">
+                <img
+                  class="logo-image"
+                  src="https://giebapromotion.com/legacy/app/resources/logo/logo-header-light.png?=1675963645"
+                  alt="Logo"
+                />
+              </div>
 
-							<h2>{{ title }}</h2>
-							<p>Data: {{ date }}</p>
-							<p>Numero: {{ quote-number }}</p>
-						</div>
+              <h2>{{ title }}</h2>
+              <p>Data: {{ date }}</p>
+              <p>Numero: {{ quote-number }}</p>
+            </div>
 
-						<!-- Contact block -->
-						<div class="contact-block">
-							<p>
-								Shipping Dog SNC<br />
-								Piazza Scopoli, 9<br />
-								38033 Cavalese (TN) - Italy<br />
-								Tel. 0462/230218<br />
-								giebapromotion@gmail.com<br />
-								P.IVA 02397230224<br />
-								COD. SDI: W7YVJK9<br />
-								IBAN: IT64T0818435280000000092146
-							</p>
-						</div>
-					</div>
-				</div>
-			</section>
+            <!-- Contact block -->
+            <div class="contact-block">
+              <p>
+                Shipping Dog SNC<br />
+                Piazza Scopoli, 9<br />
+                38033 Cavalese (TN) - Italy<br />
+                Tel. 0462/230218<br />
+                giebapromotion@gmail.com<br />
+                P.IVA 02397230224<br />
+                COD. SDI: W7YVJK9<br />
+                IBAN: IT64T0818435280000000092146
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-			<!-- Body -->
-			<div class="page-content main-wrap">
-				<section class="body">
-					<div class="customer">
-						<h3 class="customer_title">Destinazione:</h3>
-						<p class="customer_name">{{ customer-name }}</p>
-					</div>
+      <!-- Body -->
+      <div class="page-content main-wrap">
+        <section class="body">
+          <div class="customer">
+            <h3 class="customer_title">Destinazione:</h3>
+            <p class="customer_name">{{ customer-name }}</p>
+          </div>
 
-					<p class="notes">{{ notes }}</p>
+          <p class="notes">{{ notes }}</p>
 
-					<div class="products">
-						<div class="products_head">
-							<p>Codice</p>
-							<p>Descrizione</p>
-							<p>Quantità</p>
-							<p class="visible-price">Prezzo sin.</p>
-							<p class="visible-price">Prezzo tot.</p>
-						</div>
+          <div class="products">
+            <div class="products_head">
+              <p>Codice</p>
+              <p>Descrizione</p>
+              <p>Quantità</p>
+              <p class="visible-price">Prezzo sin.</p>
+              <p class="visible-price">Prezzo tot.</p>
+            </div>
 
-						{{ products }}
-					</div>
+            {{ products }}
+          </div>
 
-					<div class="services">
-						<p>
-							<strong>FORNITURA E PERSONALIZZAZIONE ABBIGLIAMENTO PROFESSIONALE, TIROLESE E PROMOZIONALE - STAMPA DIGITALE PICCOLO E GRANDE FORMATO</strong><br />
-							Biglietti da visita - Volantini - Pieghevoli - Manifesti - Locandine - Striscioni - Pannelli pubblicitari e insegne - Decorazione automezzi - Decorazione vetrine -
-							Calendari commerciali e fotografici - Timbri - Bandiere
-						</p>
-					</div>
-				</section>
+          <div class="services">
+            <p>
+              <strong
+                >FORNITURA E PERSONALIZZAZIONE ABBIGLIAMENTO PROFESSIONALE, TIROLESE E PROMOZIONALE
+                - STAMPA DIGITALE PICCOLO E GRANDE FORMATO</strong
+              ><br />
+              Biglietti da visita - Volantini - Pieghevoli - Manifesti - Locandine - Striscioni -
+              Pannelli pubblicitari e insegne - Decorazione automezzi - Decorazione vetrine -
+              Calendari commerciali e fotografici - Timbri - Bandiere
+            </p>
+          </div>
+        </section>
 
-				<!-- IVA warning -->
-				<p class="iva-warning hidden" style="text-align: right; margin-top: 2rem">Prezzi da intendersi <strong>IVA ESCLUSA</strong></p>
+        <!-- IVA warning -->
+        <p class="iva-warning hidden" style="text-align: right; margin-top: 2rem">
+          Prezzi da intendersi <strong>IVA ESCLUSA</strong>
+        </p>
 
-				<!-- Recap -->
-				<section class="recap visible-price">
-					<div class="recap_item">
-						<p>Imponibile</p>
-						<p>{{ cart-net-price }}</p>
-					</div>
-					<div class="recap_item">
-						<p>IVA</p>
-						<p>{{ cart-vat }}</p>
-					</div>
-					{{ cart-down-payment }} {{ cart-discount }}
-					<div class="recap_item">
-						<p>Totale</p>
-						<p>{{ cart-gross-price }}</p>
-					</div>
-				</section>
-			</div>
-		</main>
-	</body>
+        <!-- Recap -->
+        <section class="recap visible-price">
+          <div class="recap_item">
+            <p>Imponibile</p>
+            <p>{{ cart-net-price }}</p>
+          </div>
+          <div class="recap_item">
+            <p>IVA</p>
+            <p>{{ cart-vat }}</p>
+          </div>
+          {{ cart-down-payment }} {{ cart-discount }}
+          <div class="recap_item">
+            <p>Totale</p>
+            <p>{{ cart-gross-price }}</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
 </html>

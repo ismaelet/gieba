@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Ecommerce\CustomerController;
+use Legacy\System\Classes\Route;
 
 /**
  * Customers
  */
-\Legacy\System\Classes\Route::add('/api/customers', function () {
-	echo json_encode(CustomerController::get());
+Route::add('/api/customers', function () {
+    echo json_encode(CustomerController::get());
 });

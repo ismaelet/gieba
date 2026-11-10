@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements FilamentUser {
-
+class User extends Authenticatable implements FilamentUser
+{
     use HasFactory, Notifiable;
 
     /**
@@ -36,7 +36,8 @@ class User extends Authenticatable implements FilamentUser {
     /**
      * Property: The attributes that should be cast
      */
-    protected function casts(): array {
+    protected function casts(): array
+    {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
@@ -46,16 +47,18 @@ class User extends Authenticatable implements FilamentUser {
     /**
      * Attribute: Get the username
      */
-    public function name(): Attribute {
+    public function name(): Attribute
+    {
         return Attribute::make(
-            get: fn(?string $value): string => $value ?: $this->email,
+            get: fn (?string $value): string => $value ?: $this->email,
         );
     }
 
     /**
      * Determine if the user has access to the admin panel
      */
-    public function canAccessPanel(Panel $panel): bool {
+    public function canAccessPanel(Panel $panel): bool
+    {
         return $this->admin;
     }
 }

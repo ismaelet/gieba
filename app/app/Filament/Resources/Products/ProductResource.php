@@ -14,8 +14,8 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class ProductResource extends Resource {
-
+class ProductResource extends Resource
+{
     /**
      * Property: The model the resource corresponds to
      */
@@ -41,21 +41,25 @@ class ProductResource extends Resource {
      */
     protected static ?int $navigationSort = 3;
 
-    public static function form(Schema $schema): Schema {
+    public static function form(Schema $schema): Schema
+    {
         return ProductForm::configure($schema);
     }
 
-    public static function table(Table $table): Table {
+    public static function table(Table $table): Table
+    {
         return ProductsTable::configure($table);
     }
 
-    public static function getRelations(): array {
+    public static function getRelations(): array
+    {
         return [
             //
         ];
     }
 
-    public static function getPages(): array {
+    public static function getPages(): array
+    {
         return [
             'index' => ListProducts::route('/'),
             'create' => CreateProduct::route('/create'),

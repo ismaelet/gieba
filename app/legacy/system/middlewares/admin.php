@@ -1,3 +1,5 @@
 <?php
 
-if (!$user->admin) legacy_redirect('/login');
+if (! $user->admin) {
+    legacy_redirect('/login');
+}

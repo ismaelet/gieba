@@ -2,5 +2,4 @@
 
 namespace App\Helpers;
 
-class EcommerceHelper {
-}
+class EcommerceHelper {}

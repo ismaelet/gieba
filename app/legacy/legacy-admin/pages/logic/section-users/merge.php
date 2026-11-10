@@ -22,24 +22,24 @@ $queryConfig['title-field'] = 'name';
 * Form
 */
 $searchInputConfig = [
-	'search' => 'ecommerce_customers',
-	'search-fields' => ['name'],
-	'index-field' => 'id',
-	'visible-field' => 'name',
-	'placeholder' => 'Nome del cliente',
-	'filter' => 'id <> ' . $id,
-	'required' => true,
+    'search' => 'ecommerce_customers',
+    'search-fields' => ['name'],
+    'index-field' => 'id',
+    'visible-field' => 'name',
+    'placeholder' => 'Nome del cliente',
+    'filter' => 'id <> '.$id,
+    'required' => true,
 ];
 
 /*
 * Events
 */
 if (isset($_POST['submit'])) {
-	$customertId = $id;
-	$mainCustomerId = $_POST['id'];
+    $customertId = $id;
+    $mainCustomerId = $_POST['id'];
 
-	Order::where('customerId', $customertId)->update(['customerId' => $mainCustomerId]);
-	Customer::where('id', $customertId)->delete();
+    Order::where('customerId', $customertId)->update(['customerId' => $mainCustomerId]);
+    Customer::where('id', $customertId)->delete();
 
-	legacy_redirect('list');
+    legacy_redirect('list');
 }

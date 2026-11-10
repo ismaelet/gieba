@@ -25,22 +25,23 @@ $queryConfig['where-search'] = "LOWER(name) LIKE CONCAT('%',?,'%')";
 * List fields
 */
 $fields = [
-	['title' => 'ID', 'name' => 'id',],
-	['title' => 'Nome', 'name' => 'name', 'size' => 2],
-	['title' => 'Prezzo di default', 'name' => 'price', 'size' => 1],
-	['title' => 'Vendite', 'name' => 'saleCount', 'size' => 1],
+    ['title' => 'ID', 'name' => 'id'],
+    ['title' => 'Nome', 'name' => 'name', 'size' => 2],
+    ['title' => 'Prezzo di default', 'name' => 'price', 'size' => 1],
+    ['title' => 'Vendite', 'name' => 'saleCount', 'size' => 1],
 
-	['type' => 'btn'],
+    ['type' => 'btn'],
 ];
 
 $buttons = [
-	['type' => 'edit'],
-	['type' => 'delete'],
-	['url' => 'merge?id={{id}}', 'title' => 'Unifica', 'color' => 'green'],
+    ['type' => 'edit'],
+    ['type' => 'delete'],
+    ['url' => 'merge?id={{id}}', 'title' => 'Unifica', 'color' => 'green'],
 ];
 
-function _expand_results(&$entry, $field, $key, $row) {
-	if ($field['name'] == 'price') {
-		$entry['value'] = format_price($entry['value']);
-	}
+function _expand_results(&$entry, $field, $key, $row)
+{
+    if ($field['name'] == 'price') {
+        $entry['value'] = format_price($entry['value']);
+    }
 }

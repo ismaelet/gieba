@@ -1,66 +1,83 @@
 <?php
 
-class Query {
+class Query
+{
+    public $stmt = false;
 
-	public $stmt = false;
-	public $res = false;
-	public $num_rows = 0;
+    public $res = false;
 
-	function __construct($stmt) {
+    public $num_rows = 0;
 
-		$this->stmt = $stmt;
+    public function __construct($stmt)
+    {
 
-		if ($this->stmt->num_rows) {
+        $this->stmt = $stmt;
 
-			$this->num_rows = $this->stmt->num_rows;
+        if ($this->stmt->num_rows) {
 
-			$res = [];
-			$row = [];
-			$params = [];
-			
-			$fields = $this->stmt->result_metadata();
-			
-			while ($field = $fields->fetch_field()) $params[] = &$row[$field->name];
+            $this->num_rows = $this->stmt->num_rows;
 
-			$this->stmt->bind_result(...$params);
+            $res = [];
+            $row = [];
+            $params = [];
 
-			$i = 0; while ($this->stmt->fetch()) {
+            $fields = $this->stmt->result_metadata();
 
-				$j = 0; foreach ($row as $value) {
-					$res[$i][array_keys($row)[$j]] = $value;
-				$j++;}
+            while ($field = $fields->fetch_field()) {
+                $params[] = &$row[$field->name];
+            }
 
-			$i++;}
+            $this->stmt->bind_result(...$params);
 
-			$this->res = $res;
+            $i = 0;
+            while ($this->stmt->fetch()) {
 
-		}
-	}
+                $j = 0;
+                foreach ($row as $value) {
+                    $res[$i][array_keys($row)[$j]] = $value;
+                    $j++;
+                }
 
-	//get result
-	function get_result() {return new Query_Result($this);}
+                $i++;
+            }
+
+            $this->res = $res;
+
+        }
+    }
+
+    // get result
+    public function get_result()
+    {
+        return new Query_Result($this);
+    }
 }
 
-class Query_Result {
+class Query_Result
+{
+    public $res = false;
 
-	public $res = false;
-	public $num_rows = 0;
+    public $num_rows = 0;
 
-	function __construct($stmt) {
+    public function __construct($stmt)
+    {
 
-		$this->res = $stmt->res;
-		$this->num_rows = $stmt->num_rows;
-	}
+        $this->res = $stmt->res;
+        $this->num_rows = $stmt->num_rows;
+    }
 
-	//fetch rows
-	function fetch_assoc() {
+    // fetch rows
+    public function fetch_assoc()
+    {
 
-		if ($this->res) {
+        if ($this->res) {
 
-			$row = array_shift($this->res);
+            $row = array_shift($this->res);
 
-			return $row;
+            return $row;
 
-		} else return false;
-	}
+        } else {
+            return false;
+        }
+    }
 }

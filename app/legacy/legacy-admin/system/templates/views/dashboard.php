@@ -3,7 +3,7 @@
 {% block main %}
 
 <!-- Navigation bar -->
-<?php require_once('-expands-dashboard/navigation.php') ?>
+<?php require_once '-expands-dashboard/navigation.php'?>
 
 <!-- Body -->
 <section id="body">

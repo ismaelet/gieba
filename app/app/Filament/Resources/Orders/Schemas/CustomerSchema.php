@@ -15,8 +15,10 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Icons\Heroicon;
 
-trait CustomerSchema {
-    protected static function getCustomerSchema(): Fieldset {
+trait CustomerSchema
+{
+    protected static function getCustomerSchema(): Fieldset
+    {
         return Fieldset::make('Dati del cliente')
             ->schema([
                 Select::make('customer_id')
@@ -48,7 +50,7 @@ trait CustomerSchema {
                             ->whereNotIn('status', [6, 7, 8, 99])
                             ->when(
                                 $record,
-                                fn($query) => $query->whereKeyNot($record->getKey()),
+                                fn ($query) => $query->whereKeyNot($record->getKey()),
                             )
                             ->exists();
 
@@ -140,18 +142,18 @@ trait CustomerSchema {
 
                 Group::make()
                     ->statePath('customer_data')
-                    ->visible(fn(Get $get) => filled($get('customer_id')))
+                    ->visible(fn (Get $get) => filled($get('customer_id')))
                     ->schema([
                         TextInput::make('phone')
                             ->label('Numero di telefono')
                             ->placeholder('Numero di telefono')
-                            ->afterStateHydrated(fn(?Order $record, Set $set) => $set('phone', $record?->customer?->phone ?? ''))
+                            ->afterStateHydrated(fn (?Order $record, Set $set) => $set('phone', $record?->customer?->phone ?? ''))
                             ->copyable(),
                         Textarea::make('info')
                             ->label('Dettagli cliente')
                             ->placeholder('Dettagli cliente')
                             ->autosize()
-                            ->afterStateHydrated(fn(?Order $record, Set $set) => $set('info', $record?->customer?->info ?? '')),
+                            ->afterStateHydrated(fn (?Order $record, Set $set) => $set('info', $record?->customer?->info ?? '')),
                     ]),
             ])
             ->columns(1)

@@ -1,106 +1,127 @@
 <?php
 
-class User {
+use Legacy\System\Classes\DB;
 
-	private $data = [];
+class User
+{
+    private $data = [];
 
-	public $id = null;
-	public $username;
-	public $userFirstname;
-	public $userLastname;
-	public $email;
-	public $groupId = null;
-	public $admin = false;
+    public $id = null;
 
-	function __construct($id) {
-		if ($row = \Legacy\System\Classes\DB::row('* FROM users WHERE id=?', [$id])) {
-			$this->id = $id;
-			$this->username = $row['username'] ?: $row['email'];
-			$this->userFirstname = ucfirst($row['firstname']);
-			$this->userLastname = ucfirst($row['lastname']);
-			$this->email = strtolower($row['email']);
-			$this->groupId = $row['groupId'] ?? null;
-			$this->admin = $row['admin'];
-		}
-	}
+    public $username;
 
-	function __get($name) {
-		if (array_key_exists($name, $this->data)) {
-			return $this->data[$name];
-		} else {
-			switch ($name) {
-					// basic data
-				case 'firstname':
-					return $this->data['firstname'] = $this->getFirstName();
-				case 'lastname':
-					return $this->data['lastname'] = $this->getLastName();
-				case 'fullName':
-					return $this->data['fullName'] = $this->getFullName();
-				case 'phone':
-					return $this->data['phone'] = $this->getPhone();
+    public $userFirstname;
 
-					// images
-				case 'icon':
-					return $this->data['icon'] = $this->icon();
-			}
-		}
-	}
+    public $userLastname;
 
-	private function getFirstName() {
-		global $customer;
+    public $email;
 
-		$firstname = $this->userFirstname;
+    public $groupId = null;
 
-		if (
-			!$firstname &&
-			isset($customer) &&
-			$customer->id &&
-			$customer->lastAddress->id
-		) {
-			$firstname = $customer->lastAddress->firstname;
-		}
+    public $admin = false;
 
-		return $firstname;
-	}
+    public function __construct($id)
+    {
+        if ($row = DB::row('* FROM users WHERE id=?', [$id])) {
+            $this->id = $id;
+            $this->username = $row['username'] ?: $row['email'];
+            $this->userFirstname = ucfirst($row['firstname']);
+            $this->userLastname = ucfirst($row['lastname']);
+            $this->email = strtolower($row['email']);
+            $this->groupId = $row['groupId'] ?? null;
+            $this->admin = $row['admin'];
+        }
+    }
 
-	private function getLastName() {
-		global $customer;
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
+        } else {
+            switch ($name) {
+                // basic data
+                case 'firstname':
+                    return $this->data['firstname'] = $this->getFirstName();
+                case 'lastname':
+                    return $this->data['lastname'] = $this->getLastName();
+                case 'fullName':
+                    return $this->data['fullName'] = $this->getFullName();
+                case 'phone':
+                    return $this->data['phone'] = $this->getPhone();
 
-		$lastname = $this->userLastname;
+                    // images
+                case 'icon':
+                    return $this->data['icon'] = $this->icon();
+            }
+        }
+    }
 
-		if (
-			!$lastname &&
-			isset($customer) &&
-			$customer->id &&
-			$customer->lastAddress->id
-		) {
-			$lastname = $customer->lastAddress->Lastname;
-		}
+    private function getFirstName()
+    {
+        global $customer;
 
-		return $lastname;
-	}
+        $firstname = $this->userFirstname;
 
-	private function getFullName() {
-		$name = [];
+        if (
+            ! $firstname &&
+            isset($customer) &&
+            $customer->id &&
+            $customer->lastAddress->id
+        ) {
+            $firstname = $customer->lastAddress->firstname;
+        }
 
-		if ($this->firstname) $name[] = $this->firstname;
-		if ($this->lastname) $name[] = $this->lastname;
+        return $firstname;
+    }
 
-		return implode(' ', $name);
-	}
+    private function getLastName()
+    {
+        global $customer;
 
-	private function icon() {
-		$icon = '/uploads/profile-icons/' . $this->id . '.jpg';
+        $lastname = $this->userLastname;
 
-		if (!file_exists(SERVER_ROOT . $icon)) $icon = '/uploads/profile-icons/0.jpg';
+        if (
+            ! $lastname &&
+            isset($customer) &&
+            $customer->id &&
+            $customer->lastAddress->id
+        ) {
+            $lastname = $customer->lastAddress->Lastname;
+        }
 
-		return $icon;
-	}
+        return $lastname;
+    }
 
-	private function getPhone() {
-		$customerId = \Legacy\System\Classes\DB::find('id FROM ecommerce_customers WHERE userId=?', [$this->id]);
-		$phone = \Legacy\System\Classes\DB::find('phone FROM ecommerce_addresses WHERE customerId=? ORDER BY time DESC', [$customerId]);
+    private function getFullName()
+    {
+        $name = [];
 
-		return $phone;
-	}
+        if ($this->firstname) {
+            $name[] = $this->firstname;
+        }
+        if ($this->lastname) {
+            $name[] = $this->lastname;
+        }
+
+        return implode(' ', $name);
+    }
+
+    private function icon()
+    {
+        $icon = '/uploads/profile-icons/'.$this->id.'.jpg';
+
+        if (! file_exists(SERVER_ROOT.$icon)) {
+            $icon = '/uploads/profile-icons/0.jpg';
+        }
+
+        return $icon;
+    }
+
+    private function getPhone()
+    {
+        $customerId = DB::find('id FROM ecommerce_customers WHERE userId=?', [$this->id]);
+        $phone = DB::find('phone FROM ecommerce_addresses WHERE customerId=? ORDER BY time DESC', [$customerId]);
+
+        return $phone;
+    }
 }

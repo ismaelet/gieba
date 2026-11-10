@@ -1,64 +1,79 @@
 <?php
 
-class Query {
+class Query
+{
+    public $res = false;
 
-	public $res = false;
-	public $num_rows = 0;
+    public $num_rows = 0;
 
-	function __construct($stmt) {
+    public function __construct($stmt)
+    {
 
+        if ($stmt->num_rows) {
 
-		if ($stmt->num_rows) {
+            $this->num_rows = $stmt->num_rows;
 
-			$this->num_rows = $stmt->num_rows;
+            $res = [];
+            $row = [];
+            $params = [];
 
-			$res = [];
-			$row = [];
-			$params = [];
-			
-			$fields = $stmt->result_metadata();
-			
-			while ($field = $fields->fetch_field()) $params[] = &$row[$field->name];
+            $fields = $stmt->result_metadata();
 
-			$stmt->bind_result(...$params);
+            while ($field = $fields->fetch_field()) {
+                $params[] = &$row[$field->name];
+            }
 
-			$i = 0; while ($stmt->fetch()) {
+            $stmt->bind_result(...$params);
 
-				$j = 0; foreach ($row as $value) {
-					$res[$i][array_keys($row)[$j]] = $value;
-				$j++;}
+            $i = 0;
+            while ($stmt->fetch()) {
 
-			$i++;}
+                $j = 0;
+                foreach ($row as $value) {
+                    $res[$i][array_keys($row)[$j]] = $value;
+                    $j++;
+                }
 
-			$this->res = $res;
+                $i++;
+            }
 
-		}
-	}
+            $this->res = $res;
 
-	//get result
-	function get_result() {return new Query_Result($this);}
+        }
+    }
+
+    // get result
+    public function get_result()
+    {
+        return new Query_Result($this);
+    }
 }
 
-class Query_Result {
+class Query_Result
+{
+    public $res = false;
 
-	public $res = false;
-	public $num_rows = 0;
+    public $num_rows = 0;
 
-	function __construct($stmt) {
+    public function __construct($stmt)
+    {
 
-		$this->res = $stmt->res;
-		$this->num_rows = $stmt->num_rows;
-	}
+        $this->res = $stmt->res;
+        $this->num_rows = $stmt->num_rows;
+    }
 
-	//fetch rows
-	function fetch_assoc() {
+    // fetch rows
+    public function fetch_assoc()
+    {
 
-		if ($this->res) {
+        if ($this->res) {
 
-			$row = array_shift($this->res);
+            $row = array_shift($this->res);
 
-			return $row;
+            return $row;
 
-		} else return false;
-	}
+        } else {
+            return false;
+        }
+    }
 }

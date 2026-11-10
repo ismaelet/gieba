@@ -6,12 +6,12 @@ use App\Models\OrderItem;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Str;
 
-class DashboardRecap extends Widget {
-
+class DashboardRecap extends Widget
+{
     /**
      * Property: the column span of the widget
      */
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     /**
      * Property: the view for the widget
@@ -21,7 +21,8 @@ class DashboardRecap extends Widget {
     /**
      * Get the status recap data
      */
-    public function statusData(): array {
+    public function statusData(): array
+    {
         $recapData = [];
         $statuses = config('ecommerce.order_statuses');
 
@@ -41,8 +42,9 @@ class DashboardRecap extends Widget {
     /**
      * Get the total billed withdrawn amount
      */
-    public function billedWithdrawn(): float {
-        return OrderItem::whereHas('order', fn($query) => $query->where('billed', true))
+    public function billedWithdrawn(): float
+    {
+        return OrderItem::whereHas('order', fn ($query) => $query->where('billed', true))
             ->where('status', 6)
             ->sum('total_price_gross');
     }
@@ -50,8 +52,9 @@ class DashboardRecap extends Widget {
     /**
      * Get the total not billed withdrawn amount
      */
-    public function notBilledWithdrawn(): float {
-        return OrderItem::whereHas('order', fn($query) => $query->where('billed', false))
+    public function notBilledWithdrawn(): float
+    {
+        return OrderItem::whereHas('order', fn ($query) => $query->where('billed', false))
             ->where('status', 6)
             ->sum('total_price_gross');
     }

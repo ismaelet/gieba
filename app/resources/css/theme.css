@@ -1,72 +1,72 @@
 /* Assets */
 @font-face {
-	font-family: 'Poppins';
-	font-weight: 300;
-	font-display: swap;
-	src: url('../../public/fonts/Poppins/Poppins-Light.ttf') format('truetype');
+  font-family: "Poppins";
+  font-weight: 300;
+  font-display: swap;
+  src: url("../../public/fonts/Poppins/Poppins-Light.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: 'Poppins';
-	font-weight: 400;
-	font-display: swap;
-	src: url('../../public/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+  font-family: "Poppins";
+  font-weight: 400;
+  font-display: swap;
+  src: url("../../public/fonts/Poppins/Poppins-Regular.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: 'Poppins';
-	font-weight: 700;
-	font-display: swap;
-	src: url('../../public/fonts/Poppins/Poppins-Bold.ttf') format('truetype');
+  font-family: "Poppins";
+  font-weight: 700;
+  font-display: swap;
+  src: url("../../public/fonts/Poppins/Poppins-Bold.ttf") format("truetype");
 }
 
 @font-face {
-	font-family: 'Open Sans';
-	font-weight: 400 900;
-	font-display: swap;
-	src: url('../../public/fonts/OpenSans/OpenSans.ttf') format('truetype');
+  font-family: "Open Sans";
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("../../public/fonts/OpenSans/OpenSans.ttf") format("truetype");
 }
 
 /* Theme */
 @theme {
-	/* Theme: Colors */
-	--color-background-400: var(--color-white);
-	--color-background-500: #ebeae8;
+  /* Theme: Colors */
+  --color-background-400: var(--color-white);
+  --color-background-500: #ebeae8;
 
-	--color-neutral-border: var(--color-slate-300);
-	--color-neutral-heading: #271d28;
-	--color-neutral-text: #404040;
+  --color-neutral-border: var(--color-slate-300);
+  --color-neutral-heading: #271d28;
+  --color-neutral-text: #404040;
 
-	--color-primary-400: #eead47;
-	--color-primary-500: #e8930d;
+  --color-primary-400: #eead47;
+  --color-primary-500: #e8930d;
 
-	/* Theme: Fonts */
-	--font-heading: 'Poppins', system-ui, sans-serif;
-	--font-sans: 'Open Sans', system-ui, sans-serif;
+  /* Theme: Fonts */
+  --font-heading: "Poppins", system-ui, sans-serif;
+  --font-sans: "Open Sans", system-ui, sans-serif;
 
-	/* Spacing */
-	--spacing-breakout: 1440px;
-	--spacing-content: 1200px;
-	--spacing-content-padding: clamp(1rem, 2vw + 0.5rem, 2rem);
-	--spacing-section: clamp(0rem, 5vw + 2rem, 7.5rem);
+  /* Spacing */
+  --spacing-breakout: 1440px;
+  --spacing-content: 1200px;
+  --spacing-content-padding: clamp(1rem, 2vw + 0.5rem, 2rem);
+  --spacing-section: clamp(0rem, 5vw + 2rem, 7.5rem);
 }
 
 /* Basic setup */
 body {
-	background-color: var(--color-background-400);
-	color: var(--color-neutral-text);
+  background-color: var(--color-background-400);
+  color: var(--color-neutral-text);
 }
 
 /* Dark mode */
 .dark {
-	--color-background-400: var(--color-slate-900);
-	--color-background-500: var(--color-slate-800);
+  --color-background-400: var(--color-slate-900);
+  --color-background-500: var(--color-slate-800);
 
-	--color-neutral-border: #76738c;
-	--color-neutral-heading: var(--color-white);
-	--color-neutral-text: var(--color-slate-300);
+  --color-neutral-border: #76738c;
+  --color-neutral-heading: var(--color-white);
+  --color-neutral-text: var(--color-slate-300);
 
-	color: var(--color-neutral-text);
+  color: var(--color-neutral-text);
 }
 
 /* Utilities */

@@ -1,24 +1,24 @@
 <?php
 
-//select table
+// select table
 $index = 'id';
 $tbl = 'variables';
 $query['index'] = 'name';
 $query['order'] = 'asc';
 
-//handle search
+// handle search
 $query['filter'] = "name LIKE CONCAT('%',?,'%')";
 
-//select fields
+// select fields
 $fields = [
-	['title' => 'Nome', 'name' => 'name', 'size' => 'l'],
-	['title' => 'Valore', 'name' => 'value', 'size' => 'm'],
+    ['title' => 'Nome', 'name' => 'name', 'size' => 'l'],
+    ['title' => 'Valore', 'name' => 'value', 'size' => 'm'],
 
-	['type' => 'btn'],
+    ['type' => 'btn'],
 ];
 
-//buttons
+// buttons
 $buttons = [
-	['type' => 'edit'],
-	['type' => 'delete'],
+    ['type' => 'edit'],
+    ['type' => 'delete'],
 ];

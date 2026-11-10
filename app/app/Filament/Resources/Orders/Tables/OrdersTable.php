@@ -29,8 +29,10 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class OrdersTable {
-    public static function configure(Table $table): Table {
+class OrdersTable
+{
+    public static function configure(Table $table): Table
+    {
         return $table
             /**
              * Query
@@ -50,8 +52,8 @@ class OrdersTable {
                 TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
-                    ->extraAttributes(fn(Order $record): array => [
-                        'id' => 'order-id-' . $record->id,
+                    ->extraAttributes(fn (Order $record): array => [
+                        'id' => 'order-id-'.$record->id,
                     ])
                     ->searchable(),
 
@@ -86,8 +88,8 @@ class OrdersTable {
                     ->label('Stato')
                     ->sortable()
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => config('ecommerce.order_statuses')[$state]['label'] ?? $state)
-                    ->color(fn(int $state): string => 'status-' . $state)
+                    ->formatStateUsing(fn (string $state): string => config('ecommerce.order_statuses')[$state]['label'] ?? $state)
+                    ->color(fn (int $state): string => 'status-'.$state)
                     ->toggleable()
                     ->toggledHiddenByDefault(false),
 
@@ -127,7 +129,7 @@ class OrdersTable {
                             ->label('Stato')
                             ->options(
                                 collect(config('ecommerce.order_statuses'))
-                                    ->mapWithKeys(fn($status, $key) => [$key => $status['label']])
+                                    ->mapWithKeys(fn ($status, $key) => [$key => $status['label']])
                                     ->union([
                                         1001 => 'Fatturato',
                                         1002 => 'Non fatturato',
@@ -140,7 +142,7 @@ class OrdersTable {
                         $statuses = array_values(array_filter($data['statuses'] ?? []));
 
                         // numeric statuses
-                        $realStatuses = array_filter($statuses, fn($s) => $s < 1000);
+                        $realStatuses = array_filter($statuses, fn ($s) => $s < 1000);
 
                         if ($realStatuses === []) {
                             $query->where(function (Builder $q) {
@@ -159,11 +161,11 @@ class OrdersTable {
                         }
 
                         // billed / not billed
-                        if (in_array(1001, $statuses) && !in_array(1002, $statuses)) {
+                        if (in_array(1001, $statuses) && ! in_array(1002, $statuses)) {
                             $query->where('billed', true);
                         }
 
-                        if (in_array(1002, $statuses) && !in_array(1001, $statuses)) {
+                        if (in_array(1002, $statuses) && ! in_array(1001, $statuses)) {
                             $query->where('billed', false);
                         }
                     })->columnSpan(2),
@@ -189,13 +191,11 @@ class OrdersTable {
                         return $query
                             ->when(
                                 $data['from'] ?? null,
-                                fn(Builder $query, $date) =>
-                                $query->whereDate('created_at', '>=', $date),
+                                fn (Builder $query, $date) => $query->whereDate('created_at', '>=', $date),
                             )
                             ->when(
                                 $data['until'] ?? null,
-                                fn(Builder $query, $date) =>
-                                $query->whereDate('created_at', '<=', $date),
+                                fn (Builder $query, $date) => $query->whereDate('created_at', '<=', $date),
                             );
                     }),
 
@@ -214,17 +214,17 @@ class OrdersTable {
                                 ->placeholder('0')
                                 ->suffix('€')
                                 ->numeric(),
-                        ])->columns(2)
+                        ])->columns(2),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['price_from'] ?? null,
-                                fn(Builder $query, $price) => $query->where('price_gross', '>=', $price)
+                                fn (Builder $query, $price) => $query->where('price_gross', '>=', $price)
                             )
                             ->when(
                                 $data['price_until'] ?? null,
-                                fn(Builder $query, $price) => $query->where('price_gross', '<=', $price)
+                                fn (Builder $query, $price) => $query->where('price_gross', '<=', $price)
                             );
                     }),
             ], layout: FiltersLayout::AboveContent)
@@ -261,7 +261,7 @@ class OrdersTable {
                             ]);
 
                             $livewire->js(
-                                'window.open(' . json_encode($url) . ', "_blank")',
+                                'window.open('.json_encode($url).', "_blank")',
                             );
                         }),
 
@@ -290,7 +290,7 @@ class OrdersTable {
                             ]);
 
                             $livewire->js(
-                                'window.open(' . json_encode($url) . ', "_blank")',
+                                'window.open('.json_encode($url).', "_blank")',
                             );
                         }),
 
@@ -299,19 +299,19 @@ class OrdersTable {
                         ->color('amber')
                         ->icon(Heroicon::ArrowsPointingIn)
                         ->modalSubmitActionLabel('Unisci ordini')
-                        ->schema(fn(Order $record) => [
+                        ->schema(fn (Order $record) => [
                             Select::make('target_order_id')
                                 ->label('Unisci con ordine')
                                 ->aboveContent('Gli aricoli dell\'ordine selezionato qui sotto verranno tutti trasferiti in quest\'ordine. I dati che verranno mantenuti saranno quelli di quest\'ordine, non quelli dell\'ordine selezionato sotto.')
                                 ->searchable()
                                 ->getSearchResultsUsing(
-                                    fn(string $search) => Order::query()
+                                    fn (string $search) => Order::query()
                                         ->whereKeyNot($record->id)
                                         ->where('id', $search)
                                         ->limit(50)
                                         ->get()
-                                        ->mapWithKeys(fn(Order $order) => [
-                                            $order->id => 'Ordine ' . $order->idCode() . ' (' . ($order->customer?->name ?? '—') . ')',
+                                        ->mapWithKeys(fn (Order $order) => [
+                                            $order->id => 'Ordine '.$order->idCode().' ('.($order->customer?->name ?? '—').')',
                                         ])
                                         ->toArray()
                                 )
@@ -319,7 +319,7 @@ class OrdersTable {
                                     $order = Order::with('customer')->find($value);
 
                                     return $order
-                                        ? 'Ordine ' . $order->idCode() . ' (' . ($order->customer?->name ?? '—') . ')'
+                                        ? 'Ordine '.$order->idCode().' ('.($order->customer?->name ?? '—').')'
                                         : (string) $value;
                                 })
                                 ->required(),
@@ -341,7 +341,7 @@ class OrdersTable {
                     DeleteAction::make(),
                 ]),
             ])
-            ->recordUrl(fn(Order $record, Component $livewire) => OrderResource::getUrl('edit', [
+            ->recordUrl(fn (Order $record, Component $livewire) => OrderResource::getUrl('edit', [
                 'record' => $record,
                 'return_url' => self::currentListUrl($record, $livewire),
             ]))
@@ -399,8 +399,9 @@ class OrdersTable {
             ]);
     }
 
-    private static function currentListUrl(Order $record, ?Component $livewire = null): string {
-        $fragment = 'order-id-' . $record->id;
+    private static function currentListUrl(Order $record, ?Component $livewire = null): string
+    {
+        $fragment = 'order-id-'.$record->id;
 
         // 1) Best: build from Livewire state (this updates when you paginate)
         if ($livewire) {
@@ -414,9 +415,9 @@ class OrdersTable {
 
                 // pagination: Filament uses tablePage in most setups
                 'page' => method_exists($livewire, 'getTablePage') ? ($livewire->getTablePage() ?: null) : null,
-            ], fn($v) => $v !== null);
+            ], fn ($v) => $v !== null);
 
-            return OrderResource::getUrl('index', $params) . '#' . $fragment;
+            return OrderResource::getUrl('index', $params).'#'.$fragment;
         }
 
         // 2) Fallback: referer (only works for full page loads)
@@ -425,15 +426,16 @@ class OrdersTable {
             $sanitized = self::sanitizeReturnUrl($referer);
 
             if (filled($sanitized) && self::isOrdersIndexPath($sanitized)) {
-                return $sanitized . '#' . $fragment;
+                return $sanitized.'#'.$fragment;
             }
         }
 
         // 3) Final fallback
-        return OrderResource::getUrl('index') . '#' . $fragment;
+        return OrderResource::getUrl('index').'#'.$fragment;
     }
 
-    private static function sanitizeReturnUrl(string $url): ?string {
+    private static function sanitizeReturnUrl(string $url): ?string
+    {
         $parts = parse_url($url);
 
         $path = $parts['path'] ?? null;
@@ -447,11 +449,13 @@ class OrdersTable {
             unset($query['return_url']);
         }
 
-        $qs = $query ? ('?' . http_build_query($query)) : '';
-        return $path . $qs;
+        $qs = $query ? ('?'.http_build_query($query)) : '';
+
+        return $path.$qs;
     }
 
-    private static function isOrdersIndexPath(string $relativeUrl): bool {
+    private static function isOrdersIndexPath(string $relativeUrl): bool
+    {
         $path = parse_url($relativeUrl, PHP_URL_PATH) ?: '';
         $indexPath = parse_url(OrderResource::getUrl('index'), PHP_URL_PATH) ?: '';
 

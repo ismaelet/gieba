@@ -1,28 +1,32 @@
 <?php
 
-function sysDB($field) {
+function sysDB($field)
+{
 
-	global $sysConfig;
+    global $sysConfig;
 
-	return $sysConfig[$field] ?? false;
+    return $sysConfig[$field] ?? false;
 }
 
-function sysData($field) {
+function sysData($field)
+{
 
-	global $sysConfig;
+    global $sysConfig;
 
-	return $sysConfig[$field] ?? false;
+    return $sysConfig[$field] ?? false;
 }
 
-function sysVar($field) {
+function sysVar($field)
+{
 
-	global $sysConfig;
+    global $sysConfig;
 
-	return $sysConfig[$field] ?? false;
+    return $sysConfig[$field] ?? false;
 }
 
-function sysConfig($field) {
-	global $sysConfig;
+function sysConfig($field)
+{
+    global $sysConfig;
 
-	return $sysConfig[$field] ?? false;
+    return $sysConfig[$field] ?? false;
 }

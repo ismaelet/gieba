@@ -8,7 +8,11 @@
 		<div class="body">
 			<div class="panel-header">
 				<div class="panel-icon icon-box">
-					<?= icon_embed(APP_ICONS_DIR . 'navigation/items') ?>
+					<?php
+
+use Ecommerce\Cart;
+
+?><?= icon_embed(APP_ICONS_DIR.'navigation/items') ?>
 				</div>
 				<h1 class="title">Prodotti</h1>
 			</div>
@@ -28,7 +32,7 @@
 		<div class="body">
 			<div class="panel-header">
 				<div class="panel-icon icon-box">
-					<?= icon_embed(APP_ICONS_DIR . 'navigation/orders') ?>
+					<?= icon_embed(APP_ICONS_DIR.'navigation/orders') ?>
 				</div>
 				<h1 class="title">Ordini recenti</h1>
 			</div>
@@ -46,9 +50,9 @@
 					</div>
 
 					<?php while ($cart = $carts->fetch_assoc()) {
-						$cart = new Ecommerce\Cart($cart['id']);
-					?>
-						<a class="order" href="<?= client_url('/orders/edit?id=' . $cart->id) ?>">
+					    $cart = new Cart($cart['id']);
+					    ?>
+						<a class="order" href="<?= client_url('/orders/edit?id='.$cart->id) ?>">
 							<p class="order-field"><?= $cart->idCode ?></p>
 							<p class="order-field"><?= $cart->address->fullname ?></p>
 							<p class="order-field"><?= $cart->quantity ?> <?= $cart->quantity == 1 ? 'prodotto' : 'prodotti' ?></p>

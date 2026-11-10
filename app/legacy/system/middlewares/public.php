@@ -1,5 +1,9 @@
 <?php
 
-$public = sysDB('static') ?: \Legacy\System\Classes\DB::find('value FROM config WHERE name=?', ['public']);
+use Legacy\System\Classes\DB;
 
-if (!$public && !$user->admin) legacy_redirect('/offline');
+$public = sysDB('static') ?: DB::find('value FROM config WHERE name=?', ['public']);
+
+if (! $public && ! $user->admin) {
+    legacy_redirect('/offline');
+}

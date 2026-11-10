@@ -19,13 +19,13 @@ $queryConfig['order-direction'] = 'ASC';
 * List fields
 */
 $fields = [
-	['title' => 'Nome', 'name' => 'name', 'size' => 3],
-	['title' => 'Slug', 'name' => 'slug', 'size' => 3],
+    ['title' => 'Nome', 'name' => 'name', 'size' => 3],
+    ['title' => 'Slug', 'name' => 'slug', 'size' => 3],
 
-	['type' => 'btn'],
+    ['type' => 'btn'],
 ];
 
 $buttons = [
-	['type' => 'edit'],
-	['type' => 'delete'],
+    ['type' => 'edit'],
+    ['type' => 'delete'],
 ];

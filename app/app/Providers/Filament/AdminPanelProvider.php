@@ -18,8 +18,10 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider {
-    public function panel(Panel $panel): Panel {
+class AdminPanelProvider extends PanelProvider
+{
+    public function panel(Panel $panel): Panel
+    {
         return $panel
             ->default()
             ->id('admin')
@@ -55,7 +57,7 @@ class AdminPanelProvider extends PanelProvider {
             ])
             ->userMenuItems([
                 Action::make('emergency_exit')
-                    ->action(fn() => redirect()->route('admin.emergency-exit'))
+                    ->action(fn () => redirect()->route('admin.emergency-exit'))
                     ->color('danger')
                     ->label('Emergency Exit')
                     ->requiresConfirmation()

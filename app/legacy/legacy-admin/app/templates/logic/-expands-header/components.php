@@ -1,20 +1,22 @@
 <?php
 
+use Legacy\System\Classes\View;
+
 /*
 * Desktop navigation bar
 */
 $headerComponent['desktop-navigation'] = function () {
-	global $header;
-?>
+    global $header;
+    ?>
 
 	<nav class="h-nav">
 
 		<?php foreach ((array) $header['links'] as $link) {
-			if (empty($link['mobile'])) { ?>
+		    if (empty($link['mobile'])) { ?>
 
-				<div class="h-link <?= !isset($link['url']) ? 'h-link--inactive' : '' ?>">
-					<a <?= isset($link['url']) ? 'href="' . $link['url'] . '"' : '' ?> <?= isset($link['megamenu']) ? 'data-function="open-megamenu" data-target="' . $link['megamenu'] . '"' : false ?>>
-						<h3 class="h-link-title <?= \Legacy\System\Classes\View::$location == $link['loc'] ? 'active' : false ?>">
+				<div class="h-link <?= ! isset($link['url']) ? 'h-link--inactive' : '' ?>">
+					<a <?= isset($link['url']) ? 'href="'.$link['url'].'"' : '' ?> <?= isset($link['megamenu']) ? 'data-function="open-megamenu" data-target="'.$link['megamenu'].'"' : false ?>>
+						<h3 class="h-link-title <?= View::$location == $link['loc'] ? 'active' : false ?>">
 							<?= $link['title'] ?>
 							<?= isset($link['drop']) ? '<span class="h-ddown-icon">&#x25BC;</span>' : false ?>
 						</h3>
@@ -34,7 +36,7 @@ $headerComponent['desktop-navigation'] = function () {
 
 				</div>
 		<?php }
-		} ?>
+		    } ?>
 
 	</nav>
 <?php };
@@ -60,8 +62,8 @@ $headerComponent['mobile-icon'] = function () { ?>
 * Mobile menu
 */
 $headerComponent['mobile-menu'] = function () {
-	global $header;
-?>
+    global $header;
+    ?>
 
 	<div class="h-mob-menu">
 		<div class="h-mob-bgr" data-function="mobile-menu-close"></div>
@@ -74,13 +76,13 @@ $headerComponent['mobile-menu'] = function () {
 			<div class="h-mob-links">
 
 				<?php foreach ((array) $header['links'] as $link) {
-					if (!isset($link['mobile']) || $link['mobile']) { ?>
+				    if (! isset($link['mobile']) || $link['mobile']) { ?>
 
 						<!-- Link -->
 						<label class="link">
 							<input type="checkbox" class="hidden">
 
-							<a class="hm-link_header flex-line" <?= !isset($link['drop']) && !isset($link['megamenu']) ? 'href="' . $link['url'] . '"' : '' ?>>
+							<a class="hm-link_header flex-line" <?= ! isset($link['drop']) && ! isset($link['megamenu']) ? 'href="'.$link['url'].'"' : '' ?>>
 								<h3 class="h-mob-link-title">
 									<?= $link['title'] ?>
 								</h3>
@@ -111,15 +113,15 @@ $headerComponent['mobile-menu'] = function () {
 							<?php } ?>
 
 							<?php if (isset($link['megamenu'])) {
-								$megamenuData = (array) $header['megamenus'][$link['megamenu']];
-							?>
+							    $megamenuData = (array) $header['megamenus'][$link['megamenu']];
+							    ?>
 
 								<!-- Megamenu menu -->
 								<div class="hm-ddown">
 
 									<?php
-									if (isset($megamenuData['type']) && $megamenuData['type'] == 'free') {
-										foreach ($megamenuData['links'] as $ddownLink) { ?>
+							            if (isset($megamenuData['type']) && $megamenuData['type'] == 'free') {
+							                foreach ($megamenuData['links'] as $ddownLink) { ?>
 
 											<p class="hm-ddown_link">
 												<a href="<?= $ddownLink[1] ?>">
@@ -128,8 +130,8 @@ $headerComponent['mobile-menu'] = function () {
 											</p>
 
 										<?php }
-									} else {
-										foreach ($megamenuData as $ddownLinkGroup) { ?>
+							                } else {
+							                    foreach ($megamenuData as $ddownLinkGroup) { ?>
 
 											<p class="hm-ddown_link">
 												<a href="<?= $ddownLinkGroup['url'] ?>">
@@ -138,7 +140,7 @@ $headerComponent['mobile-menu'] = function () {
 											</p>
 
 									<?php }
-									} ?>
+							                    } ?>
 								</div>
 
 							<?php } ?>
@@ -146,7 +148,7 @@ $headerComponent['mobile-menu'] = function () {
 						</label>
 
 				<?php }
-				} ?>
+				    } ?>
 
 			</div>
 		</div>
@@ -158,7 +160,7 @@ $headerComponent['mobile-menu'] = function () {
 */
 $headerComponent['logo'] = function () { ?>
 	<a class="h-logo" href="<?= client_url('/') ?>">
-		<img class="img-fit" src="<?= client_url(LOGO_DIR . 'logo.svg') ?>">
+		<img class="img-fit" src="<?= client_url(LOGO_DIR.'logo.svg') ?>">
 	</a>
 <?php };
 
@@ -167,12 +169,12 @@ $headerComponent['logo'] = function () { ?>
 */
 $headerComponent['name'] = '
 	<div class="name-box">
-		<a href="' . client_url('/') . '">
-			<h3 class="name desk1024">' . $header['name'] . '</h3>
+		<a href="'.client_url('/').'">
+			<h3 class="name desk1024">'.$header['name'].'</h3>
 		</a>
 
-		<a href="' . client_url('/') . '">
-			<h3 class="name mob1024">' . $header['name-mob'] . '</h3>
+		<a href="'.client_url('/').'">
+			<h3 class="name mob1024">'.$header['name-mob'].'</h3>
 		</a>
 	</div>
 ';
@@ -199,12 +201,12 @@ $headerComponent['search-icon'] = function () { ?>
 <?php };
 
 $headerComponent['search-simple'] = '
-	<form class="h-search h-search_simple" action="' . client_url('/shop#shop') . '" method="GET" autocomplete="off">
+	<form class="h-search h-search_simple" action="'.client_url('/shop#shop').'" method="GET" autocomplete="off">
 		<div class="h-search-icon icon-box">
-			' . icon_embed('search') . '
+			'.icon_embed('search').'
 		</div>
 		
-		<input type="text" class="h-search-inp" name="search" placeholder="' . legacy__('Search') . '">
+		<input type="text" class="h-search-inp" name="search" placeholder="'.legacy__('Search').'">
 	</form>
 ';
 
@@ -213,42 +215,42 @@ $headerComponent['search-simple'] = '
 */
 /*$headerComponent['languages'] = '
 
-	<div class="h-languages load ld-bot ld-del2">
+    <div class="h-languages load ld-bot ld-del2">
 
-			<div class="h-language-icon h-language-icon_active bgr-fill" <?= icon_css('languages/' . $_SESSION['language']) ?>></div>
+            <div class="h-language-icon h-language-icon_active bgr-fill" <?= icon_css('languages/' . $_SESSION['language']) ?>></div>
 
-			<div class="h-languages-ddown">
+            <div class="h-languages-ddown">
 
-				<?php foreach ($header['languages'] as $h_lang) { ?>
+                <?php foreach ($header['languages'] as $h_lang) { ?>
 
-					<a href="?lang=<?= $h_lang[1] ?>" class="h-language <?= $_SESSION['language'] == $h_lang[1] ? 'active' : '' ?>">
+                    <a href="?lang=<?= $h_lang[1] ?>" class="h-language <?= $_SESSION['language'] == $h_lang[1] ? 'active' : '' ?>">
 
-						<div class="h-language-icon bgr-fill" <?= icon_css('languages/' . $h_lang[1]) ?>></div>
+                        <div class="h-language-icon bgr-fill" <?= icon_css('languages/' . $h_lang[1]) ?>></div>
 
-						<p class="h-language-name"><?= $h_lang[0] ?></p>
+                        <p class="h-language-name"><?= $h_lang[0] ?></p>
 
-					</a>
+                    </a>
 
-				<?php } ?>
+                <?php } ?>
 
-			</div>
+            </div>
 
-	</div>
+    </div>
 ';*/
 
 /*
 * Theme switch
 */
 /*$headerComponent['theme-switch'] = '
-					<!-- Theme switch -->
-					<div class="h-theme-switch h-nav-icon">
-						<div class="light-icon icon-box" data-theme="light">
-							<?= icon_embed('sun') ?>
-						</div>
-						<div class="dark-icon icon-box" data-theme="dark">
-							<?= icon_embed('moon') ?>
-						</div>
-					</div>
+                    <!-- Theme switch -->
+                    <div class="h-theme-switch h-nav-icon">
+                        <div class="light-icon icon-box" data-theme="light">
+                            <?= icon_embed('sun') ?>
+                        </div>
+                        <div class="dark-icon icon-box" data-theme="dark">
+                            <?= icon_embed('moon') ?>
+                        </div>
+                    </div>
 
 */
 
@@ -256,12 +258,12 @@ $headerComponent['search-simple'] = '
 * Profile icon
 */
 $headerComponent['profile'] = '
-	<a class="h-profile h-nav-icon" href="' . client_url('/profile') . '">
+	<a class="h-profile h-nav-icon" href="'.client_url('/profile').'">
 		<div class="icon-box">
-			' . icon_embed('profile-circle') . '
+			'.icon_embed('profile-circle').'
 		</div>
 
-		<p>' . ($user->firstname ?: 'Profilo') . '</p>
+		<p>'.($user->firstname ?: 'Profilo').'</p>
 	</a>
 ';
 
@@ -269,8 +271,8 @@ $headerComponent['profile'] = '
 * Megamenus
 */
 $headerComponent['megamenus'] = function () {
-	global $header;
-?>
+    global $header;
+    ?>
 
 	<section class="megamenus">
 
@@ -278,24 +280,24 @@ $headerComponent['megamenus'] = function () {
 
 		<?php foreach ((array) $header['megamenus'] as $megamenuName => $megamenu) { ?>
 
-			<div class="megamenu <?= isset($megamenu['type']) ? 'megamenu--' . $megamenu['type'] : '' ?>" id="megamenu-<?= $megamenuName ?>">
+			<div class="megamenu <?= isset($megamenu['type']) ? 'megamenu--'.$megamenu['type'] : '' ?>" id="megamenu-<?= $megamenuName ?>">
 				<div class="megamenu-content main-wrap pad-t-2 pad-b-2">
 
 					<?php if (isset($megamenu['type']) && $megamenu['type'] == 'free') {
-						foreach ($megamenu['links'] as $megamenulink) {
+					    foreach ($megamenu['links'] as $megamenulink) {
 
-							if (!isset($megamenuSection['mobile']) || !$megamenuSection['mobile']) { ?>
+					        if (! isset($megamenuSection['mobile']) || ! $megamenuSection['mobile']) { ?>
 
 								<p class="megamenu_link">
 									<a href="<?= $megamenulink[1] ?>"><?= $megamenulink[0] ?></a>
 								</p>
 
 							<?php }
-						}
+					        }
 					} else {
-						foreach ($megamenu as $megamenuSection) {
+					    foreach ($megamenu as $megamenuSection) {
 
-							if (!isset($megamenuSection['mobile']) || !$megamenuSection['mobile']) { ?>
+					        if (! isset($megamenuSection['mobile']) || ! $megamenuSection['mobile']) { ?>
 
 								<div class="megamenu-group grid gap1">
 									<?php if ($megamenuSection['title']) { ?>
@@ -313,7 +315,7 @@ $headerComponent['megamenus'] = function () {
 									</div>
 								</div>
 					<?php }
-						}
+					        }
 					} ?>
 
 				</div>

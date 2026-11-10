@@ -4,160 +4,183 @@ namespace Legacy\System\Classes;
 
 use Query;
 
-class DB {
+class DB
+{
+    // generic query
+    public static function execute($query, $values = false)
+    {
 
-	// generic query
-	static function execute($query, $values = false) {
+        global $con;
 
-		global $con;
+        if ($values) {
+            $values = (array) $values;
+        }
 
-		if ($values) $values = (array) $values;
+        // prepare the query
+        $stmt = $con->prepare($query);
 
-		// prepare the query
-		$stmt = $con->prepare($query);
+        // execute the query
+        if ($stmt) {
+            $types = [];
 
-		// execute the query
-		if ($stmt) {
-			$types = [];
+            if (! empty($values)) {
+                foreach ($values as &$value) {
+                    switch (true) {
+                        case $value && strval($value)[0] == 0:
+                            $types[] = 's';
+                            break;
 
-			if (!empty($values)) {
-				foreach ($values as &$value) {
-					switch (true) {
-						case $value && strval($value)[0] == 0:
-							$types[] = 's';
-							break;
+                        case is_int($value):
+                            $types[] = 'i';
+                            break;
 
-						case is_int($value):
-							$types[] = 'i';
-							break;
+                        case is_numeric($value):
+                            $types[] = 'd';
+                            break;
 
-						case is_numeric($value):
-							$types[] = 'd';
-							break;
+                        default:
+                            $types[] = 's';
+                            $value = htmlspecialchars($value);
+                    }
+                }
 
-						default:
-							$types[] = 's';
-							$value = htmlspecialchars($value);
-					}
-				}
+                $stmt->bind_param(implode('', $types), ...$values);
+            }
 
-				$stmt->bind_param(implode('', $types), ...$values);
-			}
+            $stmt->execute();
+            $stmt->store_result();
 
-			$stmt->execute();
-			$stmt->store_result();
+            return new Query($stmt);
+        } else {
+            return false;
+        }
+    }
 
-			return new Query($stmt);
-		} else {
-			return false;
-		}
-	}
+    // select several rows
+    public static function select($query, $values = false)
+    {
 
-	// select several rows
-	static function select($query, $values = false) {
+        $query = 'SELECT '.$query;
+        $res = self::execute($query, $values);
 
-		$query = 'SELECT ' . $query;
-		$res = self::execute($query, $values);
+        if ($res) {
+            return $res->get_result();
+        } else {
+            return false;
+        }
+    }
 
-		if ($res) return $res->get_result();
-		else return false;
-	}
+    // select a single row
+    public static function row($query, $values = false)
+    {
 
+        $query = $query.' LIMIT 1';
 
-	// select a single row
-	static function row($query, $values = false) {
+        $res = self::select($query, $values);
 
-		$query = $query . ' LIMIT 1';
+        return $res->fetch_assoc();
+    }
 
-		$res = self::select($query, $values);
+    // select a specific value
+    public static function find($query, $values = false)
+    {
 
-		return  $res->fetch_assoc();
-	}
+        $what = substr($query, 0, strpos($query, ' FROM'));
 
-	// select a specific value
-	static function find($query, $values = false) {
+        $row = self::row($query, $values);
 
-		$what = substr($query, 0, strpos($query, ' FROM'));
+        if ($row) {
+            return $row[$what];
+        } else {
+            return false;
+        }
+    }
 
-		$row = self::row($query, $values);
+    // get a count of entries
+    public static function count($query, $values = false)
+    {
 
-		if ($row) return $row[$what];
-		else return false;
-	}
+        $query = 'COUNT(*) AS num FROM '.$query;
 
-	// get a count of entries
-	static function count($query, $values = false) {
+        return self::row($query, $values)['num'];
+    }
 
-		$query = 'COUNT(*) AS num FROM ' . $query;
+    // get a sum of values
+    public static function sum($query, $values = false)
+    {
 
-		return self::row($query, $values)['num'];
-	}
+        $what = substr($query, 0, strpos($query, ' FROM'));
+        $query = substr($query, strpos($query, 'FROM ') + 5);
 
-	// get a sum of values
-	static function sum($query, $values = false) {
+        $query = 'SUM('.$what.') AS tot FROM '.$query;
 
-		$what = substr($query, 0, strpos($query, ' FROM'));
-		$query = substr($query, strpos($query, 'FROM ') + 5);
+        return self::row($query, $values)['tot'];
+    }
 
-		$query = 'SUM(' . $what . ') AS tot FROM ' . $query;
+    // add an element
+    public static function add($query, $values = [])
+    {
 
-		return self::row($query, $values)['tot'];
-	}
+        global $con;
 
-	// add an element
-	static function add($query, $values = []) {
+        $query = 'INSERT INTO '.$query;
 
-		global $con;
+        if (! strpos($query, 'VALUES') && strpos($query, '(')) {
+            $placeholders = [];
 
-		$query = 'INSERT INTO ' . $query;
+            if ($values) {
+                for ($i = 1; $i <= count($values); $i++) {
+                    $placeholders[] = '?';
+                }
+            }
 
-		if (!strpos($query, 'VALUES') && strpos($query, '(')) {
-			$placeholders = [];
+            $query .= ' VALUES ('.implode(',', $placeholders).')';
+        }
 
-			if ($values) {
-				for ($i = 1; $i <= count($values); $i++) $placeholders[] = '?';
-			}
+        if (self::execute($query, $values)) {
+            return $con->insert_id;
+        } else {
+            return false;
+        }
+    }
 
-			$query .= ' VALUES (' . implode(',', $placeholders) . ')';
-		}
+    // update an element
+    public static function update($query, $values = false)
+    {
 
-		if (self::execute($query, $values)) return $con->insert_id;
-		else return false;
-	}
+        $query = 'UPDATE '.$query;
 
-	// update an element
-	static function update($query, $values = false) {
+        return self::execute($query, $values);
+    }
 
-		$query = 'UPDATE ' . $query;
+    // delete an element
+    public static function delete($query, $values = false)
+    {
 
-		return self::execute($query, $values);
-	}
+        $query = 'DELETE FROM '.$query;
 
-	// delete an element
-	static function delete($query, $values = false) {
+        return self::execute($query, $values);
+    }
 
-		$query = 'DELETE FROM ' . $query;
+    // check if an element exists
+    public static function exists($query, $values = false)
+    {
 
-		return self::execute($query, $values);
-	}
+        $query = '1 FROM '.$query.' LIMIT 1';
 
-	// check if an element exists 
-	static function exists($query, $values = false) {
+        $res = self::select($query, $values);
 
-		$query = '1 FROM ' . $query . ' LIMIT 1';
+        return $res->num_rows;
+    }
 
-		$res = self::select($query, $values);
+    // check if a table exists
+    public static function table($tbl)
+    {
 
-		return $res->num_rows;
-	}
+        global $con;
 
-	// check if a table exists
-	static function table($tbl) {
+        $query = "SHOW TABLES LIKE '".$tbl."'";
 
-		global $con;
-
-		$query = "SHOW TABLES LIKE '" . $tbl . "'";
-
-		return $con->query($query)->num_rows;
-	}
+        return $con->query($query)->num_rows;
+    }
 }

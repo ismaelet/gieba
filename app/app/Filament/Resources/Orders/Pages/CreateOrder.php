@@ -7,8 +7,8 @@ use App\Models\Action;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 
-class CreateOrder extends CreateRecord {
-
+class CreateOrder extends CreateRecord
+{
     use HandleOrderPageLogic;
 
     /**
@@ -19,22 +19,25 @@ class CreateOrder extends CreateRecord {
     /**
      * Filament Method: Mount the edit page with the given record
      */
-    public function mount(): void {
+    public function mount(): void
+    {
         $this->storeReturnUrlInSession();
 
         parent::mount();
     }
 
-    protected function afterCreate(): void {
+    protected function afterCreate(): void
+    {
         $this->updateOrder();
 
         Action::create([
             'user_id' => Auth::id(),
-            'action' => "Ha creato l'ordine #{$this->record->id}"
+            'action' => "Ha creato l'ordine #{$this->record->id}",
         ]);
     }
 
-    protected function getRedirectUrl(): string {
+    protected function getRedirectUrl(): string
+    {
         return $this->getReturnUrlFromSession();
     }
 }

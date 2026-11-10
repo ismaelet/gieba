@@ -24,8 +24,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Livewire\Component;
 
-class SupplierOrdersTable {
-    public static function configure(Table $table): Table {
+class SupplierOrdersTable
+{
+    public static function configure(Table $table): Table
+    {
         return $table
             ->defaultSort('id', 'desc')
             ->defaultPaginationPageOption(50)
@@ -36,8 +38,8 @@ class SupplierOrdersTable {
                 TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
-                    ->extraAttributes(fn(Order $record): array => [
-                        'id' => 'order-id-' . $record->id,
+                    ->extraAttributes(fn (Order $record): array => [
+                        'id' => 'order-id-'.$record->id,
                     ])
                     ->searchable(),
 
@@ -54,8 +56,8 @@ class SupplierOrdersTable {
                     ->label('Stato')
                     ->sortable()
                     ->badge()
-                    ->formatStateUsing(fn(string $state): string => config('ecommerce.supplier_order_statuses')[$state]['label'] ?? $state)
-                    ->color(fn(int $state): string => 'status-' . $state),
+                    ->formatStateUsing(fn (string $state): string => config('ecommerce.supplier_order_statuses')[$state]['label'] ?? $state)
+                    ->color(fn (int $state): string => 'status-'.$state),
 
                 TextColumn::make('created_at')
                     ->label('Data')
@@ -69,7 +71,7 @@ class SupplierOrdersTable {
                             ->label('Stato')
                             ->options(
                                 collect(config('ecommerce.supplier_order_statuses'))
-                                    ->mapWithKeys(fn($status, $key) => [$key => $status['label']])
+                                    ->mapWithKeys(fn ($status, $key) => [$key => $status['label']])
                                     ->toArray()
                             )
                             ->columns(4)
@@ -79,7 +81,7 @@ class SupplierOrdersTable {
                         $statuses = array_values(array_filter($data['statuses'] ?? []));
 
                         if ($statuses === []) {
-                            $query->where(function (Builder $q) use ($statuses) {
+                            $query->where(function (Builder $q) {
                                 $q->whereNull('supplier_orders.status');
                             });
 
@@ -110,13 +112,11 @@ class SupplierOrdersTable {
                         return $query
                             ->when(
                                 $data['from'] ?? null,
-                                fn(Builder $query, $date) =>
-                                $query->whereDate('created_at', '>=', $date),
+                                fn (Builder $query, $date) => $query->whereDate('created_at', '>=', $date),
                             )
                             ->when(
                                 $data['until'] ?? null,
-                                fn(Builder $query, $date) =>
-                                $query->whereDate('created_at', '<=', $date),
+                                fn (Builder $query, $date) => $query->whereDate('created_at', '<=', $date),
                             );
                     }),
             ], layout: FiltersLayout::AboveContent)
@@ -125,7 +125,7 @@ class SupplierOrdersTable {
             ->recordActions([
                 ActionGroup::make([
                     EditAction::make()
-                        ->url(fn(Order $record, Component $livewire) => SupplierOrderResource::getUrl('edit', [
+                        ->url(fn (Order $record, Component $livewire) => SupplierOrderResource::getUrl('edit', [
                             'record' => $record,
                             'return_url' => self::currentListUrl($record, $livewire),
                         ])),
@@ -137,19 +137,19 @@ class SupplierOrdersTable {
                         ->color('info')
                         ->icon(Heroicon::ArrowsPointingIn)
                         ->modalSubmitActionLabel('Unisci ordini')
-                        ->schema(fn(Order $record) => [
+                        ->schema(fn (Order $record) => [
                             Select::make('target_order_id')
                                 ->label('Unisci con ordine')
                                 ->aboveContent('Gli aricoli verranno tutti trasferiti nell\'ordine qui. I dati che verranno mantenuti saranno quelli dell\'ordine selezionato qui sotto.')
                                 ->searchable()
                                 ->getSearchResultsUsing(
-                                    fn(string $search) => Order::query()
+                                    fn (string $search) => Order::query()
                                         ->whereKeyNot($record->id)
                                         ->where('id', $search)
                                         ->limit(50)
                                         ->get()
-                                        ->mapWithKeys(fn(Order $order) => [
-                                            $order->id => 'Ordine ' . $order->idCode() . ' (' . ($order->supplier?->name ?? '—') . ')',
+                                        ->mapWithKeys(fn (Order $order) => [
+                                            $order->id => 'Ordine '.$order->idCode().' ('.($order->supplier?->name ?? '—').')',
                                         ])
                                         ->toArray()
                                 )
@@ -157,7 +157,7 @@ class SupplierOrdersTable {
                                     $order = Order::with('supplier')->find($value);
 
                                     return $order
-                                        ? 'Ordine ' . $order->idCode() . ' (' . ($order->supplier?->name ?? '—') . ')'
+                                        ? 'Ordine '.$order->idCode().' ('.($order->supplier?->name ?? '—').')'
                                         : (string) $value;
                                 })
                                 ->required(),
@@ -176,7 +176,7 @@ class SupplierOrdersTable {
                         }),
                 ]),
             ])
-            ->recordUrl(fn(Order $record, Component $livewire) => SupplierOrderResource::getUrl('edit', [
+            ->recordUrl(fn (Order $record, Component $livewire) => SupplierOrderResource::getUrl('edit', [
                 'record' => $record,
                 'return_url' => self::currentListUrl($record, $livewire),
             ]))
@@ -234,8 +234,9 @@ class SupplierOrdersTable {
             ]);
     }
 
-    private static function currentListUrl(Order $record, ?Component $livewire = null): string {
-        $fragment = 'order-id-' . $record->id;
+    private static function currentListUrl(Order $record, ?Component $livewire = null): string
+    {
+        $fragment = 'order-id-'.$record->id;
 
         // 1) Best: build from Livewire state (this updates when you paginate)
         if ($livewire) {
@@ -249,9 +250,9 @@ class SupplierOrdersTable {
 
                 // pagination: Filament uses tablePage in most setups
                 'page' => method_exists($livewire, 'getTablePage') ? ($livewire->getTablePage() ?: null) : null,
-            ], fn($v) => $v !== null);
+            ], fn ($v) => $v !== null);
 
-            return SupplierOrderResource::getUrl('index', $params) . '#' . $fragment;
+            return SupplierOrderResource::getUrl('index', $params).'#'.$fragment;
         }
 
         // 2) Fallback: referer (only works for full page loads)
@@ -260,15 +261,16 @@ class SupplierOrdersTable {
             $sanitized = self::sanitizeReturnUrl($referer);
 
             if (filled($sanitized) && self::isOrdersIndexPath($sanitized)) {
-                return $sanitized . '#' . $fragment;
+                return $sanitized.'#'.$fragment;
             }
         }
 
         // 3) Final fallback
-        return SupplierOrderResource::getUrl('index') . '#' . $fragment;
+        return SupplierOrderResource::getUrl('index').'#'.$fragment;
     }
 
-    private static function sanitizeReturnUrl(string $url): ?string {
+    private static function sanitizeReturnUrl(string $url): ?string
+    {
         $parts = parse_url($url);
 
         $path = $parts['path'] ?? null;
@@ -282,11 +284,13 @@ class SupplierOrdersTable {
             unset($query['return_url']);
         }
 
-        $qs = $query ? ('?' . http_build_query($query)) : '';
-        return $path . $qs;
+        $qs = $query ? ('?'.http_build_query($query)) : '';
+
+        return $path.$qs;
     }
 
-    private static function isOrdersIndexPath(string $relativeUrl): bool {
+    private static function isOrdersIndexPath(string $relativeUrl): bool
+    {
         $path = parse_url($relativeUrl, PHP_URL_PATH) ?: '';
         $indexPath = parse_url(SupplierOrderResource::getUrl('index'), PHP_URL_PATH) ?: '';
 

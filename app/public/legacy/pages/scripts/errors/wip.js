@@ -1,12 +1,13 @@
-$(window).ready(function() {
+$(window).ready(function () {
+  /* Slider height */
+  resize();
+  $(window).on("resize", function () {
+    resize();
+  });
 
-	/* Slider height */
-	resize();
-	$(window).on('resize', function() {resize();});
+  function resize() {
+    var height = $(window).height();
 
-	function resize() {
-		var height = $(window).height();
-
-		$('main').css('height', height + 'px');
-	}
+    $("main").css("height", height + "px");
+  }
 });

@@ -3,7 +3,7 @@
 {% block main %}
 
 <!-- Navigation bar -->
-<?php require_once('-expands-admin/menu.php') ?>
+<?php require_once '-expands-admin/menu.php'?>
 
 <!-- Body -->
 <section class="page-content">

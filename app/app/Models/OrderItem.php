@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class OrderItem extends Model {
-
+class OrderItem extends Model
+{
     private const VAT = 0.22;
 
     /**
@@ -30,7 +30,8 @@ class OrderItem extends Model {
     /**
      * Attribute: Name of the order item (product name)
      */
-    public function name(): Attribute {
+    public function name(): Attribute
+    {
         return Attribute::make(
             get: function () {
                 return $this->product ? $this->product->name : 'N/A';
@@ -41,21 +42,24 @@ class OrderItem extends Model {
     /**
      * Relationship: The order that owns the order item
      */
-    public function order(): BelongsTo {
+    public function order(): BelongsTo
+    {
         return $this->belongsTo(Order::class);
     }
 
     /**
      * Relationship: The product that belongs to the order item
      */
-    public function product(): BelongsTo {
+    public function product(): BelongsTo
+    {
         return $this->belongsTo(Product::class);
     }
 
     /**
      * Get the unit net price of the order item from total price and quantity
      */
-    public function calcUnitPriceNet(): float {
+    public function calcUnitPriceNet(): float
+    {
         if ($this->has_vat) {
             return $this->total_price_gross / (1 + self::VAT) / $this->quantity;
         } else {
@@ -66,22 +70,24 @@ class OrderItem extends Model {
     /**
      * Get the unit gross price of the order item from total price and quantity
      */
-    public function calcUnitPriceGross(): float {
+    public function calcUnitPriceGross(): float
+    {
         return $this->total_price_gross / $this->quantity;
     }
 
     /**
      * Get the VAT amount for the order item
      */
-    public function calcTotalVat(): float {
+    public function calcTotalVat(): float
+    {
         return $this->has_vat ? round($this->total_price_gross - $this->total_price_net, 2) : 0;
     }
-
 
     /**
      * Get the total net price of the order item
      */
-    public function calcTotalPriceNet(): float {
+    public function calcTotalPriceNet(): float
+    {
         if ($this->has_vat) {
             return $this->unit_price_net * $this->quantity;
         } else {
@@ -92,7 +98,8 @@ class OrderItem extends Model {
     /**
      * Recalculate and update the unit prices based on total price and quantity
      */
-    public function recalculatePrices(): void {
+    public function recalculatePrices(): void
+    {
         $this->unit_price_net = $this->calcUnitPriceNet();
         $this->unit_price_gross = $this->calcUnitPriceGross();
         $this->total_price_net = $this->calcTotalPriceNet();
@@ -103,7 +110,8 @@ class OrderItem extends Model {
     /**
      * Get the status name of the order
      */
-    public function statusName(): string {
+    public function statusName(): string
+    {
         return config('ecommerce.order_statuses')[$this->status]['label'] ?? 'Unknown';
     }
 }

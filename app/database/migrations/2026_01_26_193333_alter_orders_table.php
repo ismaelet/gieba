@@ -4,11 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::table('orders', function (Blueprint $table) {
             $table->decimal('fixed_discount', 8, 2)->default(0.00)->change();
             $table->decimal('down_payment', 8, 2)->default(0.00)->change();
@@ -19,8 +21,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
-        Schema::table('orders', function (Blueprint $table) {
-        });
+    public function down(): void
+    {
+        Schema::table('orders', function (Blueprint $table) {});
     }
 };

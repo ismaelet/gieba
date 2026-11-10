@@ -5,15 +5,23 @@
 			<p class="sett-txt">Visibilità del sito:</p>
 
 			<form class="sett-slid" method="post">
-				<label class="sett-slid-dot <?php if (!$public) echo 'active';?>">
-					<input type="checkbox" class="hide" name="cbx_public[]" value="0" <?php if (!$public) echo 'checked';?>>
+				<label class="sett-slid-dot <?php if (! $public) {
+				    echo 'active';
+				}?>">
+					<input type="checkbox" class="hide" name="cbx_public[]" value="0" <?php if (! $public) {
+					    echo 'checked';
+					}?>>
 					<p class="sett-slid-txt">Nascosto</p>
 				</label>
 				
 				<div class="sett-slid-line"></div>
 
-				<label class="sett-slid-dot <?php if ($public) echo 'active';?>">
-					<input type="checkbox" class="hide" name="cbx_public[]" value="1" <?php if ($public) echo 'checked';?>>
+				<label class="sett-slid-dot <?php if ($public) {
+				    echo 'active';
+				}?>">
+					<input type="checkbox" class="hide" name="cbx_public[]" value="1" <?php if ($public) {
+					    echo 'checked';
+					}?>>
 					<p class="sett-slid-txt">Visibile</p>
 				</label>
 				<div class="sett-slid-focus no-trans bgr-c1"></div>

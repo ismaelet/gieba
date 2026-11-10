@@ -1,0 +1,11 @@
+*
+!app
+app/.npm
+app/.pnpm-store
+app/public/build
+app/node_modules
+app/storage/framework/cache
+app/storage/framework/sessions
+app/storage/framework/views
+app/storage/logs
+app/vendor

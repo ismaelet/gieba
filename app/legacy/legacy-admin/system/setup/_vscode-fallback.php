@@ -11,5 +11,4 @@ define('MAILCHIMP_API_KEY', null);
 define('MAILCHIMP_SERVER_PREFIX', null);
 define('MAILCHIMP_LIST_ID', null);
 
-function _expand_buttons() {
-};
+function _expand_buttons() {}

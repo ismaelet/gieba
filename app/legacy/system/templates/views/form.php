@@ -12,7 +12,7 @@
 
 			<div class="form-head">
 
-				<h1 class="form-title"><?= $title ?? $view->title;?></h1>
+				<h1 class="form-title"><?= $title ?? $view->title; ?></h1>
 
 			</div>
 			

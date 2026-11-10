@@ -1,9 +1,10 @@
 <?php
 
-//setup favicon
-function favicon() {
+// setup favicon
+function favicon()
+{
 
-	return '<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/legacy/app/resources/favicon/apple-touch-icon-57x57.png" />
+    return '<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/legacy/app/resources/favicon/apple-touch-icon-57x57.png" />
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/legacy/app/resources/favicon/apple-touch-icon-114x114.png" />
 <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/legacy/app/resources/favicon/apple-touch-icon-72x72.png" />
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/legacy/app/resources/favicon/apple-touch-icon-144x144.png" />

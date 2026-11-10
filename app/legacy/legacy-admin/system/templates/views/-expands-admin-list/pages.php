@@ -7,7 +7,7 @@
 
 			<p class="change-page__ellipsis">...</p>
 
-		<?php } else if ($pageConfig['first-page'] == 2) { ?>
+		<?php } elseif ($pageConfig['first-page'] == 2) { ?>
 
 			<label>
 				<input type="radio" class="hidden js-list-filter" name="page" value="1">
@@ -33,7 +33,7 @@
 
 			<p class="change-page__ellipsis">...</p>
 
-		<?php } else if ($currentPage == $pageConfig['last-page'] + 1) { ?>
+		<?php } elseif ($currentPage == $pageConfig['last-page'] + 1) { ?>
 
 			<label>
 				<input type="radio" class="hidden js-list-filter" name="page" value="<?= $currentPage ?>">

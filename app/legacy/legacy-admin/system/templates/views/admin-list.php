@@ -4,12 +4,16 @@
 
 <form class="js-list-form" method="POST">
 
-	<input type="hidden" name="index" value="<?= $queryConfig['order-index'] ?? null ?>">
+	<input type="hidden" name="index" value="<?php
+
+use Legacy\System\Classes\View;
+
+?><?= $queryConfig['order-index'] ?? null ?>">
 	<input type="hidden" name="order" value="<?= $queryConfig['order-direction'] ?? null ?>">
 
 	<!-- Title -->
 	<section id="title" class="mar-b-1">
-		<h1 class="txt-med"><?= \Legacy\System\Classes\View::$title ?></h1>
+		<h1 class="txt-med"><?= View::$title ?></h1>
 
 		<!-- Add button -->
 		<?php if ($pageConfig['add']) { ?>
@@ -52,7 +56,7 @@
 	{% place custom-content %}
 
 	<!-- Pages -->
-	<?php include('-expands-admin-list/pages.php') ?>
+	<?php include '-expands-admin-list/pages.php'?>
 
 	<!-- List -->
 	<section class="admin-list-wrapper">
@@ -60,16 +64,16 @@
 		<div class="admin-list" style="grid-template-columns: <?= $pageConfig['grid-columns'] ?>;">
 
 			<?php
-			include_once('-expands-admin-list/head.php');
-			include_once('-expands-admin-list/body.php');
-			?>
+	            include_once '-expands-admin-list/head.php';
+	include_once '-expands-admin-list/body.php';
+	?>
 
 		</div>
 
 	</section>
 
 	<!-- Pages -->
-	<?php include('-expands-admin-list/pages.php') ?>
+	<?php include '-expands-admin-list/pages.php'?>
 
 </form>
 

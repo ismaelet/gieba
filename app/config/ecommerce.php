@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | The list of order statuses 
+    | The list of order statuses
     |--------------------------------------------------------------------------
     |
     | This array contains all the possible order statuses used.

@@ -1,195 +1,209 @@
 <?php
 
 use App\View\Components\Form\SearchInput;
+use Legacy\System\Classes\DB;
 
 /**
  * Execute a MySQL query from inputs
  *
- * @param string $table name of the table
- * @param array $formBlocks name of the table
- * @param int $id (null), the ID of the item, if set the action is UPDATE, if not is INSERT INTO
+ * @param  string  $table  name of the table
+ * @param  array  $formBlocks  name of the table
+ * @param  int  $id  (null), the ID of the item, if set the action is UPDATE, if not is INSERT INTO
  * @return int|null
  */
-function query_from_inputs(string $table, array $formBlocks, int $id = null) {
-	$action = $id === null ? 'add' : 'update';
-	$inputs = [];
-	$values = [];
-	$fields = [];
+function query_from_inputs(string $table, array $formBlocks, ?int $id = null)
+{
+    $action = $id === null ? 'add' : 'update';
+    $inputs = [];
+    $values = [];
+    $fields = [];
 
-	// unpack the inputs
-	foreach ($formBlocks as $formBlock) {
-		if (isset($formBlock[0])) {
-			foreach ($formBlock as $input) {
-				$inputs[] = $input;
-			}
-		} else {
-			$inputs[] = $formBlock;
-		}
-	}
+    // unpack the inputs
+    foreach ($formBlocks as $formBlock) {
+        if (isset($formBlock[0])) {
+            foreach ($formBlock as $input) {
+                $inputs[] = $input;
+            }
+        } else {
+            $inputs[] = $formBlock;
+        }
+    }
 
-	// prepare the parameters
-	foreach ($inputs as $input) {
-		$type = $input['type'] ?? 'text';
+    // prepare the parameters
+    foreach ($inputs as $input) {
+        $type = $input['type'] ?? 'text';
 
-		if (!in_array($type, ['file', 'image']) && isset($input['name']) && empty($input['ignore'])) {
-			$name = $input['name'];
-			$value = isset($_POST[$name]) ? trim($_POST[$name]) : ($input['value'] ?? 0);
+        if (! in_array($type, ['file', 'image']) && isset($input['name']) && empty($input['ignore'])) {
+            $name = $input['name'];
+            $value = isset($_POST[$name]) ? trim($_POST[$name]) : ($input['value'] ?? 0);
 
-			// parse
-			if (isset($input['parse'])) {
-				switch ($input['parse']) {
-					case 'int':
-						$value = (int) $value;
-						break;
-					case 'float':
-						$value = (float) str_replace(',', '.', $value);
-						break;
-				}
-			}
+            // parse
+            if (isset($input['parse'])) {
+                switch ($input['parse']) {
+                    case 'int':
+                        $value = (int) $value;
+                        break;
+                    case 'float':
+                        $value = (float) str_replace(',', '.', $value);
+                        break;
+                }
+            }
 
-			// store values
-			$fields[] = $action == 'add' ? $name : $name . ' = ?';
-			$values[] = $value;
-		}
-	}
+            // store values
+            $fields[] = $action == 'add' ? $name : $name.' = ?';
+            $values[] = $value;
+        }
+    }
 
-	$fields = implode(', ', $fields);
+    $fields = implode(', ', $fields);
 
-	// exectue the query
-	if ($action == 'add') {
-		$query = $table . ' (' . $fields . ')';
+    // exectue the query
+    if ($action == 'add') {
+        $query = $table.' ('.$fields.')';
 
-		return \Legacy\System\Classes\DB::add($query, $values);
-	} else if ($action == 'update') {
-		$values[] = $id;
-		$indexField = \Legacy\System\Classes\DB::execute('SHOW columns FROM ' . $table . ' WHERE `Key` = "PRI"')->res[0]['Field'];
+        return DB::add($query, $values);
+    } elseif ($action == 'update') {
+        $values[] = $id;
+        $indexField = DB::execute('SHOW columns FROM '.$table.' WHERE `Key` = "PRI"')->res[0]['Field'];
 
-		\Legacy\System\Classes\DB::update($table . ' SET ' . $fields . ' WHERE ' . $indexField . ' = ?', $values);
-	}
+        DB::update($table.' SET '.$fields.' WHERE '.$indexField.' = ?', $values);
+    }
 }
 
 // Generate form
-function generate_form($fields, $data = false, $error = false, $done = false) {
+function generate_form($fields, $data = false, $error = false, $done = false)
+{
 
-	foreach ($fields as $field) {
+    foreach ($fields as $field) {
 
-		echo '<div class="form-field">';
+        echo '<div class="form-field">';
 
-		if (isset($field[0]))
-			foreach ($field as $input) generate_input($input, $data, $error, $done);
+        if (isset($field[0])) {
+            foreach ($field as $input) {
+                generate_input($input, $data, $error, $done);
+            }
+        } else {
+            generate_input($field, $data, $error, $done);
+        }
 
-		else
-			generate_input($field, $data, $error, $done);
-
-		echo '</div>';
-	}
+        echo '</div>';
+    }
 }
 
-function generate_input($input, $data, $error, $done) {
+function generate_input($input, $data, $error, $done)
+{
 
-	// basic data
-	$type = $input['type'] ?? 'text';
-	$name = $input['name'] ?? false;
-	$parse = $input['parse'] ?? false;
-	$styling = $input['styling'] ?? false;
+    // basic data
+    $type = $input['type'] ?? 'text';
+    $name = $input['name'] ?? false;
+    $parse = $input['parse'] ?? false;
+    $styling = $input['styling'] ?? false;
 
-	// calculate value
-	$value = false;
+    // calculate value
+    $value = false;
 
-	// if value is explicit
-	if (isset($input['value'])) $value = $input['value'];
+    // if value is explicit
+    if (isset($input['value'])) {
+        $value = $input['value'];
+    }
 
-	// else get from POST, if set
-	else if ($name && isset($_POST[$name])) $value = $_POST[$name];
+    // else get from POST, if set
+    elseif ($name && isset($_POST[$name])) {
+        $value = $_POST[$name];
+    }
 
-	// else get from MySQL result, if set
-	else if ($name && isset($data[$name]) && $type != 'cbx') $value = $data[$name];
+    // else get from MySQL result, if set
+    elseif ($name && isset($data[$name]) && $type != 'cbx') {
+        $value = $data[$name];
+    }
 
-	// else if it's a checkbox
-	else if ($type == 'cbx') $value = 1;
+    // else if it's a checkbox
+    elseif ($type == 'cbx') {
+        $value = 1;
+    }
 
-	// parse value
-	if ($parse) {
-		switch ($parse) {
-			case 'float':
-				$value = format($value);
-				break;
-		}
-	}
+    // parse value
+    if ($parse) {
+        switch ($parse) {
+            case 'float':
+                $value = format($value);
+                break;
+        }
+    }
 
-	// styling
-	if ($styling == 'fancy') { ?>
+    // styling
+    if ($styling == 'fancy') { ?>
 
-		<div class="fancy-input <?= isset($input['size']) ? 'fancy-input_size' . $input['size'] : '' ?>">
+		<div class="fancy-input <?= isset($input['size']) ? 'fancy-input_size'.$input['size'] : '' ?>">
 
 			<?php }
 
-		// start to generate
-		// label
-		switch ($type) {
+    // start to generate
+    // label
+    switch ($type) {
 
-			case 'lbl': ?>
+        case 'lbl': ?>
 
 				<p class="label"><?= $input['text'] ?>:</p>
 
 			<?php break;
 
-			case 'info': ?>
+        case 'info': ?>
 
 				<p class="form-text"><?= $input['text'] ?></p>
 
 				<?php break;
 
-			case 'done':
+        case 'done':
 
-				if ($type == 'done' && $done) { ?>
+            if ($type == 'done' && $done) { ?>
 
 					<p class="confirmation-message"><?= $input['text'] ?></p>
 
 				<?php }
-				break;
+            break;
 
-			case 'error':
+        case 'error':
 
-				if ($input['error'] == $error) { ?>
+            if ($input['error'] == $error) { ?>
 
 					<p class="error"><?= $input['text'] ?></p>
 
 				<?php }
-				break;
+            break;
 
-			case 'auto-filled-search':
+        case 'auto-filled-search':
 
-				echo render_search_input($input);
+            echo render_search_input($input);
 
-				break;
+            break;
 
-			case 'search':
+        case 'search':
 
-				echo render_old_search_input($input);
+            echo render_old_search_input($input);
 
-				break;
+            break;
 
-			case 'file': ?>
+        case 'file': ?>
 
-				<input type="file" class="inp file" name="<?= $name ?>" <?= isset($input['multiple']) ? 'multiple' : '' ?> <?= !empty($input['required']) ? 'required' : null ?>>
+				<input type="file" class="inp file" name="<?= $name ?>" <?= isset($input['multiple']) ? 'multiple' : '' ?> <?= ! empty($input['required']) ? 'required' : null ?>>
 
 			<?php break;
 
-			case 'select':
+        case 'select':
 
-				if (isset($input['query'])) {
-					$selectOptions = \Legacy\System\Classes\DB::select($input['query'])->res;
-					$fieldId = $input['field-name'];
-					$fieldShow = $input['field-show'];
-				} else if (isset($input['array'])) {
-					$selectOptions = $input['array'];
-					$fieldId = 0;
-					$fieldShow = 1;
-				}
-			?>
+            if (isset($input['query'])) {
+                $selectOptions = DB::select($input['query'])->res;
+                $fieldId = $input['field-name'];
+                $fieldShow = $input['field-show'];
+            } elseif (isset($input['array'])) {
+                $selectOptions = $input['array'];
+                $fieldId = 0;
+                $fieldShow = 1;
+            }
+            ?>
 
-				<select class="sel <?= isset($input['affect']) ? 'affect' : '' ?>" <?= isset($input['affect']) ? 'data-affect="' . $input['affect'] . '"' : '' ?> name="<?= $name ?>">
+				<select class="sel <?= isset($input['affect']) ? 'affect' : '' ?>" <?= isset($input['affect']) ? 'data-affect="'.$input['affect'].'"' : '' ?> name="<?= $name ?>">
 
 					<?php if (isset($input['empty'])) { ?>
 
@@ -198,7 +212,9 @@ function generate_input($input, $data, $error, $done) {
 					<?php }
 					foreach ($selectOptions as $option) { ?>
 
-						<option value="<?= $option[$fieldId] ?>" <?php if ($option[$fieldId] == $value) echo 'selected' ?>>
+						<option value="<?= $option[$fieldId] ?>" <?php if ($option[$fieldId] == $value) {
+						    echo 'selected';
+						} ?>>
 							<?= $option[$fieldShow] ?>
 						</option>
 
@@ -208,7 +224,7 @@ function generate_input($input, $data, $error, $done) {
 
 			<?php break;
 
-			case 'select-dependent': ?>
+        case 'select-dependent': ?>
 
 				<select class="sel" data-tbl="<?= $input['query-tbl'] ?>" data-filter="<?= $input['query-filter'] ?>" data-id="<?= $input['field-name'] ?>" data-show="<?= $input['field-show'] ?>" data-root="<?= CLIENT_ROOT ?>" name="<?= $name ?>" disabled>
 					<option>-</option>
@@ -216,23 +232,22 @@ function generate_input($input, $data, $error, $done) {
 
 			<?php break;
 
-			case 'textarea': ?>
+        case 'textarea': ?>
 
-				<textarea class="textarea" name="<?= $name ?>" placeholder="<?= $input['text'] ?? '' ?>" <?= isset($input['maxlength']) ? 'maxlength="' . $input['maxlength'] . '"' : '' ?> <?= isset($input['required']) ? 'required' : '' ?>><?=
-																																																												$value ?: ''
-																																																												?></textarea>
+				<textarea class="textarea" name="<?= $name ?>" placeholder="<?= $input['text'] ?? '' ?>" <?= isset($input['maxlength']) ? 'maxlength="'.$input['maxlength'].'"' : '' ?> <?= isset($input['required']) ? 'required' : '' ?>><?= $value ?: ''
+            ?></textarea>
 
 			<?php break;
 
-			case 'cbx': ?>
+        case 'cbx': ?>
 
 				<label class="
 					checkbox
 					<?= $input['custom-class'] ?? '' ?>
-					<?= isset($input['size']) ? 'inp-size' . $input['size'] : '' ?>
+					<?= isset($input['size']) ? 'inp-size'.$input['size'] : '' ?>
 				">
 
-					<input type="checkbox" name="<?= $name ?>" value="<?= $value ?>" <?= !empty($input['checked']) || ($name && isset($_POST[$name])) || ($name && isset($data[$name]) && $data[$name] == $value) ? 'checked' : '' ?> <?= isset($input['required']) ? 'required' : '' ?>>
+					<input type="checkbox" name="<?= $name ?>" value="<?= $value ?>" <?= ! empty($input['checked']) || ($name && isset($_POST[$name])) || ($name && isset($data[$name]) && $data[$name] == $value) ? 'checked' : '' ?> <?= isset($input['required']) ? 'required' : '' ?>>
 
 					<span></span>
 
@@ -242,14 +257,14 @@ function generate_input($input, $data, $error, $done) {
 
 			<?php break;
 
-			case 'image':
-				echo render_image_input($input);
+        case 'image':
+            echo render_image_input($input);
 
-				break;
+            break;
 
-			case 'btn': ?>
+        case 'btn': ?>
 
-				<button type="<?= !empty($input['submit']) ? 'submit' : 'button' ?>" class="<?= $input['btn-type'] ?? 'pbtn' ?> <?= isset($input['load']) ? 'file-submit' : '' ?> <?= $input['custom-class'] ?? '' ?>" name="<?= $name ?: 'submit' ?>" data-size="<?= $input['size'] ?? 4 ?>">
+				<button type="<?= ! empty($input['submit']) ? 'submit' : 'button' ?>" class="<?= $input['btn-type'] ?? 'pbtn' ?> <?= isset($input['load']) ? 'file-submit' : '' ?> <?= $input['custom-class'] ?? '' ?>" name="<?= $name ?: 'submit' ?>" data-size="<?= $input['size'] ?? 4 ?>">
 					<?= $input['text'] ?? '' ?>
 				</button>
 
@@ -261,44 +276,48 @@ function generate_input($input, $data, $error, $done) {
 
 			<?php break;
 
-			default: ?>
+        default: ?>
 				<input type="<?= $type ?>" class="
 					<?= $input['custom-class'] ?? '' ?>
-				" name="<?= $name ?>" value="<?= $value ?>" placeholder="<?= $styling ? '' : ($input['text'] ?? '') ?>" <?= isset($input['minlength']) ? 'minlength="' . $input['minlength'] . '"' : '' ?> <?= isset($input['maxlength']) ? 'maxlength="' . $input['maxlength'] . '"' : '' ?> <?= isset($input['min']) ? 'min="' . $input['min'] . '"' : '' ?> <?= isset($input['max']) ? 'max="' . $input['max'] . '"' : '' ?> <?= isset($input['step']) ? 'step="' . $input['step'] . '"' : '' ?> <?= isset($input['required']) ? 'required' : '' ?> <?= isset($input['readonly']) ? 'readonly' : '' ?> <?= isset($input['required']) ? 'required' : '' ?> data-size="<?= $input['size'] ?? 4 ?>" <?php
-																																																																																																																																																																									if (isset($input['data']))
-																																																																																																																																																																										foreach ($input['data'] as $dataName => $dataValue) echo 'data-' . $dataName . '="' . $dataValue . '" '
-																																																																																																																																																																									?>>
+				" name="<?= $name ?>" value="<?= $value ?>" placeholder="<?= $styling ? '' : ($input['text'] ?? '') ?>" <?= isset($input['minlength']) ? 'minlength="'.$input['minlength'].'"' : '' ?> <?= isset($input['maxlength']) ? 'maxlength="'.$input['maxlength'].'"' : '' ?> <?= isset($input['min']) ? 'min="'.$input['min'].'"' : '' ?> <?= isset($input['max']) ? 'max="'.$input['max'].'"' : '' ?> <?= isset($input['step']) ? 'step="'.$input['step'].'"' : '' ?> <?= isset($input['required']) ? 'required' : '' ?> <?= isset($input['readonly']) ? 'readonly' : '' ?> <?= isset($input['required']) ? 'required' : '' ?> data-size="<?= $input['size'] ?? 4 ?>" <?php
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                if (isset($input['data'])) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    foreach ($input['data'] as $dataName => $dataValue) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        echo 'data-'.$dataName.'="'.$dataValue.'" ';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+            ?>>
 
 			<?php break;
-		}
+    }
 
-		// styling closing tag
-		if ($styling == 'fancy') { ?>
+    // styling closing tag
+    if ($styling == 'fancy') { ?>
 
 			<p class="fancy-input-lbl"><?= $input['text'] ?></p>
 
 		</div>
 
 	<?php }
-	}
+    }
 
-	/**
-	 * Render a image input
-	 *
-	 * @param array $config [
-	 *	'name' => the name of the input
-	 *	'client-path' => string (null), the full client path of the image
-	 * ]
-	 * @return html
-	 */
-	function render_image_input(array $config) {
-		$name = $config['name'];
-		$clientPath = $config['client-path'] ?? null;
+/**
+ * Render a image input
+ *
+ * @param  array  $config  [
+ *                         'name' => the name of the input
+ *                         'client-path' => string (null), the full client path of the image
+ *                         ]
+ * @return html
+ */
+function render_image_input(array $config)
+{
+    $name = $config['name'];
+    $clientPath = $config['client-path'] ?? null;
 
-		ob_start();
+    ob_start();
 
-		if ($clientPath) {
-	?>
+    if ($clientPath) {
+        ?>
 
 		<label class="replace-image form-image">
 			<input type="file" name="<?= $name ?>">
@@ -306,66 +325,67 @@ function generate_input($input, $data, $error, $done) {
 		</label>
 
 	<?php
-		} else { ?>
+    } else { ?>
 
 		<input type="file" name="<?= $name ?>">
 
 	<?php }
 
-		return ob_get_clean();
-	}
+    return ob_get_clean();
+}
 
-	/**
-	 * Render a search input
-	 */
-	function render_search_input(array $config): string {
-		return SearchInput::render($config);
-	}
+/**
+ * Render a search input
+ */
+function render_search_input(array $config): string
+{
+    return SearchInput::render($config);
+}
 
-	/**
-	 * OLD
-	 * Render a search input
-	 * 
-	 * @param array $config [
-	 *	'search' => string, the name of the table to be searched
-	 *	'search-fields' => array|string, the fields to search
-	 *	'index-field' => string, the name of column associanted to the hidden input
-	 *	'index-name' => string (index-field), the name of the hidden input
-	 *	'index-value' => mixed (null), the value of the hidden input
-	 *	'visible-field' => string, the name of column associanted to the visible input
-	 *	'visible-name' => string (index-field), the name of the visible input
-	 *	'visible-value' => mixed (null), the value of the visible input
-	 *	'filter' => string = null, the WHERE sql filter
-	 *	'placeholder' => string (null), the placeholder text
-	 *	'custom-classes' => array ([]), custom classes that the whole block will have
-	 *	'required' => bool (false), set if the input is required
-	 *	'has-title' => bool (false), if set, it will show the visible input content on hover
-	 * ]
-	 * @return html
-	 */
+/**
+ * OLD
+ * Render a search input
+ *
+ * @param  array  $config  [
+ *                         'search' => string, the name of the table to be searched
+ *                         'search-fields' => array|string, the fields to search
+ *                         'index-field' => string, the name of column associanted to the hidden input
+ *                         'index-name' => string (index-field), the name of the hidden input
+ *                         'index-value' => mixed (null), the value of the hidden input
+ *                         'visible-field' => string, the name of column associanted to the visible input
+ *                         'visible-name' => string (index-field), the name of the visible input
+ *                         'visible-value' => mixed (null), the value of the visible input
+ *                         'filter' => string = null, the WHERE sql filter
+ *                         'placeholder' => string (null), the placeholder text
+ *                         'custom-classes' => array ([]), custom classes that the whole block will have
+ *                         'required' => bool (false), set if the input is required
+ *                         'has-title' => bool (false), if set, it will show the visible input content on hover
+ *                         ]
+ * @return html
+ */
+function render_old_search_input(array $config)
+{
+    $search = $config['search'];
+    $searchFields = is_array($config['search-fields']) ? implode(',', $config['search-fields']) : $config['search-fields'];
+    $indexField = $config['index-field'];
+    $indexName = $config['index-name'] ?? $indexField;
+    $indexValue = $config['index-value'] ?? null;
+    $visibleField = $config['visible-field'];
+    $visibleName = $config['visible-name'] ?? $visibleField;
+    $visibleValue = str_replace('"', '&quot;', $config['visible-value'] ?? null);
+    $placeholder = $config['placeholder'] ?? null;
+    $customClasses = implode(' ', $config['custom-classes'] ?? []);
+    $required = $config['required'] ?? false;
+    $hasTitle = $config['has-title'] ?? false;
+    $filter = $config['filter'] ?? false;
 
-	function render_old_search_input(array $config) {
-		$search = $config['search'];
-		$searchFields = is_array($config['search-fields']) ? implode(',', $config['search-fields']) :  $config['search-fields'];
-		$indexField = $config['index-field'];
-		$indexName = $config['index-name'] ?? $indexField;
-		$indexValue = $config['index-value'] ?? null;
-		$visibleField = $config['visible-field'];
-		$visibleName = $config['visible-name'] ?? $visibleField;
-		$visibleValue = str_replace('"', "&quot;", $config['visible-value'] ?? null);
-		$placeholder = $config['placeholder'] ?? null;
-		$customClasses = implode(' ', $config['custom-classes'] ?? []);
-		$required = $config['required'] ?? false;
-		$hasTitle = $config['has-title'] ?? false;
-		$filter = $config['filter'] ?? false;
-
-		ob_start();
-	?>
+    ob_start();
+    ?>
 
 	<div class="ajax-search <?= $customClasses ?> js-ajax-search" data-search="<?= $search ?>" data-search-fields="<?= $searchFields ?>" data-index-field="<?= $indexField ?>" data-visible-field="<?= $visibleField ?>" data-filter="<?= $filter ?>">
 		<input type="hidden" class="ajax-search__index-input js-ajax-search__index-input" name="<?= $indexName ?>" value="<?= $indexValue ?>" <?= $required ? 'required' : '' ?>>
 
-		<input type="text" class="ajax-search__visible-inpu js-ajax-search__visible-input" name="<?= $visibleName ?>" value="<?= $visibleValue ?>" <?= $hasTitle ? 'title="' . $visibleValue . '"' : '' ?> placeholder="<?= $placeholder ?>" <?= $required ? 'required' : '' ?> autocomplete="off">
+		<input type="text" class="ajax-search__visible-inpu js-ajax-search__visible-input" name="<?= $visibleName ?>" value="<?= $visibleValue ?>" <?= $hasTitle ? 'title="'.$visibleValue.'"' : '' ?> placeholder="<?= $placeholder ?>" <?= $required ? 'required' : '' ?> autocomplete="off">
 
 		<div class="ajax-search__dropdown hidden js-ajax-search__dropdown">
 			<div class="ajax-search__items js-ajax-search__items"></div>
@@ -374,5 +394,5 @@ function generate_input($input, $data, $error, $done) {
 
 <?php
 
-		return ob_get_clean();
-	}
+        return ob_get_clean();
+}

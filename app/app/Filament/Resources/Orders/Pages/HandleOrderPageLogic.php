@@ -7,12 +7,13 @@ use Filament\Actions\Action;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
 
-trait HandleOrderPageLogic {
-
+trait HandleOrderPageLogic
+{
     /**
      * Update the order and related data
      */
-    protected function updateOrder(): void {
+    protected function updateOrder(): void
+    {
         $state = $this->form->getState();
 
         $customerId = $state['customer_id'] ?? null;
@@ -20,7 +21,7 @@ trait HandleOrderPageLogic {
         if ($customerId) {
             Customer::find($customerId)->update([
                 'phone' => data_get($state, 'customer_data.phone'),
-                'info'  => data_get($state, 'customer_data.info'),
+                'info' => data_get($state, 'customer_data.info'),
             ]);
         }
 
@@ -40,7 +41,8 @@ trait HandleOrderPageLogic {
     /**
      * Store the return URL in the session
      */
-    protected function storeReturnUrlInSession(): void {
+    protected function storeReturnUrlInSession(): void
+    {
         $returnUrl = request()->query('return_url');
 
         if ($returnUrl && Str::startsWith($returnUrl, ['/admin', static::getResource()::getUrl('index')])) {
@@ -51,7 +53,8 @@ trait HandleOrderPageLogic {
     /**
      * Get the return URL from the session or default to the index page
      */
-    protected function getReturnUrlFromSession(): string {
+    protected function getReturnUrlFromSession(): string
+    {
         if (session()->has('orders.return_url')) {
             return session()->pull('orders.return_url');
         }
@@ -59,7 +62,8 @@ trait HandleOrderPageLogic {
         return static::getResource()::getUrl('index');
     }
 
-    public function confirmCustomerSelectionAction(): Action {
+    public function confirmCustomerSelectionAction(): Action
+    {
         return Action::make('confirmCustomerSelection')
             ->modalHeading('Ordine già esistente')
             ->modalDescription(

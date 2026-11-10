@@ -1,9 +1,11 @@
 <?php
 
+use Legacy\System\Classes\DB;
+
 global $con;
 
 // config table
-\Legacy\System\Classes\DB::execute('
+DB::execute('
 	CREATE TABLE IF NOT EXISTS config (
 		id INT(3) AUTO_INCREMENT PRIMARY KEY,
 		name VARCHAR(30),
@@ -11,10 +13,12 @@ global $con;
 	)
 ');
 
-if (!\Legacy\System\Classes\DB::exists('config WHERE name="public"')) \Legacy\System\Classes\DB::add('config (name, value) VALUES (?, ?)', ['public', 0]);
+if (! DB::exists('config WHERE name="public"')) {
+    DB::add('config (name, value) VALUES (?, ?)', ['public', 0]);
+}
 
 // users table
-\Legacy\System\Classes\DB::execute('
+DB::execute('
 	CREATE TABLE IF NOT EXISTS users (
 		id INT(11) AUTO_INCREMENT PRIMARY KEY,
 		username VARCHAR(50) DEFAULT "",
@@ -29,7 +33,7 @@ if (!\Legacy\System\Classes\DB::exists('config WHERE name="public"')) \Legacy\Sy
 ');
 
 // password resets
-\Legacy\System\Classes\DB::execute('
+DB::execute('
 	CREATE TABLE IF NOT EXISTS user_resets (
 		id INT(11) AUTO_INCREMENT PRIMARY KEY,
 		userID INT(11),
@@ -39,7 +43,7 @@ if (!\Legacy\System\Classes\DB::exists('config WHERE name="public"')) \Legacy\Sy
 ');
 
 // authentication table
-\Legacy\System\Classes\DB::execute('
+DB::execute('
 	CREATE TABLE IF NOT EXISTS auth_tokens (
 		id INT(11) AUTO_INCREMENT PRIMARY KEY,
 		selector VARCHAR(12),

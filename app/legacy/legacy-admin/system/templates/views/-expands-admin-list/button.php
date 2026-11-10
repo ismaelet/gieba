@@ -2,9 +2,10 @@
 
 	<div class="buttons">
 
-		<?php if (isset($entry['buttons'])) foreach ($entry['buttons'] as $button) {
+		<?php if (isset($entry['buttons'])) {
+		    foreach ($entry['buttons'] as $button) {
 
-			if ($button['type'] == 'link') { ?>
+		        if ($button['type'] == 'link') { ?>
 
 				<a
 					href="<?= $button['url'] ?>"
@@ -16,11 +17,11 @@
 						
 				</a>
 
-			<?php } else if ($button['type'] == 'button') { ?>
+			<?php } elseif ($button['type'] == 'button') { ?>
 
 				<button
 					type="<?= $button['name'] ? 'submit' : 'button' ?>"
-					<?= $button['name'] ? 'name="' . $button['name'] .'"' : '' ?>
+					<?= $button['name'] ? 'name="'.$button['name'].'"' : '' ?>
 					class="btn <?= $button['color'] ?> <?= $button['custom-class'] ?>"
 
 					<?php if ($button['warning']) {?>
@@ -35,7 +36,8 @@
 
 			<?php } ?>
 
-		<?php } ?>
+		<?php }
+		    } ?>
 
 	</div>
 	

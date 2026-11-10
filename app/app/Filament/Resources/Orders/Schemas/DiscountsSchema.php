@@ -8,8 +8,10 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 
-trait DiscountsSchema {
-    protected static function getDiscountsSchema(): Fieldset {
+trait DiscountsSchema
+{
+    protected static function getDiscountsSchema(): Fieldset
+    {
         return Fieldset::make('Acconti e sconti')
             ->schema([
                 TextInput::make('down_payment')
@@ -18,8 +20,8 @@ trait DiscountsSchema {
                     ->default('0.00')
                     ->live(onBlur: true)
                     ->extraInputAttributes(self::extraAttributesForPrices())
-                    ->afterStateHydrated(fn($state, TextInput $component) => $component->state(self::parseNumber($state)))
-                    ->dehydrateStateUsing(fn($state) => self::parseToFloat($state))
+                    ->afterStateHydrated(fn ($state, TextInput $component) => $component->state(self::parseNumber($state)))
+                    ->dehydrateStateUsing(fn ($state) => self::parseToFloat($state))
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         self::updateOrderTotals(get: $get, set: $set);
                     }),
@@ -33,8 +35,8 @@ trait DiscountsSchema {
                     ->default('0.00')
                     ->live(onBlur: true)
                     ->extraInputAttributes(self::extraAttributesForPrices())
-                    ->afterStateHydrated(fn($state, TextInput $component) => $component->state(self::parseNumber($state)))
-                    ->dehydrateStateUsing(fn($state) => self::parseToFloat($state))
+                    ->afterStateHydrated(fn ($state, TextInput $component) => $component->state(self::parseNumber($state)))
+                    ->dehydrateStateUsing(fn ($state) => self::parseToFloat($state))
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         self::updateOrderTotals(get: $get, set: $set);
                     }),
@@ -48,8 +50,8 @@ trait DiscountsSchema {
                     ->numeric()
                     ->default('0')
                     ->live(onBlur: true)
-                    ->afterStateHydrated(fn($state, TextInput $component) => $component->state(self::parseNumber($state)))
-                    ->dehydrateStateUsing(fn($state) => self::parseToFloat($state))
+                    ->afterStateHydrated(fn ($state, TextInput $component) => $component->state(self::parseNumber($state)))
+                    ->dehydrateStateUsing(fn ($state) => self::parseToFloat($state))
                     ->afterStateUpdated(function (Get $get, Set $set) {
                         self::updateOrderTotals(get: $get, set: $set);
                     }),

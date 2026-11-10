@@ -4,7 +4,7 @@
 
 <div class="form-foot">
 	<button type="submit" name="submit" class="mbtn">Log Out</button>
-	<a href="<?= __HROOT__;?>/"class="sbtn">Indietro</a>
+	<a href="<?= __HROOT__; ?>/"class="sbtn">Indietro</a>
 </div>
 
 {% end content %}

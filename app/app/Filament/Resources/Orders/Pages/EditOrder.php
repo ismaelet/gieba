@@ -10,8 +10,8 @@ use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class EditOrder extends EditRecord {
-
+class EditOrder extends EditRecord
+{
     use HandleOrderPageLogic;
 
     /**
@@ -37,7 +37,8 @@ class EditOrder extends EditRecord {
     /**
      * Filament Method: Get the header actions for the edit page
      */
-    protected function getHeaderActions(): array {
+    protected function getHeaderActions(): array
+    {
         return [
             DeleteAction::make(),
             Action::make('duplicate')
@@ -45,14 +46,15 @@ class EditOrder extends EditRecord {
                 ->icon('heroicon-o-document-duplicate')
                 ->color('gray')
                 ->requiresConfirmation()
-                ->action(fn() => $this->duplicateRecord()),
+                ->action(fn () => $this->duplicateRecord()),
         ];
     }
 
     /**
      * Filament Method: Mount the edit page with the given record
      */
-    public function mount($record): void {
+    public function mount($record): void
+    {
         $this->storeReturnUrlInSession();
 
         parent::mount($record);
@@ -61,7 +63,8 @@ class EditOrder extends EditRecord {
     /**
      * Filament Method: Mutate the form data before saving the record, storing original values for comparison
      */
-    protected function mutateFormDataBeforeSave(array $data): array {
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
         $this->originalStatus = $this->record->statusName();
         $this->originalQuantity = $this->record->quantity;
         $this->originalPriceGross = $this->record->price_gross;
@@ -72,7 +75,8 @@ class EditOrder extends EditRecord {
     /**
      * Filament Method: Actions to perform after saving the record
      */
-    protected function afterSave(): void {
+    protected function afterSave(): void
+    {
         // Update the order's totals
         $this->updateOrder();
 
@@ -88,7 +92,8 @@ class EditOrder extends EditRecord {
     /**
      * Custom Method: Log the action of editing the order, including details about what was changed
      */
-    protected function logAction(): void {
+    protected function logAction(): void
+    {
         // Generate a log message based on the changes made to the order
         $actionTextParts = [];
 
@@ -101,7 +106,7 @@ class EditOrder extends EditRecord {
         }
 
         if ($this->originalPriceGross !== $this->record->price_gross) {
-            $actionTextParts[] = " cambiando il prezzo totale da " . price($this->originalPriceGross) . " a " . price($this->record->price_gross);
+            $actionTextParts[] = ' cambiando il prezzo totale da '.price($this->originalPriceGross).' a '.price($this->record->price_gross);
         }
 
         if (empty($actionTextParts)) {
@@ -109,7 +114,7 @@ class EditOrder extends EditRecord {
         }
 
         $baseActionText = "Ha modificato l'ordine #{$this->record->id}";
-        $actionText = $baseActionText . ' ' . implode(' e ', $actionTextParts);
+        $actionText = $baseActionText.' '.implode(' e ', $actionTextParts);
 
         // Log the action in the database
         ModelsAction::create([
@@ -121,7 +126,8 @@ class EditOrder extends EditRecord {
     /**
      * Custom Method: Duplicate the current order record along with its associated order items, and redirect to the edit page of the new copy
      */
-    protected function duplicateRecord(): void {
+    protected function duplicateRecord(): void
+    {
         DB::transaction(function () {
             $original = $this->record->load('order_items');
 

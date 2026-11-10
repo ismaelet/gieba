@@ -1,30 +1,33 @@
 <?php
 
-//offline page
-\Legacy\System\Classes\Route::add('/offline', function () {
+use Legacy\System\Classes\Route;
+use Legacy\System\Classes\View;
 
-	//create view
-	$view = new \Legacy\System\Classes\View('errors/offline');
+// offline page
+Route::add('/offline', function () {
 
-	//setup view
-	$view->title = 'Offline';
-	$view->template = 'void';
-	$view->middlewares = ['not_public'];
+    // create view
+    $view = new View('errors/offline');
 
-	//render view
-	$view->show();
+    // setup view
+    $view->title = 'Offline';
+    $view->template = 'void';
+    $view->middlewares = ['not_public'];
+
+    // render view
+    $view->show();
 });
 
-//offline page
-\Legacy\System\Classes\Route::add('/wip', function () {
+// offline page
+Route::add('/wip', function () {
 
-	//create view
-	$view = new \Legacy\System\Classes\View('errors/wip');
+    // create view
+    $view = new View('errors/wip');
 
-	//setup view
-	$view->title = 'Offline';
-	$view->template = 'void';
+    // setup view
+    $view->title = 'Offline';
+    $view->template = 'void';
 
-	//render view
-	$view->show();
+    // render view
+    $view->show();
 });

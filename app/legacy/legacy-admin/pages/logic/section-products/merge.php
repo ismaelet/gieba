@@ -2,6 +2,7 @@
 
 use Ecommerce\Order;
 use Ecommerce\Product;
+use Legacy\System\Classes\DB;
 
 /**
  * * Page configuration
@@ -20,24 +21,24 @@ $queryConfig['title-field'] = 'name';
 * Form
 */
 $searchInputConfig = [
-	'search' => Product::TABLE,
-	'search-fields' => ['name'],
-	'index-field' => Product::INDEX,
-	'visible-field' => 'name',
-	'filter' => Product::INDEX . ' <> ' . $_GET['id'],
-	'placeholder' => 'Nome del prodotto',
-	'required' => true,
+    'search' => Product::TABLE,
+    'search-fields' => ['name'],
+    'index-field' => Product::INDEX,
+    'visible-field' => 'name',
+    'filter' => Product::INDEX.' <> '.$_GET['id'],
+    'placeholder' => 'Nome del prodotto',
+    'required' => true,
 ];
 
 /*
 * Events
 */
 if (isset($_POST['submit'])) {
-	$productId = $_GET['id'];
-	$mainProductId = $_POST['id'];
+    $productId = $_GET['id'];
+    $mainProductId = $_POST['id'];
 
-	\Legacy\System\Classes\DB::update(Order::TABLE . ' SET ' . Order::PRODUCT_INDEX . ' = ? WHERE ' . Order::PRODUCT_INDEX . ' = ?', [$mainProductId, $productId]);
-	\Legacy\System\Classes\DB::delete(Product::TABLE . ' WHERE ' . Product::INDEX . ' = ?', [$productId]);
+    DB::update(Order::TABLE.' SET '.Order::PRODUCT_INDEX.' = ? WHERE '.Order::PRODUCT_INDEX.' = ?', [$mainProductId, $productId]);
+    DB::delete(Product::TABLE.' WHERE '.Product::INDEX.' = ?', [$productId]);
 
-	legacy_redirect('list');
+    legacy_redirect('list');
 }

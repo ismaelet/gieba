@@ -8,129 +8,157 @@ use ScriptLoader;
 use StyleLoader;
 use Viewer;
 
-class View {
-	public static $name = null;
-	public static $title;
-	public static $tabTitle;
-	public static $thumbnail = null;
-	public static $description;
-	public static $location = null;
-	public static $middlewares = ['public'];
-	public static $template = 'main';
-	public static $url = null;
-	public static $variables = [];
+class View
+{
+    public static $name = null;
 
-	public static function __constructStatic() {
-		self::$description = legacy__(sys_config('description'));
-		self::$title = sys_config('name');
-		self::$tabTitle = sys_config('name');
-		self::$thumbnail = client_url(sys_config('logo'));
+    public static $title;
 
-		if (!empty(sys_config('short-description'))) {
-			self::$tabTitle .= ' | ' . sys_config('short-description');
-		}
-	}
+    public static $tabTitle;
 
-	/*
-	* Set properties
-	*/
-	public static function setPage(string $name) {
-		self::$name = $name;
+    public static $thumbnail = null;
 
-		return new static(self::$name);
-	}
+    public static $description;
 
-	public static function setTemplate(string $template) {
-		self::$template = $template;
+    public static $location = null;
 
-		return new static(self::$name);
-	}
+    public static $middlewares = ['public'];
 
-	public static function setTitle(string $title) {
-		self::$title = $title;
-		self::$tabTitle = $title . ' | ' . sys_config('name');
+    public static $template = 'main';
 
-		return new static(self::$name);
-	}
+    public static $url = null;
 
-	public static function setDescription(string $description) {
-		self::$description = $description;
+    public static $variables = [];
 
-		return new static(self::$name);
-	}
+    public static function __constructStatic()
+    {
+        self::$description = legacy__(sys_config('description'));
+        self::$title = sys_config('name');
+        self::$tabTitle = sys_config('name');
+        self::$thumbnail = client_url(sys_config('logo'));
 
-	public static function setThumbnail(string $thumbnail = null) {
-		if ($thumbnail) {
-			self::$thumbnail = strpos($thumbnail, CLIENT_ROOT) === 0 ? $thumbnail : client_url($thumbnail);
-		}
+        if (! empty(sys_config('short-description'))) {
+            self::$tabTitle .= ' | '.sys_config('short-description');
+        }
+    }
 
-		return new static(self::$name);
-	}
+    /*
+    * Set properties
+    */
+    public static function setPage(string $name)
+    {
+        self::$name = $name;
 
-	public static function setLocation(string $location) {
-		self::$location = $location;
+        return new static(self::$name);
+    }
 
-		return new static(self::$name);
-	}
+    public static function setTemplate(string $template)
+    {
+        self::$template = $template;
 
-	public static function setMiddlewares(array $middlewares = []) {
-		$middlewares = (array) $middlewares;
+        return new static(self::$name);
+    }
 
-		self::$middlewares = $middlewares;
+    public static function setTitle(string $title)
+    {
+        self::$title = $title;
+        self::$tabTitle = $title.' | '.sys_config('name');
 
-		return new static(self::$name);
-	}
+        return new static(self::$name);
+    }
 
-	public static function addMiddlewares(array $middlewares) {
-		$middlewares = (array) $middlewares;
+    public static function setDescription(string $description)
+    {
+        self::$description = $description;
 
-		foreach ($middlewares as $middleware) {
-			self::$middlewares[] = $middleware;
-		}
+        return new static(self::$name);
+    }
 
-		return new static(self::$name);
-	}
+    public static function setThumbnail(?string $thumbnail = null)
+    {
+        if ($thumbnail) {
+            self::$thumbnail = strpos($thumbnail, CLIENT_ROOT) === 0 ? $thumbnail : client_url($thumbnail);
+        }
 
-	/*
-	* Manage the variables
-	*/
-	public static function set(string $var, $value, mixed $arrayKey = null) {
-		if (!$arrayKey) {
-			self::$variables[$var] = $value;
-		} else {
-			self::$variables[$var][$arrayKey] = $value;
-		}
+        return new static(self::$name);
+    }
 
-		return new static(self::$name);
-	}
+    public static function setLocation(string $location)
+    {
+        self::$location = $location;
 
-	public static function get($var) {
-		return self::$variables[$var] ?? null;
+        return new static(self::$name);
+    }
 
-		return new static(self::$name);
-	}
+    public static function setMiddlewares(array $middlewares = [])
+    {
+        $middlewares = (array) $middlewares;
 
-	/*
-	* Render the view
-	*/
-	public static function show() {
-		// set basic data
-		if (!self::$location) self::$location = self::$name;
-		if (!self::$url) self::$url = SERVER_ROOT . '/pages/views/' . self::$name . '.php';
+        self::$middlewares = $middlewares;
 
-		// load the middlewares
-		foreach (self::$middlewares as $middleware) MiddlewareLoader::run($middleware);
+        return new static(self::$name);
+    }
 
-		// load the logic
-		Logic::add(self::$template, 'template');
-		Logic::add(self::$name, 'page');
-		Logic::load();
+    public static function addMiddlewares(array $middlewares)
+    {
+        $middlewares = (array) $middlewares;
 
-		// load page resources
-		StyleLoader::addPageStyles(\Legacy\System\Classes\View::$name);
-		ScriptLoader::addPageScripts(\Legacy\System\Classes\View::$name);
+        foreach ($middlewares as $middleware) {
+            self::$middlewares[] = $middleware;
+        }
 
-		// render page
-		Viewer::render();
-	}
+        return new static(self::$name);
+    }
+
+    /*
+    * Manage the variables
+    */
+    public static function set(string $var, $value, mixed $arrayKey = null)
+    {
+        if (! $arrayKey) {
+            self::$variables[$var] = $value;
+        } else {
+            self::$variables[$var][$arrayKey] = $value;
+        }
+
+        return new static(self::$name);
+    }
+
+    public static function get($var)
+    {
+        return self::$variables[$var] ?? null;
+
+        return new static(self::$name);
+    }
+
+    /*
+    * Render the view
+    */
+    public static function show()
+    {
+        // set basic data
+        if (! self::$location) {
+            self::$location = self::$name;
+        }
+        if (! self::$url) {
+            self::$url = SERVER_ROOT.'/pages/views/'.self::$name.'.php';
+        }
+
+        // load the middlewares
+        foreach (self::$middlewares as $middleware) {
+            MiddlewareLoader::run($middleware);
+        }
+
+        // load the logic
+        Logic::add(self::$template, 'template');
+        Logic::add(self::$name, 'page');
+        Logic::load();
+
+        // load page resources
+        StyleLoader::addPageStyles(View::$name);
+        ScriptLoader::addPageScripts(View::$name);
+
+        // render page
+        Viewer::render();
+    }
 }

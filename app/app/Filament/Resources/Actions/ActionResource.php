@@ -2,19 +2,19 @@
 
 namespace App\Filament\Resources\Actions;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Actions\Pages\ListActions;
 use App\Models\Action;
 use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class ActionResource extends Resource {
-
+class ActionResource extends Resource
+{
     /**
      * Property: The model the resource corresponds to
      */
@@ -40,18 +40,21 @@ class ActionResource extends Resource {
      */
     protected static ?int $navigationSort = 5;
 
-    public static function canCreate(): bool {
+    public static function canCreate(): bool
+    {
         return false;
     }
 
-    public static function form(Schema $schema): Schema {
+    public static function form(Schema $schema): Schema
+    {
         return $schema
             ->components([
                 //
             ]);
     }
 
-    public static function table(Table $table): Table {
+    public static function table(Table $table): Table
+    {
         return $table
             ->columns([
                 TextColumn::make('user.username')
@@ -78,17 +81,18 @@ class ActionResource extends Resource {
             ])
             ->defaultSort('created_at', 'desc')
             ->paginated([10, 25, 50, 100, 'all'])
-            ->defaultPaginationPageOption(100)
-        ;
+            ->defaultPaginationPageOption(100);
     }
 
-    public static function getRelations(): array {
+    public static function getRelations(): array
+    {
         return [
             //
         ];
     }
 
-    public static function getPages(): array {
+    public static function getPages(): array
+    {
         return [
             'index' => ListActions::route('/'),
         ];

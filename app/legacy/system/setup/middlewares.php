@@ -1,11 +1,15 @@
 <?php
 
-function load_middleware($name, $user, $view) {
+function load_middleware($name, $user, $view)
+{
 
-	$middleware = false;
+    $middleware = false;
 
-	if (file_exists($file = SERVER_ROOT . '/app/middlewares/' . $name . '.php')) $middleware = $file;
-	else if (file_exists($file = SERVER_ROOT . '/system/middlewares/' . $name . '.php')) $middleware = $file;
+    if (file_exists($file = SERVER_ROOT.'/app/middlewares/'.$name.'.php')) {
+        $middleware = $file;
+    } elseif (file_exists($file = SERVER_ROOT.'/system/middlewares/'.$name.'.php')) {
+        $middleware = $file;
+    }
 
-	require_once($middleware);
+    require_once $middleware;
 }

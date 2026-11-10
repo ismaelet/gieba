@@ -16,7 +16,9 @@
 
 			{% place form-body %}
 
-		<?php } else if ($inputs) generate_form($inputs, $entry) ?>
+		<?php } elseif ($inputs) {
+		    generate_form($inputs, $entry);
+		} ?>
 
 	</section>
 

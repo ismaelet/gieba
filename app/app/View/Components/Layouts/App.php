@@ -7,8 +7,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\View\Component;
 
-class App extends Component {
-
+class App extends Component
+{
     /**
      * Property: The language attribute for the HTML tag
      */
@@ -25,8 +25,8 @@ class App extends Component {
     ) {
         // Set the full title
         $this->title = $title ?
-            $title . ' | ' . config('app.name') :
-            config('app.name') . ' | ' . config('custom.short_description');
+            $title.' | '.config('app.name') :
+            config('app.name').' | '.config('custom.short_description');
 
         // Set the description
         $this->description = $description ?: config('custom.description');
@@ -44,14 +44,16 @@ class App extends Component {
     /**
      * Get the view that represents the component
      */
-    public function render(): View|Closure|string {
+    public function render(): View|Closure|string
+    {
         return view('components.layouts.app');
     }
 
     /**
      * Get the current color scheme
      */
-    private function getColorScheme(): string {
+    private function getColorScheme(): string
+    {
         // Get the default color scheme from config, or use 'light' if not set
         $defaultColorScheme = config('custom.meta_data.default_color_scheme') ?? 'light';
 
@@ -59,7 +61,7 @@ class App extends Component {
         $appHasDynamicColorScheme = config('custom.meta_data.dynamic_color_scheme') == true;
 
         // If dynamic color scheme is not enabled, return the default color scheme
-        if (!$appHasDynamicColorScheme) {
+        if (! $appHasDynamicColorScheme) {
             return $defaultColorScheme;
         }
 

@@ -4,6 +4,7 @@ namespace App\Filament\Tables\Columns;
 
 use Filament\Tables\Columns\Column;
 
-class OrderItemsColumn extends Column {
+class OrderItemsColumn extends Column
+{
     protected string $view = 'filament.tables.columns.order-items-column';
 }

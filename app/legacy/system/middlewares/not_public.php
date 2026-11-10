@@ -1,5 +1,9 @@
 <?php
 
-$public = sysDB('static') ?: \Legacy\System\Classes\DB::find('value FROM variables WHERE name=?', ['public']);
+use Legacy\System\Classes\DB;
 
-if ($public) legacy_redirect('/');
+$public = sysDB('static') ?: DB::find('value FROM variables WHERE name=?', ['public']);
+
+if ($public) {
+    legacy_redirect('/');
+}

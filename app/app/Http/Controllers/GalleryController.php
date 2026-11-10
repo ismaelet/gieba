@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Collection;
 use App\Models\Image;
 
-class GalleryController extends Controller {
-
+class GalleryController extends Controller
+{
     /**
      * Show the gallery page
      */
-    public function index() {
+    public function index()
+    {
         $collections = Collection::orderBy('sort', 'asc')->orderBy('id', 'asc')->get();
 
         return view('gallery', [
@@ -22,7 +23,8 @@ class GalleryController extends Controller {
     /**
      * Show a specific collection
      */
-    public function show(Collection $collection) {
+    public function show(Collection $collection)
+    {
         $images = Image::where('hidden', false)
             ->where('collection', $collection->id)
             ->orderBy('id', 'desc')

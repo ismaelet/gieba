@@ -6,7 +6,7 @@
 				<?php if ($dashboardConfig['logo']) { ?>
 					<!-- logo -->
 					<a class="header" href="<?= client_url('/') ?>">
-						<div class="logo icon bgr-wht" <?= img_svg(LOGO_DIR . 'logo.svg') ?>></div>
+						<div class="logo icon bgr-wht" <?= img_svg(LOGO_DIR.'logo.svg') ?>></div>
 						<h1 class="title txt-low"><?= sys_config('name') ?></h1>
 					</a>
 				<?php } ?>
@@ -25,8 +25,8 @@
 				<div class="group">
 
 					<!-- Home link -->
-					<div class="category <?= !$currentPath ? 'active current-category' : '' ?>">
-						<a href="<?= client_url('/' . $dashboardConfig['path']) ?>" class="title-box grid">
+					<div class="category <?= ! $currentPath ? 'active current-category' : '' ?>">
+						<a href="<?= client_url('/'.$dashboardConfig['path']) ?>" class="title-box grid">
 							<div class="highlight"></div>
 							<div class="icon-box">
 								<?= icon_embed('home') ?>
@@ -45,7 +45,7 @@
 							<div class="title-box grid">
 								<div class="highlight"></div>
 								<div class="icon-box">
-									<?= icon_embed(APP_ICONS_DIR . 'dashboards/' . $category['slug']) ?>
+									<?= icon_embed(APP_ICONS_DIR.'dashboards/'.$category['slug']) ?>
 								</div>
 								<p class="title txt-line"><?= $category['title'] ?></p>
 							</div>
