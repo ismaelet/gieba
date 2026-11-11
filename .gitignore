@@ -8,3 +8,5 @@
 /app/public/hot
 /app/public/storage
 /app/vendor
+
+/app/.phpunit.result.cache

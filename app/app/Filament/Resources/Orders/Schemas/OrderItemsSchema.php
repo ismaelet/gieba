@@ -207,6 +207,15 @@ trait OrderItemsSchema
 
                 Checkbox::make('has_vat')
                     ->label('IVA')
+                    ->extraFieldWrapperAttributes(['class' => 'order-vat-field'])
+                    ->aboveLabel(
+                        Action::make('toggleAllVat')
+                            ->label('IVA')
+                            ->link()
+                            ->color('gray')
+                            ->tooltip('Attiva o disattiva IVA per tutti gli articoli')
+                            ->action(fn (Get $get, Set $set) => self::toggleOrderItemsVat($get, $set))
+                    )
                     ->default(true)
                     ->live()
                     ->afterStateUpdated(
@@ -239,5 +248,15 @@ trait OrderItemsSchema
             ->columnSpanFull()
             ->defaultItems(1)
             ->required();
+    }
+
+    protected static function toggleOrderItemsVat(Get $get, Set $set): void
+    {
+        $items = $get('../../ordered_order_items') ?? [];
+        $hasVat = collect($items)->contains(fn (array $item): bool => empty($item['has_vat']));
+
+        foreach ($items as $key => $item) {
+            $set("../../ordered_order_items.{$key}.has_vat", $hasVat, shouldCallUpdatedHooks: true);
+        }
     }
 }
