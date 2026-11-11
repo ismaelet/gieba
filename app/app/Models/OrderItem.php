@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Validation\ValidationException;
 
 class OrderItem extends Model
 {
@@ -60,10 +61,12 @@ class OrderItem extends Model
      */
     public function calcUnitPriceNet(): float
     {
+        $quantity = $this->validatedQuantity();
+
         if ($this->has_vat) {
-            return $this->total_price_gross / (1 + self::VAT) / $this->quantity;
+            return $this->total_price_gross / (1 + self::VAT) / $quantity;
         } else {
-            return $this->total_price_gross / $this->quantity;
+            return $this->total_price_gross / $quantity;
         }
     }
 
@@ -72,7 +75,20 @@ class OrderItem extends Model
      */
     public function calcUnitPriceGross(): float
     {
-        return $this->total_price_gross / $this->quantity;
+        return $this->total_price_gross / $this->validatedQuantity();
+    }
+
+    private function validatedQuantity(): int
+    {
+        $quantity = filter_var($this->quantity, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+        if ($quantity === false) {
+            throw ValidationException::withMessages([
+                'quantity' => 'La quantità deve essere un numero intero maggiore o uguale a 1.',
+            ]);
+        }
+
+        return $quantity;
     }
 
     /**
