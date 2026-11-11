@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Orders\Tables;
 
 use App\Filament\Resources\Orders\OrderResource;
+use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Filament\Tables\Columns\OrderItemsColumn;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -27,7 +28,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
 
 class OrdersTable
 {
@@ -251,7 +251,7 @@ class OrdersTable
                         ->action(function (
                             Order $record,
                             array $data,
-                            Component $livewire,
+                            ListOrders $livewire,
                         ): void {
                             $url = route('admin.orders.quote.download', [
                                 'order' => $record->id,
@@ -280,7 +280,7 @@ class OrdersTable
                         ->action(function (
                             Order $record,
                             array $data,
-                            Component $livewire,
+                            ListOrders $livewire,
                         ): void {
                             $url = route('admin.orders.delivery-note.download', [
                                 'order' => $record->id,
@@ -341,7 +341,7 @@ class OrdersTable
                     DeleteAction::make(),
                 ]),
             ])
-            ->recordUrl(fn (Order $record, Component $livewire) => OrderResource::getUrl('edit', [
+            ->recordUrl(fn (Order $record, ListOrders $livewire) => OrderResource::getUrl('edit', [
                 'record' => $record,
                 'return_url' => self::currentListUrl($record, $livewire),
             ]))
@@ -351,7 +351,7 @@ class OrdersTable
                     ->icon(Heroicon::OutlinedCheck)
                     ->color('primary')
                     ->outlined()
-                    ->visible(function (Component $livewire): bool {
+                    ->visible(function (ListOrders $livewire): bool {
                         $filters = $livewire->getTableFiltersForm()?->getState() ?? [];
 
                         $selected = data_get($filters, 'status.statuses', []);
@@ -363,7 +363,7 @@ class OrdersTable
 
                         return $selected !== $allStatuses;
                     })
-                    ->action(function (Component $livewire): void {
+                    ->action(function (ListOrders $livewire): void {
                         $form = $livewire->getTableFiltersForm();
 
                         $filters = $form?->getState() ?? [];
@@ -380,14 +380,14 @@ class OrdersTable
                     ->icon(Heroicon::XMark)
                     ->color('danger')
                     ->outlined()
-                    ->visible(function (Component $livewire): bool {
+                    ->visible(function (ListOrders $livewire): bool {
                         $filters = $livewire->getTableFiltersForm()?->getState() ?? [];
 
                         $values = data_get($filters, 'status.statuses', []);
 
                         return ! empty($values);
                     })
-                    ->action(function (Component $livewire): void {
+                    ->action(function (ListOrders $livewire): void {
                         $livewire->removeTableFilter('status');
                     }),
             ])
@@ -399,7 +399,7 @@ class OrdersTable
             ]);
     }
 
-    private static function currentListUrl(Order $record, ?Component $livewire = null): string
+    private static function currentListUrl(Order $record, ?ListOrders $livewire = null): string
     {
         $fragment = 'order-id-'.$record->id;
 

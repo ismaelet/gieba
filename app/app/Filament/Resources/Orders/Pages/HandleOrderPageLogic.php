@@ -3,12 +3,24 @@
 namespace App\Filament\Resources\Orders\Pages;
 
 use App\Models\Customer;
+use App\Models\Order;
 use Filament\Actions\Action;
+use Filament\Resources\Resource as FilamentResource;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
-use Livewire\Attributes\Url;
 
+/**
+ * @property Schema $form
+ * @property Order $record
+ * @property array|null $data
+ */
 trait HandleOrderPageLogic
 {
+    /**
+     * @return class-string<FilamentResource>
+     */
+    abstract public static function getResource(): string;
+
     /**
      * Update the order and related data
      */

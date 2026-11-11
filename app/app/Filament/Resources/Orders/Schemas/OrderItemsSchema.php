@@ -18,6 +18,20 @@ use Filament\Support\Icons\Heroicon;
 
 trait OrderItemsSchema
 {
+    abstract public static function updateOrderStatus(Get $get, Set $set): void;
+
+    abstract private static function parseNumber(?string $number): string;
+
+    abstract private static function parseToFloat(?string $number): float;
+
+    abstract public static function extraAttributesForPrices(): array;
+
+    abstract public static function extraAttributesForInt(): array;
+
+    abstract private static function updatePrices(Get $get, Set $set, ?string $fieldName = null, ?float $unitPriceNet = null): void;
+
+    abstract private static function updateOrderTotals(Get $get, Set $set): void;
+
     protected static function getOrderItemsSchema(): Repeater
     {
         return Repeater::make('ordered_order_items')

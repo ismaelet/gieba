@@ -7,6 +7,10 @@ use Filament\Schemas\Components\Group;
 
 trait TotalSchema
 {
+    abstract private static function parseNumber(?string $number): string;
+
+    abstract private static function parseToFloat(?string $number): float;
+
     protected static function getTotalSchema(): Group
     {
         return Group::make()

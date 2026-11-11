@@ -4,9 +4,13 @@ namespace App\Filament\Resources\Orders\Pages;
 
 use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Action;
+use App\Models\Order;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @property Order $record
+ */
 class CreateOrder extends CreateRecord
 {
     use HandleOrderPageLogic;

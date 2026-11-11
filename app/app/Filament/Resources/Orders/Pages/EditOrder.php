@@ -4,12 +4,16 @@ namespace App\Filament\Resources\Orders\Pages;
 
 use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Action as ModelsAction;
+use App\Models\Order;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @property Order $record
+ */
 class EditOrder extends EditRecord
 {
     use HandleOrderPageLogic;

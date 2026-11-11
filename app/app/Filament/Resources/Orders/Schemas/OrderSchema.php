@@ -13,6 +13,8 @@ use Filament\Schemas\Components\Utilities\Set;
 
 trait OrderSchema
 {
+    abstract private static function updateOrderItemsStatuses($state, Get $get, Set $set): void;
+
     protected static function getOrderSchema(): Fieldset
     {
         return Fieldset::make('Dati dell\'ordine')

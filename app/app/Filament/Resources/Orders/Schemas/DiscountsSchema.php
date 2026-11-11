@@ -10,6 +10,14 @@ use Filament\Schemas\Components\Utilities\Set;
 
 trait DiscountsSchema
 {
+    abstract private static function updateOrderTotals(Get $get, Set $set): void;
+
+    abstract private static function parseNumber(?string $number): string;
+
+    abstract private static function parseToFloat(?string $number): float;
+
+    abstract public static function extraAttributesForPrices(): array;
+
     protected static function getDiscountsSchema(): Fieldset
     {
         return Fieldset::make('Acconti e sconti')
