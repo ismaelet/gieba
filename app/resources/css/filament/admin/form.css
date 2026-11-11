@@ -55,12 +55,6 @@ html:has(.fi-resource-supplier-orders) {
       grid-column: 1;
       grid-row: 1 / -1;
       padding: 0;
-
-      .fi-fo-repeater-item:first-child & {
-        .fi-fo-repeater-item-header-end-actions {
-          grid-row: 2;
-        }
-      }
     }
 
     /* Labels */
@@ -74,22 +68,9 @@ html:has(.fi-resource-supplier-orders) {
     .fi-sc-component:has(input[type="checkbox"]) {
       justify-items: center;
 
-      .fi-fo-repeater-item:first-child &::before {
-        content: "IVA";
-        font-size: var(--text-sm);
-        line-height: var(--tw-leading, var(--text-sm--line-height));
-        font-weight: var(--font-weight-medium);
-      }
-
       .fi-fo-field,
       .fi-fo-field-label-col {
         align-items: center;
-      }
-
-      .fi-fo-repeater-item:first-child & {
-        .fi-fo-field {
-          grid-row: 2;
-        }
       }
 
       .fi-fo-field-label-content {
@@ -97,16 +78,6 @@ html:has(.fi-resource-supplier-orders) {
       }
 
       &:has(.order-vat-field) {
-        .fi-fo-repeater-item:first-child & {
-          &::before {
-            content: none;
-          }
-
-          .order-vat-field {
-            grid-row: 1 / -1;
-          }
-        }
-
         .fi-fo-field-label-col {
           display: grid;
           grid-template-rows: subgrid;
@@ -121,11 +92,6 @@ html:has(.fi-resource-supplier-orders) {
         .fi-fo-field-label-col > .fi-sc {
           display: none;
         }
-
-        .fi-fo-repeater-item:first-child & .fi-fo-field-label-col > .fi-sc {
-          display: flex;
-          grid-row: 1;
-        }
       }
     }
 
@@ -138,6 +104,40 @@ html:has(.fi-resource-supplier-orders) {
     /* Select inputs */
     .fi-select-input-value-label {
       @apply line-clamp-1;
+    }
+  }
+
+  .order-repeater-item .fi-fo-repeater-item:first-child {
+    .fi-fo-repeater-item-header-end-actions {
+      grid-row: 2;
+    }
+
+    .fi-sc-component:has(input[type="checkbox"]) {
+      &::before {
+        content: "IVA";
+        font-size: var(--text-sm);
+        line-height: var(--tw-leading, var(--text-sm--line-height));
+        font-weight: var(--font-weight-medium);
+      }
+
+      .fi-fo-field {
+        grid-row: 2;
+      }
+
+      &:has(.order-vat-field) {
+        &::before {
+          content: none;
+        }
+
+        .order-vat-field {
+          grid-row: 1 / -1;
+        }
+
+        .fi-fo-field-label-col > .fi-sc {
+          display: flex;
+          grid-row: 1;
+        }
+      }
     }
   }
 
