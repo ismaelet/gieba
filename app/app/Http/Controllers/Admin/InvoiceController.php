@@ -119,6 +119,11 @@ class InvoiceController extends Controller
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        $dompdf->stream($title.'_'.str_replace('#', '', $order->idCode()).'.pdf');
+        $filename = $title.'_'.str_replace('#', '', $order->idCode()).'.pdf';
+
+        return response($dompdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
     }
 }
